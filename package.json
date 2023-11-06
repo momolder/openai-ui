@@ -12,7 +12,10 @@
     "predeploy": "npm run build",
     "deploy": "(pwsh -command \"Compress-Archive -Path ./Release/* -DestinationPath release.zip -force\") && az webapp deployment source config-zip --resource-group rg-openai-ui --name openai-ui --src release.zip",
     "login": "az login && az account set --subscription",
-    "test": "playwright test"
+    "test": "playwright test",
+    "docker:build": "docker build --pull --rm -f \"Dockerfile\" -t openaiui:latest \".\" --progress=plain",
+    "predocker:run": "npm run docker:build",
+    "docker:run": "docker run --rm -d -p 80:80/tcp openaiui:latest"
   },
   "devDependencies": {
     "@playwright/test": "^1.39.0",

@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && mv ./build ../Release/wwwroot || (robocopy ./build ../Release/wwwroot /move /mir & exit 0)",
-    "preview": "vite preview",
+    "build": "vite build && mv ./build ../Release/wwwroot -v || (robocopy ./build ../Release/wwwroot /move /mir & exit 0)",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "eslint .",
