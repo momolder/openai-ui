@@ -1,0 +1,351 @@
+{
+  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenAI-WebApp",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/authentication/user": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "Authentication_GetUser",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInformation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/authentication/user/validate": {
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "Authentication_ValidateUser",
+        "requestBody": {
+          "x-name": "user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInformation"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/conversation": {
+      "post": {
+        "tags": [
+          "Conversation"
+        ],
+        "operationId": "Conversation_GetResponse",
+        "requestBody": {
+          "x-name": "conversation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Conversation"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/history/user/{userId}": {
+      "get": {
+        "tags": [
+          "History"
+        ],
+        "operationId": "History_GetConversations",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Conversation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "History"
+        ],
+        "operationId": "History_ClearConversations",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/history": {
+      "post": {
+        "tags": [
+          "History"
+        ],
+        "operationId": "History_AddConversation",
+        "requestBody": {
+          "x-name": "conversation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Conversation"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "History"
+        ],
+        "operationId": "History_UpdateConversation",
+        "requestBody": {
+          "x-name": "conversation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Conversation"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "History"
+        ],
+        "operationId": "History_DeleteConversation",
+        "requestBody": {
+          "x-name": "conversation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Conversation"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Conversation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settings": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "operationId": "Settings_GetSettings",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackendConfiguration"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserInformation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/ChatRole"
+          },
+          "content": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ChatRole": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Assistant",
+          "User",
+          "System",
+          "Function",
+          "Tool"
+        ],
+        "enum": [
+          "assistant",
+          "user",
+          "system",
+          "function",
+          "tool"
+        ]
+      },
+      "Conversation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "guid": {
+            "type": "string"
+          },
+          "isFollowed": {
+            "type": "boolean"
+          },
+          "userId": {
+            "type": "string"
+          }
+        }
+      },
+      "BackendConfiguration": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "useMock": {
+            "type": "boolean"
+          },
+          "useHistory": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "open-ai-svelte",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && mv ./build ../Release/wwwroot || (robocopy ./build ../Release/wwwroot /move /mir & exit 0)",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "eslint .",
+    "format": "prettier --plugin-search-dir . --write ."
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^2.1.0",
+    "@sveltejs/adapter-static": "^2.0.3",
+    "@sveltejs/kit": "^1.27.2",
+    "@types/uuid": "^9.0.6",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "@zerodevx/svelte-toast": "^0.9.5",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-svelte": "^2.34.0",
+    "postcss": "^8.4.31",
+    "prettier": "^2.8.8",
+    "prettier-plugin-svelte": "^2.10.1",
+    "svelte": "^4.2.2",
+    "svelte-check": "^3.5.2",
+    "tailwindcss": "^3.3.5",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "uuid": "^9.0.1",
+    "vite": "^4.5.0"
+  },
+  "type": "module"
+}

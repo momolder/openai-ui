@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json.schemastore.org/launchsettings.json",
+    "profiles": {
+      "backend": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "hotReloadEnabled": true,
+        "launchUrl": "swagger",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "dotnetRunMessages": true,
+        "applicationUrl": "http://localhost:5000"
+      }
+    }
+}

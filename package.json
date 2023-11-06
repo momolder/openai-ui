@@ -1,0 +1,22 @@
+{
+  "name": "open-ai-svelte",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"cd ./Frontend && npm run dev\" \"cd ./Backend && dotnet watch\"",
+    "build": "concurrently \"cd ./Frontend && npm run build\" \"cd ./Backend && dotnet publish Backend.csproj -c Release /p:PublishProfile='./Properties/PublishProfiles/PublishProfile.pubxml'\"",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "cd ./Frontend && npm run lint",
+    "format": "concurrently \"cd ./Frontend && npm run format\" \"cd ./Backend && dotnet format Backend.sln\"",
+    "predeploy": "npm run build",
+    "deploy": "(pwsh -command \"Compress-Archive -Path ./Release/* -DestinationPath release.zip -force\") && az webapp deployment source config-zip --resource-group rg-openai-ui --name openai-ui --src release.zip",
+    "login": "az login && az account set --subscription",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.39.0",
+    "@types/node": "^20.8.10",
+    "concurrently": "^8.2.1"
+  }
+}

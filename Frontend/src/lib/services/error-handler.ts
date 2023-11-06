@@ -1,0 +1,17 @@
+import { toast } from '@zerodevx/svelte-toast';
+import type { SwaggerException } from './backend-api';
+
+export function ToastErrors(error: SwaggerException): undefined {
+  console.error(error.response);
+  toast.push(
+    { msg: error.message },
+    {
+      dismissable: true,
+      duration: 5000
+    }
+  );
+}
+
+export function isNullOrWhitespace(input: string | null | undefined): boolean {
+  return input == null ? true : input.trim() === '';
+}
