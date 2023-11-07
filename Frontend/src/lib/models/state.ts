@@ -3,4 +3,5 @@ export interface State {
   useHistory: boolean;
   useMock: boolean;
   autosave: boolean;
+  version: string;
 }

@@ -343,6 +343,9 @@
           },
           "useHistory": {
             "type": "boolean"
+          },
+          "version": {
+            "type": "string"
           }
         }
       }

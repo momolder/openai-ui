@@ -4,6 +4,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80/tcp
 ENV ASPNETCORE_URLS="http://+:80"
+ARG GIT_TAG
+ENV BackendConfiguration__Version=$GIT_TAG
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS testbase
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -

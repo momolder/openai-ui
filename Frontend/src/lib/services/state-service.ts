@@ -23,7 +23,8 @@ class StateService {
         StateStore.update((u) => {
           u.useHistory = c.useHistory;
           u.useMock = c.useMock;
-          u.autosave = c.useHistory && u.autosave
+          u.autosave = c.useHistory && u.autosave;
+          u.version = c.version;
           return u;
         });
       })

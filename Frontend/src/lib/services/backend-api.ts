@@ -402,6 +402,7 @@ export interface Conversation {
 export interface BackendConfiguration {
     useMock: boolean;
     useHistory: boolean;
+    version: string;
 }
 
 export class SwaggerException extends Error {

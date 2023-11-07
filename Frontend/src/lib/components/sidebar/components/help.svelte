@@ -3,13 +3,14 @@
 </script>
 
 <div class="h-full p-5">
+  <h4 class="mb-3">Version: {$StateStore.version}</h4>
   {#if $StateStore.useHistory}
     <p>
       Alle Eingaben werden innerhalb des OpenAI Azure Tennants gespeichert und zur Anzeige des Verlaufs
       verwendet.
     </p>
   {/if}
-  <p>
+  <p class="mb-3">
     Daten werden nur für die Kommunikation mit den kognitiven Diensten von Microsoft verwendet um die
     gestellten Fragen zu beantworten.
   </p>
