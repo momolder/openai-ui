@@ -16,7 +16,7 @@ public class OpenAiClient : IOpenAiClient
       Temperature = configuration.Temperature,
       FrequencyPenalty = configuration.FrequencyPenalty,
       PresencePenalty = configuration.PresencePenalty,
-      NucleusSamplingFactor = configuration.NucleusSamplingFactor, // Top P
+      NucleusSamplingFactor = configuration.NucleusSamplingFactor,
       StopSequences = { configuration.StopSequences }
     };
 

@@ -7,13 +7,14 @@ public static class DatabaseStartupExtensions
 {
   public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
   {
-    var config = configuration.GetTyped<DatabaseConfiguration>();
+    var config = configuration.GetTyped<BackendConfiguration>();
 
-    if (!string.IsNullOrWhiteSpace(config.AccountKey))
+    if (!config.UseMock && config.UseHistory)
     {
-      services.AddDbContext<ConversationContext>(options => options.UseCosmos(config.AccountEndpoint.NotNull().NotWhiteSpace(),
-                                                                              config.AccountKey.NotNull().NotWhiteSpace(),
-                                                                              config.DatabaseName.NotNull().NotWhiteSpace()));
+      var dbConfig = configuration.GetTyped<DatabaseConfiguration>();
+      services.AddDbContext<ConversationContext>(options => options.UseCosmos(dbConfig.AccountEndpoint.NotNull().NotWhiteSpace(),
+                                                                              dbConfig.AccountKey.NotNull().NotWhiteSpace(),
+                                                                              dbConfig.DatabaseName.NotNull().NotWhiteSpace()));
     }
 
     return services;
@@ -21,16 +22,17 @@ public static class DatabaseStartupExtensions
 
   public static WebApplication UseDababase(this WebApplication app, IConfiguration configuration)
   {
-    var config = configuration.GetTyped<DatabaseConfiguration>();
+    var config = configuration.GetTyped<BackendConfiguration>();
 
-    if (!string.IsNullOrWhiteSpace(config.AccountKey))
+    if (!config.UseMock && config.UseHistory)
     {
+      var dbConfig = configuration.GetTyped<DatabaseConfiguration>();
       using var scope = app.Services.CreateScope();
       var services = scope.ServiceProvider;
 
       var context = services.GetRequiredService<ConversationContext>();
 
-      if (config.Rebuild)
+      if (dbConfig.Rebuild)
       {
         context.Database.EnsureDeleted();
       }

@@ -6,7 +6,7 @@
   import followImg from '$lib/assets/follow.svg';
   import unfollowImg from '$lib/assets/unfollow.svg';
   import { lang, t } from '$lib/localization/translation';
-  import { ConversationStore } from '$lib/services/state-management';
+  import { ConversationStore, StateStore } from '$lib/services/state-management';
   import Tooltip from '$lib/components/controls/tooltip.svelte';
   import historyService from '$lib/services/history-service';
   import { onDestroy } from 'svelte';
@@ -71,30 +71,30 @@
           <img class="ico" src={clear} alt="clear chat" />
         </button>
       </Tooltip>
-
-      {#if $ConversationStore && $ConversationStore.isFollowed}
-        <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Unfollow)}>
-          <button
-            class="btn min-w-max disabled:cursor-not-allowed"
-            type="button"
-            disabled={!hasConversation || processing}
-            on:click={unfollow}>
-            <img class="ico" src={unfollowImg} alt="unfollow chat" />
-          </button>
-        </Tooltip>
-      {:else}
-        <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Follow)}>
-          <button
-            data-testid="inputFollowButton"
-            class="btn min-w-max disabled:cursor-not-allowed"
-            type="button"
-            disabled={!hasConversation || processing}
-            on:click={follow}>
-            <img class="ico" src={followImg} alt="follow chat" />
-          </button>
-        </Tooltip>
+      {#if $StateStore.useHistory}
+        {#if $ConversationStore && $ConversationStore.isFollowed}
+          <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Unfollow)}>
+            <button
+              class="btn min-w-max disabled:cursor-not-allowed"
+              type="button"
+              disabled={!hasConversation || processing}
+              on:click={unfollow}>
+              <img class="ico" src={unfollowImg} alt="unfollow chat" />
+            </button>
+          </Tooltip>
+        {:else}
+          <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Follow)}>
+            <button
+              data-testid="inputFollowButton"
+              class="btn min-w-max disabled:cursor-not-allowed"
+              type="button"
+              disabled={!hasConversation || processing}
+              on:click={follow}>
+              <img class="ico" src={followImg} alt="follow chat" />
+            </button>
+          </Tooltip>
+        {/if}
       {/if}
-
       {#if processing}
         <button class="btn min-w-max" type="reset" disabled={!processing}>
           <img class="ico" src={wait} alt="wait" />
