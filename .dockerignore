@@ -21,5 +21,10 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/Release
+**/test-results
+**/playwright-report
+**/.svelte-kit
+**/build
 LICENSE
 README.md

@@ -4,7 +4,7 @@
   import themingService from '$lib/services/theming-service';
   import stateService from '$lib/services/state-service';
   import historyService from '$lib/services/history-service';
-  import { LanguageStore } from '$lib/services/state-management';
+  import { LanguageStore, StateStore } from '$lib/services/state-management';
   import { onDestroy } from 'svelte';
   import conversationService from '$lib/services/conversation-service';
 
@@ -23,8 +23,7 @@
     await stateService
       .loadUser()
       .then(conversationService.clear)
-      .then(stateService.getConfiguration)
-      .then((c) => (c?.useHistory === true ? historyService.loadHistory() : {}));
+      .then(async _ => ($StateStore.useHistory === true ? await historyService.loadHistory() : {}));
   }
 
   const toastOptions = {
