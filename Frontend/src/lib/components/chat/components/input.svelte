@@ -101,7 +101,7 @@
         </button>
       {:else}
         <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Send)}>
-          <button class="btn min-w-max" type="submit" disabled={processing || !userPrompt}>
+          <button data-testid="inputSendButton" class="btn min-w-max" type="submit" disabled={processing || !userPrompt}>
             <img class="ico" src={send} alt="send" />
           </button>
         </Tooltip>

@@ -16,7 +16,7 @@
   }
 </script>
 
-<div class="cmp-raised rounded {tab === '' ? 'w-max' : 'w-screen md:w-80'} flex flex-col">
+<div data-testid="sidebar" class="cmp-raised rounded {tab === '' ? 'w-max' : 'w-screen md:w-80'} flex flex-col">
   {#if $StateStore.useHistory}
     <SidebarSlot
       ico={history}

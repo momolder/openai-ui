@@ -6,6 +6,7 @@
   export let items: { label: string; value: string }[];
   export let selectedItem: string;
   export let label: string;
+  export let testid: string = "";
 
   function select(event: Event) {
     const value = (event.target as HTMLSelectElement).selectedOptions[0].value;
@@ -15,7 +16,7 @@
 
 <div class="flex justify-between p-2">
   <span class="ml-3">{label}</span>
-  <select class="rounded bg-light-cmp dark:bg-dark-cmp outline-none" on:change={select}>
+  <select data-testid={testid} class="rounded bg-light-cmp dark:bg-dark-cmp outline-none" on:change={select}>
     {#each items as item}
       <option
         class="bg-light-cmp dark:bg-dark-cmp outline-none"

@@ -22,7 +22,7 @@
 </script>
 
 {#if !history || history.length === 0}
-  <div class="p-2">{t(lang.Page.History.Empty)}</div>
+  <div data-testid="historyEmpty" class="p-2">{t(lang.Page.History.Empty)}</div>
 {:else}
   <button class="btn" on:click={clearHistory}>
     <img class="ico w-7" src={unfollow} alt="clear history" />

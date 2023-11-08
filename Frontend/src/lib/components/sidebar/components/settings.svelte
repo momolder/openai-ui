@@ -33,19 +33,22 @@
 
 <div class="h-full p-3">
   <Switch
+    testid="settingsSidebarRight"
     label={t(lang.Page.Settings.SidebarRight)}
     on:click={changeSidebarSide}
     value={$StateStore.sidebarRight} />
   <Select
+    testid="settingsLanguage"
     items={supportedLanguages}
     selectedItem={$LanguageStore}
     on:select={changeLanguage}
     label={t(lang.Page.Settings.Language)} />
   {#if $StateStore.useHistory}
     <Switch
+      testid="settingsAutosave"
       label={t(lang.Page.Settings.Autosave)}
       on:click={() => ($StateStore.autosave = !$StateStore.autosave)}
       value={$StateStore.autosave} />
   {/if}
-  <Switch label={t(lang.Page.Settings.ThemeDark)} on:click={toggleTheme} value={!themingService.isLight()} />
+  <Switch testid="settingsTheme" label={t(lang.Page.Settings.ThemeDark)} on:click={toggleTheme} value={!themingService.isLight()} />
 </div>

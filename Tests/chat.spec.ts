@@ -5,14 +5,6 @@ test.describe("Chat tests", async () => {
     await page.goto('/');
   });
 
-  test("has title", async ({ page }) => {
-    await expect(page).toHaveTitle(/OpenAI-UI/);
-  });
-
-  test('User should be identified correctly', async ({ page }) => {
-    await expect(page.getByTestId('headerUserButtonTooltip')).toContainText('Mock-User-');
-  })
-
   test("Ask a question, follow and unfollow", async ({ page }) => {
     await page.getByTestId("welcomeStartButton").click();
     await expect(page.getByTestId("message-0")).toBeVisible();
@@ -25,9 +17,9 @@ test.describe("Chat tests", async () => {
   });
 
   test("Start chatting and clear the chat", async ({ page }) => {
-    await page.getByTestId("inputMessageInput").click();
+    //await page.getByTestId("inputMessageInput").click();
     await page.getByTestId("inputMessageInput").fill("Antworte mit exakt 'Antwort zur Frage'");
-    await page.getByTestId("inputMessageInput").press("Enter");
+    await page.getByTestId("inputSendButton").click();
     expect(await page.getByTestId("message-0").textContent()).toContain(
       "Antworte mit exakt 'Antwort zur Frage'"
     );

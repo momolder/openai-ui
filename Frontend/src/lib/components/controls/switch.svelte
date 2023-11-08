@@ -4,6 +4,8 @@
   const dispatch = createEventDispatcher();
   export let label: string;
   export let value: boolean;
+  export let testid: string = "";
+
   function click() {
     dispatch('click', { value: value });
   }
@@ -13,7 +15,7 @@
   <span class="ml-3">{label}</span>
   <label class="relative inline-flex items-center cursor-pointer">
     <input type="checkbox" on:click={click} checked={value} class="sr-only peer" />
-    <div
+    <div data-testid={testid}
       class="w-11 h-[25px] rounded-full peer
     bg-light-base dark:bg-dark-base peer-checked:bg-light-flat dark:peer-checked:bg-dark-flat after:bg-light-cmp dark:after:bg-dark-cmp
     peer-checked:after:translate-x-full
