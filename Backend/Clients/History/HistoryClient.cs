@@ -17,8 +17,12 @@ public class HistoryClient(ConversationContext context) : IHistoryClient, IDispo
 
   public async Task<List<Conversation>> Remove(Conversation conversation)
   {
-    context.Conversations.Remove(conversation);
-    await context.SaveChangesAsync();
+    var conv = context.Conversations.SingleOrDefault(c => c.UserId == conversation.UserId && c.Guid == conversation.Guid);
+    if (conv != null)
+    {
+      context.Conversations.Remove(conv);
+      await context.SaveChangesAsync();
+    }
     return context.Conversations.Where(c => c.UserId == conversation.UserId).AsNoTracking().ToList();
   }
 
