@@ -6,10 +6,10 @@ public record OpenAiConfiguration
   public string? Endpoint { get; set; }
   public string? Deployment { get; set; }
 
-  public int MaxTokens { get; set; } = 60;
-  public float Temperature { get; set; } = 0.3f;
-  public float FrequencyPenalty { get; set; } = 0.5f;
+  public int MaxTokens { get; set; } = 800;
+  public float Temperature { get; set; } = 0.7f;
+  public float FrequencyPenalty { get; set; } = 0.0f;
   public float PresencePenalty { get; set; } = 0.0f;
-  public float NucleusSamplingFactor { get; set; } = 1; // Top P
-  public string StopSequences { get; set; } = "You:";
+  public float NucleusSamplingFactor { get; set; } = 0.95f; // Top P
+  public string StopSequences { get; set; } = "<|im_end|>";
 }
