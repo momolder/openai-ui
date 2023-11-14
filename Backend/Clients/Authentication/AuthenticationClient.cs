@@ -15,16 +15,30 @@ internal class AuthenticationClient : IAuthenticationClient
 
   public Task<UserInformation> GetUserInformation(HttpRequest request)
   {
-    var userId = GetHeaderValue(request, "X-Ms-Client-Principal-Id");
-    var userDisplayName = GetHeaderValue(request, "X-Ms-Client-Principal-Name");
-    return Task.FromResult(new UserInformation(userId, userDisplayName));
+    try
+    {
+      var userId = GetHeaderValue(request, "X-Ms-Client-Principal-Id");
+      var userDisplayName = GetHeaderValue(request, "X-Ms-Client-Principal-Name");
+      return Task.FromResult(new UserInformation(userId, userDisplayName));
+    }
+    catch (Exception)
+    {
+      return Task.FromResult(new UserInformation("unknown", "Unauthenticated"));
+    }
   }
 
   public Task<bool> ValidateUserInformation(HttpRequest request, UserInformation user)
   {
-    var userId = GetHeaderValue(request, "X-Ms-Client-Principal-Id");
-    var userDisplayName = GetHeaderValue(request, "X-Ms-Client-Principal-Name");
-    return Task.FromResult(user.Id == userId && user.DisplayName == userDisplayName);
+    try
+    {
+      var userId = GetHeaderValue(request, "X-Ms-Client-Principal-Id");
+      var userDisplayName = GetHeaderValue(request, "X-Ms-Client-Principal-Name");
+      return Task.FromResult(user.Id == userId && user.DisplayName == userDisplayName);
+    }
+    catch (Exception)
+    {
+      return Task.FromResult(false);
+    }
   }
 
   private static string GetHeaderValue(HttpRequest request, string key)
