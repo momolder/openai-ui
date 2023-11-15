@@ -45,10 +45,9 @@ body {
   .btn {
     @apply hover:bg-light-highlight hover:dark:bg-dark-highlight py-2 px-4 h-14  disabled:cursor-not-allowed disabled:opacity-20;
   }
-  /* .btn-outline {
-    @apply bg-transparent bg-gray-300 dark:bg-gray-700 hover:bg-blue-500 text-blue-700 hover:text-white  border-blue-500;
-    @apply font-semibold border hover:border-transparent rounded p-1;
-  } */
+  .sidebar-btn {
+    @apply btn flex flex-nowrap items-center justify-start gap-4 text-xl h-14;
+  }
   .ico {
     @apply h-9 w-9 dark:invert;
   }
