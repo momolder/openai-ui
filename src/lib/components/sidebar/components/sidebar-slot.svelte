@@ -22,9 +22,3 @@
     <slot />
   </div>
 {/if}
-
-<style>
-  .sidebar-btn {
-    @apply btn flex flex-nowrap items-center justify-start gap-4 text-xl h-14;
-  }
-</style>
