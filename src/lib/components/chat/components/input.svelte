@@ -8,7 +8,6 @@
   import { lang, t } from '$lib/localization/translation';
   import { ConversationStore, StateStore } from '$lib/services/state-management';
   import Tooltip from '$lib/components/controls/tooltip.svelte';
-  import historyService from '$lib/services/history-service';
   import { onDestroy } from 'svelte';
 
   let userPrompt: '';
@@ -36,10 +35,10 @@
   }
 
   function follow() {
-    historyService.follow();
+    conversationService.follow();
   }
   function unfollow() {
-    historyService.unfollow($ConversationStore);
+    conversationService.unfollow($ConversationStore);
   }
 
   function clearChat() {
