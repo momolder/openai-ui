@@ -9,15 +9,15 @@
   HistoryStore.subscribe((h) => {history = h;console.log(h);});
 
   async function deleteEntry(entry: Conversation): Promise<void> {
-    await historyService.unfollow(entry);
+    await conversationService.unfollow(entry);
   }
 
   function loadEntry(entry: Conversation): void {
-    historyService.load(entry);
+    conversationService.load(entry);
   }
 
   async function clearHistory(): Promise<void> {
-    await historyService.clear();
+    await conversationService.clearHistory();
   }
 </script>
 
