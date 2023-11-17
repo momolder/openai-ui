@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ChatRole, type ChatMessage } from '$lib/services/backend-api';
+  import { ChatRole, type ChatMessage } from '$lib/models/Contracts';
   import { ConversationStore } from '$lib/services/state-management';
   import { afterUpdate, onDestroy } from 'svelte';
   import Message from './message.svelte';
