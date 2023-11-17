@@ -1,7 +1,6 @@
 import { toast } from '@zerodevx/svelte-toast';
-import type { SwaggerException } from './backend-api';
 
-export function ToastErrors(error: SwaggerException): undefined {
+export function ToastErrors(error: any): undefined {
   console.error(error.response);
   toast.push(
     { msg: error.message },
