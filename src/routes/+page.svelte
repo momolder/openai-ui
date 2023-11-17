@@ -1,8 +1,9 @@
 <script lang="ts">
   import Header from '$lib/components/header.svelte';
-  import Sidebar from '$lib/components/sidebar/sidebar.svelte';
   import Chat from '$lib/components/chat/chat.svelte';
-  import { StateStore } from '$lib/services/state-management';
+  import Sidebar from '$lib/components/sidebar/sidebar.svelte';
+
+  let sidebarOpen = false;
 </script>
 
 <div class="page-grid">
@@ -15,4 +16,15 @@
   <div class="cmp overflow-hidden {sidebarOpen ? 'collapse md:visible' : ''}">
     <Chat  />
   </div>
+
 </div>
+
+<style>
+  .page-grid{
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+  }
+</style>

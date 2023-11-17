@@ -13,12 +13,12 @@
   }
 </script>
 
-<button data-testid="sidebar{name}Button" class="sidebar-btn" on:click={() => toggle()} type="button">
-  <img class="ico" src={ico} alt="{name}icon" />
-  <p class="hidden md:block md:visible">{label}</p>
+<button data-testid="sidebar{name}Button" class="sidebar-btn p-2" on:click={() => toggle()} type="button">
+  <img class="ico h-5 w-5" src={ico} alt="{name}icon" />
+  <p class="{isOpen ? 'visible' : 'hidden'} text-center justify-self-center">{label}</p>
 </button>
 {#if isOpen}
-  <div class="overflow-hidden overflow-y-auto">
+  <div class="overflow-hidden overflow-y-auto z-10">
     <slot />
   </div>
 {/if}

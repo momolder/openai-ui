@@ -21,9 +21,8 @@
   @apply bg-light-flat dark:bg-dark-flat;
 }
 body {
-  margin: 8px;
-  width: calc(100vw - (8px * 2));
-  height: calc(100vh - (8px * 2));
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 }
 @layer base {
@@ -43,19 +42,19 @@ body {
 
 @layer components {
   .btn {
-    @apply hover:bg-light-highlight hover:dark:bg-dark-highlight py-2 px-4 h-14  disabled:cursor-not-allowed disabled:opacity-20;
+    @apply disabled:cursor-not-allowed h-10 disabled:opacity-20;
   }
   .sidebar-btn {
-    @apply btn flex flex-nowrap items-center justify-start gap-4 text-xl h-14;
+    @apply btn flex flex-nowrap items-center justify-start gap-4 text-xl;
   }
   .ico {
-    @apply h-9 w-9 dark:invert;
+    @apply h-full w-full dark:invert;
   }
   .cmp {
-    @apply h-full w-full overflow-hidden;
+    @apply h-full w-full;
   }
   .cmp-raised {
-    @apply cmp bg-light-cmp dark:bg-dark-cmp;
+    @apply cmp bg-light-cmp dark:bg-dark-cmp shadow dark:shadow-light-flat shadow-dark-flat;
   }
   .ext-link {
     @apply underline font-bold;

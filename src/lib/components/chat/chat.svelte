@@ -5,7 +5,7 @@
   import Output from './components/output.svelte';
 </script>
 
-<div class="cmp chat-grid gap-2">
+<div class="cmp gap-2 overflow-hidden flex justify-center rounded p-1">
   {#if !$ConversationStore || $ConversationStore.messages.length === 0}
     <Welcome />
   {:else}
@@ -13,12 +13,7 @@
     <Output bottomGapClass="h-24" />
   </div>
   {/if}
-  <Input />
+  <div class="w-2/4 absolute self-end mb-4">
+    <Input />
+  </div>
 </div>
-
-<style>
-  .chat-grid {
-    display: grid;
-    grid-template-rows: 1fr auto;
-  }
-</style>
