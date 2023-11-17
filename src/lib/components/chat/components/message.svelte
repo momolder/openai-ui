@@ -17,7 +17,8 @@
     <div
       class="rounded {message.role === ChatRole.User
         ? 'bg-light-chat-user dark:bg-dark-chat-user'
-        : 'bg-light-chat-assistant dark:bg-dark-chat-assistant'} max-w-[80%] p-3">
+        : 'bg-light-chat-assistant dark:bg-dark-chat-assistant'}
+        shadow shadow-dark-flat dark:shadow-light-flat max-w-[80%] p-3">
         <SvelteMarkdown source={message.content.replaceAll('\\n', '\n')} />
     </div>
   </div>

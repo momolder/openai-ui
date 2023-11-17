@@ -4,6 +4,7 @@
   import { afterUpdate, onDestroy } from 'svelte';
   import Message from './message.svelte';
 
+  export let bottomGapClass = "h-20";
   let messages: ChatMessage[];
   let last: ChatMessage | undefined;
   let chatOutputDiv: HTMLDivElement;
@@ -20,7 +21,7 @@
   });
 </script>
 
-<div class="cmp overflow-y-auto" bind:this={chatOutputDiv}>
+<div class="cmp-raised overflow-y-auto" bind:this={chatOutputDiv}>
   {#each messages as message, index}
     <div data-testid="message-{index}" class="m-5"><Message {message} /></div>
   {/each}

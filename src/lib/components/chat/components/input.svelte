@@ -25,7 +25,8 @@
       processing = true;
       const prompt = userPrompt;
       userPrompt = '';
-      await conversationService.getResponse(prompt).finally(() => {processing = false;
+      await conversationService.getResponse(prompt).finally(() => {
+        processing = false;
       });
     }
   }
@@ -46,65 +47,63 @@
   }
 </script>
 
-<form on:submit={sendPrompt} on:reset={cancel}>
-  <div class="cmp-raised rounded flex flex-wrap md:flex-nowrap">
-    <div class="flex flex-nowrap w-full">
+<div class="cmp flex items-stretch justify-stretch">
+  <form on:submit={sendPrompt} on:reset={cancel} class="cmp">
+    <div class="cmp overflow-x-auto p-4 flex justify-end bg-light-input dark:bg-dark-input rounded">
       <!-- svelte-ignore a11y-autofocus -->
-      <input
+      <textarea
         data-testid="inputMessageInput"
-        class="outline-none w-full h-14 px-2 bg-light-input dark:bg-dark-input"
+        class="outline-none w-full h-full resize-none bg-light-input dark:bg-dark-input"
         placeholder={t(lang.Page.Chat.Input.Placeholder)}
-        type="text"
         bind:value={userPrompt}
         required
         autofocus />
-    </div>
-    <div class="flex">
-      <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Clean)}>
-        <button
-          data-testid="inputClearButton"
-          class="btn min-w-max"
-          type="button"
-          disabled={!hasConversation || processing}
-          on:click={clearChat}>
-          <img class="ico" src={clear} alt="clear chat" />
-        </button>
-      </Tooltip>
-      {#if $StateStore.useHistory}
-        {#if $ConversationStore && $ConversationStore.isFollowed}
-          <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Unfollow)}>
-            <button
-              class="btn min-w-max disabled:cursor-not-allowed"
-              type="button"
-              disabled={!hasConversation || processing}
-              on:click={unfollow}>
-              <img class="ico" src={unfollowImg} alt="unfollow chat" />
-            </button>
-          </Tooltip>
-        {:else}
-          <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Follow)}>
-            <button
-              data-testid="inputFollowButton"
-              class="btn min-w-max disabled:cursor-not-allowed"
-              type="button"
-              disabled={!hasConversation || processing}
-              on:click={follow}>
-              <img class="ico" src={followImg} alt="follow chat" />
-            </button>
-          </Tooltip>
-        {/if}
-      {/if}
       {#if processing}
         <button class="btn min-w-max" type="reset" disabled={!processing}>
           <img class="ico" src={wait} alt="wait" />
         </button>
       {:else}
-        <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Send)}>
-          <button data-testid="inputSendButton" class="btn min-w-max" type="submit" disabled={processing || !userPrompt}>
-            <img class="ico" src={send} alt="send" />
+        <button data-testid="inputSendButton" class="btn" type="submit" disabled={processing || !userPrompt}>
+          <img class="ico" src={send} alt="send" />
+        </button>
+      {/if}
+    </div>
+  </form>
+
+  <div class="flex flex-col pl-2">
+    <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Clean)} position="top">
+      <button
+        data-testid="inputClearButton"
+        class="btn"
+        type="button"
+        disabled={!hasConversation || processing}
+        on:click={clearChat}>
+        <img class="ico" src={clear} alt="clear chat" />
+      </button>
+    </Tooltip>
+    {#if $StateStore.useHistory}
+      {#if $ConversationStore && $ConversationStore.isFollowed}
+        <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Unfollow)} position="top">
+          <button
+            class="btn p-1 disabled:cursor-not-allowed"
+            type="button"
+            disabled={!hasConversation || processing}
+            on:click={unfollow}>
+            <img class="ico" src={unfollowImg} alt="unfollow chat" />
+          </button>
+        </Tooltip>
+      {:else}
+        <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Follow)} position="top">
+          <button
+            data-testid="inputFollowButton"
+            class="btn p-1 disabled:cursor-not-allowed"
+            type="button"
+            disabled={!hasConversation || processing}
+            on:click={follow}>
+            <img class="ico" src={followImg} alt="follow chat" />
           </button>
         </Tooltip>
       {/if}
-    </div>
+    {/if}
   </div>
-</form>
+</div>

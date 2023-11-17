@@ -6,9 +6,9 @@
   import { StateStore, UserStore } from '$lib/services/state-management';
 </script>
 
-<div class="cmp-raised rounded p-4 flex justify-between h-16 items-center">
+<div class="cmp p-4 flex justify-between h-16 items-center">
   <a class="flex gap-5 items-center" data-sveltekit-reload href="/"
-    ><img class="ico" src={logo} alt="logo" />
+    ><img class="ico h-14 w-14" src={logo} alt="logo" />
     <h1>{t(lang.Page.Header.Title)}</h1>
   </a>
   {#if $StateStore.useMock}
