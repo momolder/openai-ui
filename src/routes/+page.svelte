@@ -5,12 +5,14 @@
   import { StateStore } from '$lib/services/state-management';
 </script>
 
-<div class="cmp flex flex-col gap-2">
-  <Header />
-  <div class="cmp flex gap-2 {$StateStore.sidebarRight ? 'flex-row-reverse' : 'flex-row'}">
-    <div class="min-w-fit">
-      <Sidebar />
-    </div>
-    <Chat />
+<div class="page-grid">
+  <div class="col-span-2">
+    <Header />
+  </div>
+  <div class="cmp p-1 {sidebarOpen ? 'w-screen col-span-2 md:w-80 md:col-span-1' : 'w-max'}">
+    <Sidebar on:toggle={(e) => {console.log(e); sidebarOpen = e.detail.isOpen;}} />
+  </div>
+  <div class="cmp overflow-hidden {sidebarOpen ? 'collapse md:visible' : ''}">
+    <Chat  />
   </div>
 </div>

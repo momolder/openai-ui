@@ -1,9 +1,9 @@
 import { env } from '$env/dynamic/private';
 import type { Conversation } from '$lib/models/Contracts';
-import { CosmosClient } from '@azure/cosmos';
+import { Container, CosmosClient } from '@azure/cosmos';
 
 class DatabaseService {
-  private db = {};
+  private db = {} as Container;
   private key = env.Database_AccountKey;
   private endpoint = env.Database_AccountEndpoint;
   private client: CosmosClient;

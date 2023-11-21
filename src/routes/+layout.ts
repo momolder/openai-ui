@@ -5,9 +5,10 @@ import { LanguageStore, StateStore } from '$lib/services/state-management';
 import { get } from 'svelte/store';
 import { browser } from '$app/environment';
 
-export const ssr = true;
+export const ssr = false;
 
-export async function load() {if(browser) {
+export async function load() {
+  if (browser) {
     let language = localStorage.getItem('language') ?? get(LanguageStore);
     LanguageStore.set(language);
     LanguageStore.subscribe((l) => {
@@ -18,6 +19,6 @@ export async function load() {if(browser) {
     await stateService.loadState();
     await stateService.loadUser();
     conversationService.clear();
-    if(get(StateStore).useHistory === true) await conversationService.loadHistory();
+    if (get(StateStore).useHistory === true) await conversationService.loadHistory();
   }
 }

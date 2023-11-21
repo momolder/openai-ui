@@ -5,13 +5,13 @@ test.describe("Settings tests", async () => {
     await page.goto('/');
   });
 
-  test('Sidebar position test', async ({page}) => {
-    await page.getByTestId("sidebarsettingsButton").click();
-    await expect(page.getByTestId("settingsSidebarRight")).not.toBeChecked();
-    await page.getByTestId("settingsSidebarRight").click();
-    await expect(page.getByTestId("settingsSidebarRight")).toBeChecked();
-    await page.goto('/');
-    await page.getByTestId("sidebarsettingsButton").click();
-    await expect(page.getByTestId("settingsSidebarRight")).toBeChecked();
-  });
+  // test('Sidebar position test', async ({page}) => {
+  //   await page.getByTestId("sidebarsettingsButton").click();
+  //   await expect(page.getByTestId("settingsSidebarRight")).not.toBeChecked();
+  //   await page.getByTestId("settingsSidebarRight").click();
+  //   await expect(page.getByTestId("settingsSidebarRight")).toBeChecked();
+  //   await page.goto('/');
+  //   await page.getByTestId("sidebarsettingsButton").click();
+  //   await expect(page.getByTestId("settingsSidebarRight")).toBeChecked();
+  // });
 });

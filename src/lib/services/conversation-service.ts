@@ -1,7 +1,6 @@
 import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, StateStore, UserStore } from './state-management';
 import { v4 as uuid } from 'uuid';
-import historyService from './history-service';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type Conversation } from '$lib/models/Contracts';
 

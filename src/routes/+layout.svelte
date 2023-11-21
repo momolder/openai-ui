@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
   import '../app.css';
   import { SvelteToast } from '@zerodevx/svelte-toast';
 

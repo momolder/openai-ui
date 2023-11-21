@@ -6,7 +6,7 @@ import { env } from '$env/dynamic/private';
 const client = new OpenAIClient(env.OpenAi_Endpoint, new AzureKeyCredential(env.OpenAi_Key));
 
 export async function POST({ request }: RequestEvent) {
-  const conversation = (await request.json()) as Conversation;
+const conversation = (await request.json()) as Conversation;
   const mappedMessages = conversation.messages.map((m) => {
     return {
       content: m.content,
@@ -14,8 +14,8 @@ export async function POST({ request }: RequestEvent) {
       name: m.name
     };
   });
-  const chatStream = client.listChatCompletions(env.OpenAi_Deployment, mappedMessages);
-  const stream = new ReadableStream({
+  const chatStream = client.listChatCompletions(env.OpenAi_Deployment ?? "", mappedMessages);
+const stream = new ReadableStream({
     async start(controller) {
       for await (const update of chatStream) {
         for (const choice of update.choices) {

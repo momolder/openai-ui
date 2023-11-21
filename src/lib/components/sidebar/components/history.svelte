@@ -2,11 +2,11 @@
   import { HistoryStore } from '$lib/services/state-management';
   import unfollow from '$lib/assets/unfollow.svg';
   import { lang, t } from '$lib/localization/translation';
-  import historyService from '$lib/services/history-service';
-  import type { Conversation } from '$lib/services/backend-api';
+  import conversationService from '$lib/services/conversation-service';
+  import type { Conversation } from '$lib/models/Contracts';
 
   let history: Conversation[] = [];
-  HistoryStore.subscribe((h) => (history = h));
+  HistoryStore.subscribe((h) => {history = h;console.log(h);});
 
   async function deleteEntry(entry: Conversation): Promise<void> {
     await historyService.unfollow(entry);
