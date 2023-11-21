@@ -38,9 +38,9 @@ export default class DatabaseService {
   }
 
   public async updateHistory(conversation: Conversation): Promise<Conversation> {
-    const { resource } = await this.db.item(conversation.id).read();
+    const { resource } = await this.db.item(conversation.id, conversation.userId).read();
     resource.messages = conversation.messages;
-    await this.db.replace(resource);
+    await this.db.item(conversation.id, conversation.userId).replace(resource);
     return resource as Conversation;
   }
 
