@@ -4,7 +4,7 @@
 
   export let message: ChatMessage = {} as ChatMessage;
   export let isLoading = false;
-  </script>
+</script>
 
 {#if isLoading}
   <div class="flex gap-2">
@@ -19,7 +19,7 @@
         ? 'bg-light-chat-user dark:bg-dark-chat-user'
         : 'bg-light-chat-assistant dark:bg-dark-chat-assistant'}
         shadow shadow-dark-flat dark:shadow-light-flat max-w-[80%] p-3">
-        <SvelteMarkdown source={message.content.replaceAll('\\n', '\n')} />
+      <SvelteMarkdown source={message.content.replaceAll('\\n', '\n')} />
     </div>
   </div>
 {/if}

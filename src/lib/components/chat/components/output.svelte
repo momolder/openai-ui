@@ -4,7 +4,7 @@
   import { afterUpdate, onDestroy } from 'svelte';
   import Message from './message.svelte';
 
-  export let bottomGapClass = "h-20";
+  export let bottomGapClass = 'h-20';
   let messages: ChatMessage[];
   let last: ChatMessage | undefined;
   let chatOutputDiv: HTMLDivElement;
@@ -28,7 +28,7 @@
   {#if last?.role === ChatRole.User}
     <div class="m-5"><Message isLoading /></div>
   {/if}
-<div class="cmp sticky {bottomGapClass} w-full"></div>
+  <div class="cmp sticky {bottomGapClass} w-full" />
 </div>
 
 <style>

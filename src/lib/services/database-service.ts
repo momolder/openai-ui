@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import type { Conversation } from '$lib/models/Contracts';
-import { Container, CosmosClient } from '@azure/cosmos';
+import { Container, CosmosClient, ItemResponse } from '@azure/cosmos';
 
 export default class DatabaseService {
   private db = {} as Container;
@@ -37,11 +37,16 @@ export default class DatabaseService {
     return resource as Conversation;
   }
 
-  public async updateHistory(conversation: Conversation): Promise<Conversation> {
-    const { resource } = await this.db.item(conversation.id, conversation.userId).read();
-    resource.messages = conversation.messages;
-    await this.db.item(conversation.id, conversation.userId).replace(resource);
-    return resource as Conversation;
+  public async updateHistory(conversation: Conversation): Promise<Conversation | undefined> {
+    const { resource }: ItemResponse<Conversation> = await this.db
+      .item(conversation.id, conversation.userId)
+      .read();
+    if (resource) {
+      resource.messages = conversation.messages;
+      await this.db.item(conversation.id, conversation.userId).replace(resource);
+      return resource;
+    }
+    return undefined;
   }
 
   public async deleteHistory(conversation: Conversation): Promise<void> {
@@ -50,11 +55,16 @@ export default class DatabaseService {
 
   public async deleteUserHistory(userId: string): Promise<void> {
     await this.db.items
-    .query({
-      query: 'select * from conversation WHERE conversation.userId = @userId',
-      parameters: [{ name: '@userId', value: userId }]
-    }).fetchAll()
-    .then(r => r.resources.forEach(c => this.db.item(c.id, userId).delete()));
+      .query<Conversation>({
+        query: 'select * from conversation WHERE conversation.userId = @userId',
+        parameters: [{ name: '@userId', value: userId }]
+      })
+      .fetchAll()
+      .then(async (r) => {
+        for (const c of r.resources) {
+          await this.db.item(c.id, userId).delete();
+        }
+      });
     // await this.db.deleteAllItemsForPartitionKey(userId);
   }
 }

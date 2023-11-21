@@ -1,7 +1,7 @@
 import { toast } from '@zerodevx/svelte-toast';
 
 export function ToastErrors(error: any): undefined {
-  console.error(error.response);
+  console.error(error);
   toast.push(
     { msg: error.message },
     {

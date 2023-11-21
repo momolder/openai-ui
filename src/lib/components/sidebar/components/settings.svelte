@@ -4,11 +4,7 @@
   import { lang, supportedLanguages, t } from '$lib/localization/translation';
   import { LanguageStore, StateStore } from '$lib/services/state-management';
   import themingService from '$lib/services/theming-service';
-  import light from '$lib/assets/light.svg';
-  import dark from '$lib/assets/dark.svg';
   import { toast } from '@zerodevx/svelte-toast';
-
-  let ico = themingService.isLight() ? light : dark;
 
   function changeSidebarSide() {
     $StateStore.sidebarRight = !$StateStore.sidebarRight;
@@ -27,7 +23,6 @@
 
   function toggleTheme() {
     themingService.toggleTheme();
-    ico = themingService.isLight() ? light : dark;
   }
 </script>
 
@@ -50,5 +45,9 @@
       on:click={() => ($StateStore.autosave = !$StateStore.autosave)}
       value={$StateStore.autosave} />
   {/if}
-  <Switch testid="settingsTheme" label={t(lang.Page.Settings.ThemeDark)} on:click={toggleTheme} value={!themingService.isLight()} />
+  <Switch
+    testid="settingsTheme"
+    label={t(lang.Page.Settings.ThemeDark)}
+    on:click={toggleTheme}
+    value={!themingService.isLight()} />
 </div>

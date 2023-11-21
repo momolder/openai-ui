@@ -11,16 +11,19 @@
     <Header />
   </div>
   <div class="cmp p-1 {sidebarOpen ? 'w-screen col-span-2 md:w-80 md:col-span-1' : 'w-max'}">
-    <Sidebar on:toggle={(e) => {console.log(e); sidebarOpen = e.detail.isOpen;}} />
+    <Sidebar
+      on:toggle={(e) => {
+        console.log(e);
+        sidebarOpen = e.detail.isOpen;
+      }} />
   </div>
   <div class="cmp overflow-hidden {sidebarOpen ? 'collapse md:visible' : ''}">
-    <Chat  />
+    <Chat />
   </div>
-
 </div>
 
 <style>
-  .page-grid{
+  .page-grid {
     display: grid;
     height: 100%;
     width: 100%;

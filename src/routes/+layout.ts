@@ -9,16 +9,16 @@ export const ssr = false;
 
 export async function load() {
   if (browser) {
-    let language = localStorage.getItem('language') ?? get(LanguageStore);
+    const language = localStorage.getItem('language') ?? get(LanguageStore);
     LanguageStore.set(language);
     LanguageStore.subscribe((l) => {
       document.documentElement.setAttribute('lang', l);
       localStorage.setItem('language', l);
     });
     themingService.loadTheme();
-    await stateService.loadState();
+    stateService.loadState();
     await stateService.loadUser();
     conversationService.clear();
-    if (get(StateStore).useHistory === true) await conversationService.loadHistory();
+    if (get(StateStore).useHistory) await conversationService.loadHistory();
   }
 }

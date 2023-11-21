@@ -1,7 +1,7 @@
 # OpenAI-UI
 
 The OpenAI-UI is designed to be as easy to use and understand as possible. It consists of a Backend and Frontend.
-Both can be ran independently. 
+Both can be ran independently.
 
 ## Setup
 
@@ -21,9 +21,11 @@ npm run build
 ```
 
 To test the build locally, run:
+
 ```bash
 dotnet run ./Release/backend/backend.dll
 ```
+
 and open the browser on http://localhost:5000
 
 ### Docker (TODO)
@@ -31,19 +33,21 @@ and open the browser on http://localhost:5000
 Frontend and Backend are build independently in docker to keep them seperated here too.
 
 ```bash
-docker build --pull --rm -f "Dockerfile" -t openaiui:latest "." 
+docker build --pull --rm -f "Dockerfile" -t openaiui:latest "."
 docker run --rm -d -p 80:80/tcp openaiui:latest
 ```
 
 ### Azure
 
 Install azure cli and login e.g.:
+
 ```bash
 az login
 az account set --subscription xxxxxxx-xxxxx-xxxx-xxxxx-xxxxxxxy
 ```
 
 Prepare the azure resources:
+
 ```bash
 az group create --name rg-openai-ui --location eastus
 az appservice plan create --resource-group rg-openai-ui --location eastus --name asp-openai-ui --is-linux --sku FREE
@@ -52,6 +56,7 @@ az webapp config appsettings set --resource-group rg-openai-ui --name openai-ui 
 ```
 
 Change the publishing model:
+
 ```bash
 az webapp config show --resource-group rg-openai-ui --name openai-ui
 az webapp config set --name openai-ui --resource-group rg-openai-ui --linux-fx-version "DOTNETCORE|7.0"
@@ -60,23 +65,27 @@ az webapp config container set --docker-custom-image-name mcr.microsoft.com/apps
 ```
 
 Zip the release folder contents:
+
 ```bash
 Compress-Archive -Path .\Release\Backend\* -DestinationPath release.zip -force
 ```
 
 Deploy the app to azure:
+
 ```bash
 npm run deploy
 ```
 
 Clean up:
+
 ```bash
 az group delete --no-wait --name rg-openai-ui
 ```
 
 ## TODOs
 
-- reduce history calls on streaming
+- ENV config for autosave
+- ENV config for language
 - modify request
 - regenerate last response
 - user Entra ID icon & bot icon (bot.svg == logo.svg)

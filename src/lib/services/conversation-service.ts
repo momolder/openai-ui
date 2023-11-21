@@ -27,14 +27,17 @@ class ConversationService {
         if (!reader) {
           throw new Error('Failed to read response');
         }
-        while (true) {
+        let quitReading = false;
+        while (!quitReading) {
           const { done, value } = await reader.read();
-          if (done) break;
-          if (!value) continue;
+          quitReading = done;
+          if (quitReading || !value) continue;
           ConversationStore.update((u) => {
-            const message = u.messages.pop()!;
-            message.content += value;
-            u.messages.push(message);
+            const message = u.messages.pop();
+            if (message) {
+              message.content += value;
+              u.messages.push(message);
+            }
             return u;
           });
         }
@@ -61,7 +64,7 @@ class ConversationService {
       messages: [],
       title: '',
       isFollowed: false,
-      userId: get(UserStore)?.id ?? '1'
+      userId: get(UserStore).id
     });
   }
 
@@ -85,11 +88,13 @@ class ConversationService {
     const currentConversation = get(ConversationStore);
     currentConversation.isFollowed = true;
     currentConversation.title = currentConversation.messages.at(0)?.content ?? 'undefined';
-    const addedConversation = await (
-      await fetch(`/history`, { method: 'POST', body: JSON.stringify(currentConversation) })
-    )
-      .json()
-      .catch(ToastErrors);
+    const addedConversation = await fetch(`/history`, {
+      method: 'POST',
+      body: JSON.stringify(currentConversation)
+    })
+      .then(async (x) => (await x.json()) as Conversation)
+      .catch(ToastErrors)
+
     if (addedConversation) {
       HistoryStore.update((u) => {
         u = [addedConversation, ...u];

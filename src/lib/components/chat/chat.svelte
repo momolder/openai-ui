@@ -9,9 +9,9 @@
   {#if !$ConversationStore || $ConversationStore.messages.length === 0}
     <Welcome />
   {:else}
-  <div class="cmp-raised overflow-hidden flex flex-col">
-    <Output bottomGapClass="h-24" />
-  </div>
+    <div class="cmp-raised overflow-hidden flex flex-col">
+      <Output bottomGapClass="h-24" />
+    </div>
   {/if}
   <div class="w-2/4 absolute self-end mb-4">
     <Input />

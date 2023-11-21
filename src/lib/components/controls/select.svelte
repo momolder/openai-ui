@@ -6,7 +6,7 @@
   export let items: { label: string; value: string }[];
   export let selectedItem: string;
   export let label: string;
-  export let testid: string = "";
+  export let testid = '';
 
   function select(event: Event) {
     const value = (event.target as HTMLSelectElement).selectedOptions[0].value;

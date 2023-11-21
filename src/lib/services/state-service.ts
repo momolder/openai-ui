@@ -5,7 +5,7 @@ import { ToastErrors, isNullOrWhitespace } from './error-handler';
 import { StateStore, UserStore } from './state-management';
 
 class StateService {
-  public async loadState(): Promise<void> {
+  public loadState(): void {
     if (browser) {
       const state = localStorage.state as string;
       StateStore.set(JSON.parse(isNullOrWhitespace(state) ? '{}' : state) as State);
@@ -21,13 +21,13 @@ class StateService {
   }
 
   public async loadUser(): Promise<void> {
-      const r = await fetch(`/user`, { method: 'GET' });
-      await r
-        .json()
-        .then((user) => {
-          UserStore.set(user as UserInformation);
-        })
-        .catch(ToastErrors);
+    const r = await fetch(`/user`, { method: 'GET' });
+    await r
+      .json()
+      .then((user) => {
+        UserStore.set(user as UserInformation);
+      })
+      .catch(ToastErrors);
   }
 }
 

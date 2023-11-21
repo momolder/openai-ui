@@ -10,5 +10,5 @@
 </script>
 
 <div>
-  <Sidebar on:toggle={e => console.log(e)} />
+  <Sidebar on:toggle={(e) => console.log(e)} />
 </div>

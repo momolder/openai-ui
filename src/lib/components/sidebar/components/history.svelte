@@ -6,7 +6,10 @@
   import type { Conversation } from '$lib/models/Contracts';
 
   let history: Conversation[] = [];
-  HistoryStore.subscribe((h) => {history = h;console.log(h);});
+  HistoryStore.subscribe((h) => {
+    history = h;
+    console.log(h);
+  });
 
   async function deleteEntry(entry: Conversation): Promise<void> {
     await conversationService.unfollow(entry);
