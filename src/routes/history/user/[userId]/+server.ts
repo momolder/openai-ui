@@ -6,5 +6,5 @@ export async function GET({ params }): Promise<Response> {
 };
 
 export async function DELETE({ params }): Promise<Response> {
-  return json(await databaseService.deleteUserHistory(params.userId));
+  return json(databaseService.deleteUserHistory(params.userId));
 };
