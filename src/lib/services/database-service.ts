@@ -2,7 +2,7 @@ import { env } from '$env/dynamic/private';
 import type { Conversation } from '$lib/models/Contracts';
 import { Container, CosmosClient } from '@azure/cosmos';
 
-class DatabaseService {
+export default class DatabaseService {
   private db = {} as Container;
   private key = env.Database_AccountKey;
   private endpoint = env.Database_AccountEndpoint;
@@ -59,5 +59,5 @@ class DatabaseService {
   }
 }
 
-const databaseService: DatabaseService = await new DatabaseService().init();
-export default databaseService;
+// const databaseService: DatabaseService = new DatabaseService();
+// export default databaseService;
