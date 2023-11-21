@@ -6,7 +6,7 @@
   let sidebarOpen = false;
 </script>
 
-<div class="page-grid">
+<div class="page-grid p-4">
   <div class="col-span-2">
     <Header />
   </div>

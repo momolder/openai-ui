@@ -21,7 +21,7 @@
   });
 </script>
 
-<div class="cmp-raised overflow-y-auto" bind:this={chatOutputDiv}>
+<div class="cmp overflow-y-auto" bind:this={chatOutputDiv}>
   {#each messages as message, index}
     <div data-testid="message-{index}" class="m-5"><Message {message} /></div>
   {/each}
