@@ -60,7 +60,7 @@
 
 <div class="cmp flex items-stretch justify-stretch">
   <form on:submit={sendPrompt} on:reset={cancel} class="cmp">
-    <div class="cmp overflow-x-auto p-4 flex justify-end bg-light-input dark:bg-dark-input rounded">
+    <div class="cmp-raised overflow-x-auto p-4 flex justify-end bg-light-input dark:bg-dark-input rounded">
       <!-- svelte-ignore a11y-autofocus -->
       <textarea
         data-testid="inputMessageInput"
