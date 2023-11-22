@@ -9,7 +9,7 @@
   import { ConversationStore, StateStore } from '$lib/services/state-management';
   import Tooltip from '$lib/components/controls/tooltip.svelte';
   import { onDestroy } from 'svelte';
-  import { isNullOrWhitespace } from '$lib/services/error-handler';
+  import { isNullOrWhitespace } from '$lib/helper';
 
   let userPrompt: '';
   let processing = false;

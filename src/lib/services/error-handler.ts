@@ -10,7 +10,3 @@ export function ToastErrors(error: any): undefined {
     }
   );
 }
-
-export function isNullOrWhitespace(input: string | null | undefined): boolean {
-  return input == null ? true : input.trim() === '';
-}

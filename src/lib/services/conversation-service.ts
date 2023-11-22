@@ -3,6 +3,7 @@ import { ConversationStore, HistoryStore, StateStore, UserStore } from './state-
 import { v4 as uuid } from 'uuid';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type Conversation } from '$lib/models/Contracts';
+import { chunkString } from '$lib/helper';
 
 class ConversationService {
   public async getResponse(userPrompt: string) {
@@ -28,18 +29,17 @@ class ConversationService {
           throw new Error('Failed to read response');
         }
         let quitReading = false;
+        const conv = get(ConversationStore);
         while (!quitReading) {
           const { done, value } = await reader.read();
           quitReading = done;
           if (quitReading || !value) continue;
-          ConversationStore.update((u) => {
-            const message = u.messages.pop();
-            if (message) {
-              message.content += value;
-              u.messages.push(message);
-            }
-            return u;
-          });
+
+          for (const char of chunkString(value, 4)) {
+            await new Promise(f => setTimeout(f, 10));
+            conv.messages[conv.messages.length-1].content += char;
+            ConversationStore.set(conv);
+          }
         }
         reader.releaseLock();
       })
@@ -93,7 +93,7 @@ class ConversationService {
       body: JSON.stringify(currentConversation)
     })
       .then(async (x) => (await x.json()) as Conversation)
-      .catch(ToastErrors)
+      .catch(ToastErrors);
 
     if (addedConversation) {
       HistoryStore.update((u) => {

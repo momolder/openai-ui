@@ -1,7 +1,8 @@
 import { browser } from '$app/environment';
 import { env } from '$env/dynamic/public';
+import { isNullOrWhitespace } from '$lib/helper';
 import type { State, UserInformation } from '$lib/models/Contracts';
-import { ToastErrors, isNullOrWhitespace } from './error-handler';
+import { ToastErrors } from './error-handler';
 import { StateStore, UserStore } from './state-management';
 
 class StateService {
