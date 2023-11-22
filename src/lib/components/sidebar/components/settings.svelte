@@ -26,7 +26,7 @@
   }
 </script>
 
-<div class="h-full p-3">
+<div class="h-full justify-start">
   <Switch
     testid="settingsSidebarRight"
     label={t(lang.Page.Settings.SidebarRight)}

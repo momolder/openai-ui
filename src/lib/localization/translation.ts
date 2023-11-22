@@ -62,6 +62,10 @@ export const lang = {
       Empty: {
         en: 'No history available',
         de: 'Kein Verlauf vorhanden'
+      },
+      ClearAll: {
+        en: 'Delete history',
+        de: 'Verlauf löschen'
       }
     },
     Settings: {

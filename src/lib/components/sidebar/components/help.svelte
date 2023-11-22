@@ -2,7 +2,7 @@
   import { StateStore } from '$lib/services/state-management';
 </script>
 
-<div class="h-full p-5">
+<div class="cmp">
   <h4 class="mb-3">Version: {$StateStore.version}</h4>
   {#if $StateStore.useHistory}
     <p>

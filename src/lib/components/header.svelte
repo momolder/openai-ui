@@ -16,7 +16,7 @@
   {/if}
   <div>
     <Tooltip text={$UserStore?.displayName} testid="headerUserButtonTooltip">
-      <button data-testid="headerUserButton" class="btn p-2 rounded-full" type="button">
+      <button data-testid="headerUserButton" class="btn" type="button">
         <img class="ico" src={user} alt="user" />
       </button>
     </Tooltip>

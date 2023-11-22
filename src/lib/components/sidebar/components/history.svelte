@@ -27,9 +27,12 @@
 {#if !history || history.length === 0}
   <div data-testid="historyEmpty" class="p-2">{t(lang.Page.History.Empty)}</div>
 {:else}
-  <button class="btn" on:click={clearHistory}>
-    <img class="ico w-7" src={unfollow} alt="clear history" />
+<div class="flex justify-start items-center">
+  {t(lang.Page.History.ClearAll)}
+  <button class="btn ml-4" on:click={clearHistory}>
+    <img class="ico w-5" src={unfollow} alt="clear history" />
   </button>
+</div>
 {/if}
 {#each history as historyEntry, index}
   <div class="flex justify-between">
@@ -42,7 +45,7 @@
       class="btn min-w-max"
       type="button"
       on:click={async () => deleteEntry(historyEntry)}>
-      <img class="ico w-7" src={unfollow} alt="remove conversation from chat" />
+      <img class="ico w-5 ml-2" src={unfollow} alt="remove conversation from chat" />
     </button>
   </div>
 {/each}
