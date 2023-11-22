@@ -9,6 +9,7 @@
   import { ConversationStore, StateStore } from '$lib/services/state-management';
   import Tooltip from '$lib/components/controls/tooltip.svelte';
   import { onDestroy } from 'svelte';
+  import { isNullOrWhitespace } from '$lib/services/error-handler';
 
   let userPrompt: '';
   let processing = false;
@@ -45,6 +46,16 @@
   function clearChat() {
     conversationService.clear();
   }
+
+  async function handleInput(event: KeyboardEvent) {
+    if (event.code === 'Enter' && !event.shiftKey){
+      event.preventDefault();
+      if(isNullOrWhitespace(userPrompt)) {
+        return;
+      }
+      await sendPrompt();
+    }
+  }
 </script>
 
 <div class="cmp flex items-stretch justify-stretch">
@@ -56,6 +67,7 @@
         class="outline-none w-full h-full resize-none bg-light-input dark:bg-dark-input"
         placeholder={t(lang.Page.Chat.Input.Placeholder)}
         bind:value={userPrompt}
+        on:keydown={e => handleInput(e)}
         required
         autofocus />
       {#if processing}
