@@ -13,6 +13,7 @@ class StateService {
       StateStore.update((u) => {
         u.useHistory = env.PUBLIC_App_UseHistory === 'true';
         u.useMock = env.PUBLIC_App_UseMock === 'true';
+        if(!state) { u.autosave = u.useHistory && env.PUBLIC_App_Autosave === 'true'}
         u.autosave = u.useHistory && u.autosave;
         u.version = env.PUBLIC_App_Version;
         return u;
