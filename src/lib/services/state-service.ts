@@ -13,7 +13,9 @@ class StateService {
       StateStore.update((u) => {
         u.useHistory = env.PUBLIC_App_UseHistory === 'true';
         u.useMock = env.PUBLIC_App_UseMock === 'true';
-        if(!state) { u.autosave = u.useHistory && env.PUBLIC_App_Autosave === 'true'}
+        if (!state) {
+          u.autosave = u.useHistory && env.PUBLIC_App_Autosave === 'true';
+        }
         u.autosave = u.useHistory && u.autosave;
         u.version = env.PUBLIC_App_Version;
         return u;
@@ -33,7 +35,9 @@ class StateService {
   }
 
   public async getUserinfo(): Promise<ClientPrincipal | undefined> {
-    return await fetch(`/user/validate`, { method: 'GET' }).then(async r => await r.json() as ClientPrincipal).catch(ToastErrors);
+    return await fetch(`/user/validate`, { method: 'GET' })
+      .then(async (r) => (await r.json()) as ClientPrincipal)
+      .catch(ToastErrors);
   }
 
   public async validateUser(): Promise<boolean> {

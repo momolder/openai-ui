@@ -18,7 +18,7 @@
   <p class="{isOpen ? 'visible' : 'hidden'} text-center justify-self-center">{label}</p>
 </button>
 {#if isOpen}
-  <div class="overflow-hidden overflow-y-auto p-5">
+  <div class="cmp overflow-hidden overflow-y-auto p-5">
     <slot />
   </div>
 {/if}

@@ -48,9 +48,9 @@
   }
 
   async function handleInput(event: KeyboardEvent) {
-    if (event.code === 'Enter' && !event.shiftKey){
+    if (event.code === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      if(isNullOrWhitespace(userPrompt)) {
+      if (isNullOrWhitespace(userPrompt)) {
         return;
       }
       await sendPrompt();
@@ -67,7 +67,7 @@
         class="outline-none w-full h-full resize-none bg-light-input dark:bg-dark-input"
         placeholder={t(lang.Page.Chat.Input.Placeholder)}
         bind:value={userPrompt}
-        on:keydown={e => handleInput(e)}
+        on:keydown={(e) => handleInput(e)}
         required
         autofocus />
       {#if processing}

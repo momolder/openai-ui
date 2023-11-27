@@ -12,6 +12,6 @@
       ? 'bg-light-chat-user dark:bg-dark-chat-user'
       : 'bg-light-chat-assistant dark:bg-dark-chat-assistant'}
         shadow shadow-dark-flat dark:shadow-light-flat max-w-[80%] p-3 break-words">
-    <SvelteMarkdown source={message.content} renderers={{code: CodeBlock}} />
+    <SvelteMarkdown source={message.content} renderers={{ code: CodeBlock }} />
   </div>
 </div>

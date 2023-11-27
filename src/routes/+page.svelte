@@ -10,7 +10,7 @@
   <div class="col-span-2">
     <Header />
   </div>
-  <div class="cmp p-1 {sidebarOpen ? 'w-screen col-span-2 md:w-80 md:col-span-1' : 'w-max'}">
+  <div class="cmp p-1 overflow-hidden {sidebarOpen ? 'w-screen col-span-2 md:w-80 md:col-span-1' : 'w-max'}">
     <Sidebar
       on:toggle={(e) => {
         sidebarOpen = e.detail.isOpen;

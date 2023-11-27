@@ -6,10 +6,6 @@
   import themingService from '$lib/services/theming-service';
   import { toast } from '@zerodevx/svelte-toast';
 
-  function changeSidebarSide() {
-    $StateStore.sidebarRight = !$StateStore.sidebarRight;
-  }
-
   function changeLanguage(event: CustomEvent) {
     $LanguageStore = event.detail.value;
     toast.push(
@@ -27,11 +23,6 @@
 </script>
 
 <div class="h-full justify-start">
-  <Switch
-    testid="settingsSidebarRight"
-    label={t(lang.Page.Settings.SidebarRight)}
-    on:click={changeSidebarSide}
-    value={$StateStore.sidebarRight} />
   <Select
     testid="settingsLanguage"
     items={supportedLanguages}

@@ -25,7 +25,6 @@ export enum ChatRole {
   Tool = 'tool'
 }
 export interface State {
-  sidebarRight: boolean;
   useHistory: boolean;
   useMock: boolean;
   autosave: boolean;
@@ -34,7 +33,7 @@ export interface State {
 
 export interface ClientPrincipal {
   auth_typ: string;
-  claims: {typ: string, val: string}[];
+  claims: { typ: string; val: string }[];
   name_typ: string;
   role_typ: string;
 }

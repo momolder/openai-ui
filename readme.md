@@ -83,19 +83,15 @@ az group delete --no-wait --name rg-openai-ui
 ```
 
 ## TODOs
-- role validation
-- markdown improvement for code segments
+
 - ENV config for language
-- modify request
+- modify last request
+- cancel request / resonse
 - regenerate last response
 - user Entra ID icon & bot icon (bot.svg == logo.svg)
 - document upload
 - Update readme
 - e2e tests against azure
-- improve "delete all history" button layout & design
-- improve icons
-- improve markdown on requests and answers
-- improve streaming behaviour
 - hyperlinks to documents
 - speech recoginition
 - TTS

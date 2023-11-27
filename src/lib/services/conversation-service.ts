@@ -36,8 +36,8 @@ class ConversationService {
           if (quitReading || !value) continue;
 
           for (const char of chunkString(value, 4)) {
-            await new Promise(f => setTimeout(f, 10));
-            conv.messages[conv.messages.length-1].content += char;
+            await new Promise((f) => setTimeout(f, 10));
+            conv.messages[conv.messages.length - 1].content += char;
             ConversationStore.set(conv);
           }
         }

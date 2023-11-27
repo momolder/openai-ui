@@ -69,10 +69,6 @@ export const lang = {
       }
     },
     Settings: {
-      SidebarRight: {
-        en: 'Sidebar position right',
-        de: 'Seitenleiste rechts'
-      },
       Language: {
         en: 'Select language',
         de: 'Sprache ändern'

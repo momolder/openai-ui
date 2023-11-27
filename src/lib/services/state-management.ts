@@ -5,7 +5,6 @@ export const ConversationStore = writable<Conversation>();
 export const StateStore = writable<State>({
   useMock: true,
   useHistory: false,
-  sidebarRight: false,
   autosave: false,
   version: '1'
 });

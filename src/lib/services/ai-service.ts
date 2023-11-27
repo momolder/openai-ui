@@ -3,8 +3,7 @@ import type { Conversation } from '$lib/models/Contracts';
 import { AzureKeyCredential, OpenAIClient, type ChatCompletions } from '@azure/openai';
 
 export function GetResponse(conversation: Conversation): AsyncIterable<ChatCompletions> {
-  const client = new OpenAIClient(env.OpenAi_Endpoint, new AzureKeyCredential(env.OpenAi_Key), {}
-  );
+  const client = new OpenAIClient(env.OpenAi_Endpoint, new AzureKeyCredential(env.OpenAi_Key), {});
   const mappedMessages = conversation.messages.map((m) => {
     return {
       content: m.content,

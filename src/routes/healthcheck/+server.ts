@@ -1,5 +1,5 @@
-import { json } from "@sveltejs/kit";
+import { json } from '@sveltejs/kit';
 
-export async function GET(): Promise<Response> {
-  return json(undefined, {status: 200 });
+export function GET(): Response {
+  return json(undefined, { status: 200 });
 }
