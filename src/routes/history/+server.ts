@@ -18,5 +18,5 @@ export async function DELETE({ request }: RequestEvent): Promise<Response> {
   const databaseService = await new DatabaseService().init();
   const conversation = (await request.json()) as Conversation;
   await databaseService.deleteHistory(conversation);
-  return new Response(null, { status: 204 });
+  return new Response(undefined, { status: 204 });
 }

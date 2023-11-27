@@ -31,3 +31,10 @@ export interface State {
   autosave: boolean;
   version: string;
 }
+
+export interface ClientPrincipal {
+  auth_typ: string;
+  claims: {typ: string, val: string}[];
+  name_typ: string;
+  role_typ: string;
+}

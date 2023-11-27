@@ -83,8 +83,8 @@ az group delete --no-wait --name rg-openai-ui
 ```
 
 ## TODOs
-
-- ENV config for autosave
+- role validation
+- markdown improvement for code segments
 - ENV config for language
 - modify request
 - regenerate last response

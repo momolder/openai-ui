@@ -8,7 +8,6 @@
   let history: Conversation[] = [];
   HistoryStore.subscribe((h) => {
     history = h;
-    console.log(h);
   });
 
   async function deleteEntry(entry: Conversation): Promise<void> {

@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { env } from '$env/dynamic/public';
 import { isNullOrWhitespace } from '$lib/helper';
-import type { State, UserInformation } from '$lib/models/Contracts';
+import type { ClientPrincipal, State, UserInformation } from '$lib/models/Contracts';
 import { ToastErrors } from './error-handler';
 import { StateStore, UserStore } from './state-management';
 
@@ -30,6 +30,20 @@ class StateService {
         UserStore.set(user as UserInformation);
       })
       .catch(ToastErrors);
+  }
+
+  public async getUserinfo(): Promise<ClientPrincipal | undefined> {
+    return await fetch(`/user/validate`, { method: 'GET' }).then(async r => await r.json() as ClientPrincipal).catch(ToastErrors);
+  }
+
+  public async validateUser(): Promise<boolean> {
+    let isValid = false;
+    await fetch(`/user/validate`, { method: 'GET' })
+      .then((ok) => {
+        isValid = ok.status === 200;
+      })
+      .catch(ToastErrors);
+    return isValid;
   }
 }
 

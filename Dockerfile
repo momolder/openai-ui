@@ -9,7 +9,7 @@ FROM node:20 AS testbase
 ENV CI=true
 WORKDIR /app
 COPY . .
-RUN npm ci
+RUN npm install
 RUN npx playwright install
 RUN npx playwright install-deps
 

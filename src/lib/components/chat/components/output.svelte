@@ -26,7 +26,7 @@
     <div data-testid="message-{index}" class="m-5"><Message {message} /></div>
   {/each}
   {#if last?.role === ChatRole.User}
-    <div class="m-5"><Message isLoading /></div>
+    <div class="m-5"><Message /></div>
   {/if}
   <div class="cmp sticky {bottomGapClass} w-full" />
 </div>
