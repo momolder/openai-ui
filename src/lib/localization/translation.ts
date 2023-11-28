@@ -23,6 +23,10 @@ export const lang = {
       }
     },
     Sidebar: {
+      Clear: {
+        en: 'New Chat',
+        de: 'Neuer Chat'
+      },
       History: {
         en: 'History',
         de: 'Verlauf'
@@ -34,6 +38,10 @@ export const lang = {
       Help: {
         en: 'Help',
         de: 'Hilfe'
+      },
+      User: {
+        en: 'User',
+        de: 'Benutzer'
       }
     },
     Welcome: {

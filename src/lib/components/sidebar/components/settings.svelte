@@ -22,7 +22,7 @@
   }
 </script>
 
-<div class="h-full justify-start">
+<div class="cmp">
   <Select
     testid="settingsLanguage"
     items={supportedLanguages}

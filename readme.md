@@ -84,14 +84,13 @@ az group delete --no-wait --name rg-openai-ui
 
 ## TODOs
 
-- ENV config for language
-- modify last request
-- cancel request / resonse
-- regenerate last response
-- user Entra ID icon & bot icon (bot.svg == logo.svg)
-- document upload
 - Update readme
 - e2e tests against azure
+- cancel request / resonse
+- regenerate last response
+- modify last request
+- ENV config for language
+- user Entra ID icon & bot icon (bot.svg == logo.svg)
+- document upload
 - hyperlinks to documents
-- speech recoginition
 - TTS
