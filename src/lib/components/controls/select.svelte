@@ -14,8 +14,8 @@
   }
 </script>
 
-<div class="flex justify-between p-2">
-  <span class="ml-3">{label}</span>
+<div class="flex justify-between py-2">
+  <span>{label}</span>
   <select data-testid={testid} class="rounded bg-light-cmp dark:bg-dark-cmp outline-none" on:change={select}>
     {#each items as item}
       <option

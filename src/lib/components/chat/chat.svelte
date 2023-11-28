@@ -5,7 +5,7 @@
   import Output from './components/output.svelte';
 </script>
 
-<div class="cmp gap-2 overflow-hidden flex justify-center rounded p-1">
+<div class="cmp gap-2 overflow-hidden flex justify-center">
   {#if !$ConversationStore || $ConversationStore.messages.length === 0}
     <Welcome />
   {:else}

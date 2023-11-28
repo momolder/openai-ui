@@ -24,7 +24,7 @@
 </script>
 
 {#if !history || history.length === 0}
-  <div data-testid="historyEmpty" class="p-2">{t(lang.Page.History.Empty)}</div>
+  <div data-testid="historyEmpty">{t(lang.Page.History.Empty)}</div>
 {:else}
   <div class="flex justify-start items-center">
     {t(lang.Page.History.ClearAll)}
