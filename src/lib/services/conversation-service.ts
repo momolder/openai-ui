@@ -58,13 +58,14 @@ class ConversationService {
     ConversationStore.set(entry);
   }
 
-  public clear() {
+  public new() {
     ConversationStore.set({
       id: uuid().toString(),
       messages: [],
       title: '',
       isFollowed: false,
-      userId: get(UserStore).id
+      userId: get(UserStore).id,
+      date: new Date()
     });
   }
 
