@@ -44,7 +44,7 @@
   }
 
   function clearChat() {
-    conversationService.clear();
+    conversationService.new();
   }
 
   async function handleInput(event: KeyboardEvent) {

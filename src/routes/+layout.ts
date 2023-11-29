@@ -18,7 +18,7 @@ export async function load() {
     themingService.loadTheme();
     stateService.loadState();
     await stateService.loadUser();
-    conversationService.clear();
+    conversationService.new();
     if (get(StateStore).useHistory) await conversationService.loadHistory();
   }
 }
