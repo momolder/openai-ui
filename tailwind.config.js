@@ -3,8 +3,15 @@ export default {
   darkMode: 'class',
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     colors: {
-      'dark-base': 'rgb(17 24 39)', // gray-900
+      'dark-base': 'rgb(36 41 46)', // github-dark
       'dark-flat': 'rgb(107 114 128)', // gray-500
       'dark-cmp': 'rgb(51 65 85)', // slate-700
       'dark-input': 'rgb(0 0 0)', // black
@@ -12,7 +19,7 @@ export default {
       'dark-text': 'rgb(255 255 255)', // white
       'dark-chat-user': 'rgb(20 83 45)', // green-900
       'dark-chat-assistant': 'rgb(51 65 85)', // slate-700
-      'light-base': 'rgb(229 231 235)', // gray-200
+      'light-base': 'rgb(255 255 255)', // github-light
       'light-flat': 'rgb(107 114 128)', // gray-500
       'light-cmp': 'rgb(203 213 225)', // slate-300
       'light-input': 'rgb(255 255 255)', // white
@@ -21,6 +28,9 @@ export default {
       'light-chat-user': 'rgb(34 197 94)', // green-500
       'light-chat-assistant': 'rgb(203 213 225)', // slate-300
       warn: 'rgb(250 204 21)' // text-yellow-400
+      // 'rgb(36 41 46)', // github-dark
+      // 'rgb(255 255 255)', // github-light
+      // 'rgb(17 24 39)', // gray-900
     },
     extend: {
       animation: {

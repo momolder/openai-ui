@@ -6,26 +6,17 @@
   let sidebarOpen = false;
 </script>
 
-<div class="page-grid">
-  <div class="cmp overflow-hidden {sidebarOpen ? 'w-screen col-span-2 md:w-80 md:col-span-1' : 'w-max'}">
+<div class="cmp flex flex-row overflow-hidden">
+  <div class="h-full overflow-hidden {sidebarOpen ? 'w-screen min-w-full md:w-96 md:min-w-0' : 'w-max'}">
     <Sidebar
       on:toggle={(e) => {
         sidebarOpen = e.detail.isOpen;
       }} />
   </div>
-  <div class="cmp-raised flex flex-col">
+  <div class="cmp-raised overflow-hidden flex flex-col">
     <Header />
-    <div class="cmp overflow-hidden {sidebarOpen ? 'collapse md:visible' : ''}">
+    <div class="cmp overflow-hidden">
       <Chat />
     </div>
   </div>
 </div>
-
-<style>
-  .page-grid {
-    display: grid;
-    height: 100%;
-    width: 100%;
-    grid-template-columns: auto 1fr;
-  }
-</style>

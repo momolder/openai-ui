@@ -1,19 +1,19 @@
 <script lang="ts">
   import { ConversationStore } from '$lib/services/state-management';
-  import Welcome from '../welcome.svelte';
+  import Welcome from './components/welcome.svelte';
   import Input from './components/input.svelte';
   import Output from './components/output.svelte';
 </script>
 
-<div class="cmp gap-2 overflow-hidden flex justify-center">
+<div class="cmp overflow-hidden flex flex-col justify-center">
   {#if !$ConversationStore || $ConversationStore.messages.length === 0}
     <Welcome />
   {:else}
-    <div class="cmp-raised overflow-hidden flex flex-col">
-      <Output bottomGapClass="h-24" />
+    <div class="cmp overflow-hidden flex flex-col">
+      <Output />
     </div>
   {/if}
-  <div class="w-2/4 absolute self-end mb-4">
+  <div class="self-center w-full md:w-3/4 mb-2">
     <Input />
   </div>
 </div>

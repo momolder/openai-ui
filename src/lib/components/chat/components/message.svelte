@@ -6,12 +6,12 @@
   export let message: ChatMessage = {} as ChatMessage;
 </script>
 
-<div class="flex {message.role === ChatRole.Assistant ? '' : 'flex-row-reverse'}">
+<div class="flex">
   <div
-    class="rounded {message.role === ChatRole.User
-      ? 'bg-light-chat-user dark:bg-dark-chat-user'
-      : 'bg-light-chat-assistant dark:bg-dark-chat-assistant'}
-        shadow shadow-dark-flat dark:shadow-light-flat max-w-[80%] p-3 break-words">
+    class="cmp overflow-hidden p-3 whitespace-pre-wrap break-words">
+        <span class="font-bold text-lg">{message.role === ChatRole.User ? 'You' : 'Bot'}</span>
+        <div class="cmp overflow-hidden">
     <SvelteMarkdown source={message.content} renderers={{ code: CodeBlock }} />
+  </div>
   </div>
 </div>

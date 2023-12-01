@@ -4,7 +4,6 @@
   import { afterUpdate, onDestroy } from 'svelte';
   import Message from './message.svelte';
 
-  export let bottomGapClass = 'h-20';
   let messages: ChatMessage[];
   let last: ChatMessage | undefined;
   let chatOutputDiv: HTMLDivElement;
@@ -21,15 +20,8 @@
   });
 </script>
 
-<div class="cmp overflow-y-auto" bind:this={chatOutputDiv}>
+<div class="cmp overflow-y-auto flex flex-col md:px-[15%]" bind:this={chatOutputDiv}>
   {#each messages as message, index}
-    <div data-testid="message-{index}" class="m-5"><Message {message} /></div>
+    <Message {message} />
   {/each}
-  {#if last?.role === ChatRole.User}
-    <div class="m-5"><Message /></div>
-  {/if}
-  <div class="cmp sticky {bottomGapClass} w-full" />
 </div>
-
-<style>
-</style>

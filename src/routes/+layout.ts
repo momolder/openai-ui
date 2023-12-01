@@ -6,9 +6,20 @@ import { get } from 'svelte/store';
 import { browser } from '$app/environment';
 
 export const ssr = false;
+function adjustHeight() {
+  const viewHeight = window.innerHeight + 'px';
+  const container = document.body;
+if(container)
+  container.style.height = viewHeight;
+}
 
 export async function load() {
   if (browser) {
+  adjustHeight(); // Initial call to set the height
+
+  window.addEventListener('resize', adjustHeight);
+  window.addEventListener('orientationchange', adjustHeight);
+  
     const language = localStorage.getItem('language') ?? get(LanguageStore);
     LanguageStore.set(language);
     LanguageStore.subscribe((l) => {
