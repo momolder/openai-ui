@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex justify-between py-2">
-  <span>{label}</span>
+  <span class="whitespace-nowrap">{label}</span>
   <label class="relative inline-flex items-center cursor-pointer">
     <input type="checkbox" on:click={click} checked={value} class="sr-only peer" />
     <div

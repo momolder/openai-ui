@@ -31,6 +31,9 @@
   }
 </script>
 
+<div class="bg-dark-cmp">
+  <pre>{lang}</pre>
 {#await highlight().then( (c) => c?.codeToHtml( text, { lang: isNullOrWhitespace(lang) ? 'bash' : lang, theme: themingService.isDark() ? darkTheme : lightTheme } ) ) then code}
-  <code>{@html code}</code>
+          <div class="overflow-x-auto overscroll-contain bg-light-base dark:bg-dark-base p-2"><code>{@html code}</code></div>
 {/await}
+</div>
