@@ -10,10 +10,12 @@
   import Tooltip from '$lib/components/controls/tooltip.svelte';
   import { onDestroy } from 'svelte';
   import { isNullOrWhitespace } from '$lib/helper';
+  import { text } from '@sveltejs/kit';
 
-  let userPrompt: '';
+  let userPrompt = '';
   let processing = false;
   let hasConversation = false;
+  let textAreaHtml: HTMLTextAreaElement;
 
   const unsubscriber = ConversationStore.subscribe((c) => {
     hasConversation = !c || c.messages.length > 0;
@@ -48,6 +50,7 @@
   }
 
   async function handleInput(event: KeyboardEvent) {
+    // ResizeTextArea(); // todo fix
     if (event.code === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       if (isNullOrWhitespace(userPrompt)) {
@@ -56,15 +59,33 @@
       await sendPrompt();
     }
   }
+
+  function ResizeTextArea() {
+    const currentHeight = Number.parseInt(textAreaHtml.style.height.replace("px", ''));
+    const scrollHeight = textAreaHtml?.scrollHeight;
+    const maxHeight = 200;
+    const minHeight = 52;
+    const isScrollable = scrollHeight > minHeight;
+
+    if(isScrollable && currentHeight < scrollHeight) {
+      console.log("isScrollable && currentHeight < scrollHeight");
+      textAreaHtml.style.height = `${scrollHeight}px`;
+    }
+    if(!isScrollable) {
+      console.log("!isScrollable");
+      textAreaHtml.style.height = `${minHeight}px`;
+    }
+  }
 </script>
 
-<div class="cmp flex items-stretch justify-stretch">
+<div class="cmp flex flex-col items-center justify-center gap-2">
   <form on:submit={sendPrompt} on:reset={cancel} class="cmp">
-    <div class="cmp overflow-x-auto p-4 flex justify-end bg-light-input dark:bg-dark-input rounded">
+    <div class="cmp p-4 flex justify-end bg-light-input dark:bg-dark-input rounded-xl">
       <!-- svelte-ignore a11y-autofocus -->
       <textarea
+        bind:this={textAreaHtml}
         data-testid="inputMessageInput"
-        class="outline-none w-full h-full resize-none bg-light-input dark:bg-dark-input"
+        class="max-h-[200px] outline-none overflow-x-auto w-full resize-none bg-light-input dark:bg-dark-input"
         placeholder={t(lang.Page.Chat.Input.Placeholder)}
         bind:value={userPrompt}
         on:keydown={(e) => handleInput(e)}
@@ -75,14 +96,14 @@
           <img class="ico" src={wait} alt="wait" />
         </button>
       {:else}
-        <button data-testid="inputSendButton" class="btn" type="submit" disabled={processing || !userPrompt}>
-          <img class="ico" src={send} alt="send" />
+        <button data-testid="inputSendButton" class="btn p-2 bg-dark-base dark:bg-light-base border border-light-cmp dark:border-dark-cmp rounded-lg" type="submit" disabled={processing || !userPrompt}>
+          <img class="ico h-4 w-5 invert dark:invert-0" src={send} alt="send" />
         </button>
       {/if}
     </div>
   </form>
 
-  <div class="flex flex-col pl-2">
+  <!-- <div class="flex flex-col pl-2">
     <Tooltip text={t(lang.Page.Tooltip.Chat.Actions.Clean)} position="top">
       <button
         data-testid="inputClearButton"
@@ -117,5 +138,6 @@
         </Tooltip>
       {/if}
     {/if}
-  </div>
+  </div> -->
+  <span class="text-xs md:text-sm">{t(lang.Page.Chat.Input.ChatInfo)}</span>
 </div>

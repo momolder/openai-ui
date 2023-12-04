@@ -13,7 +13,7 @@
       <Output />
     </div>
   {/if}
-  <div class="self-center w-full md:w-3/4 mb-2">
+  <div class="self-center w-full md:w-2/4 mb-2">
     <Input />
   </div>
 </div>

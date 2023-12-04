@@ -26,14 +26,14 @@
 
 <div data-testid="sidebar" class="cmp flex flex-col justify-between">
   <div class="cmp flex flex-col">
-    <SidebarSlot
+    <NewChat />
+    <!-- <SidebarSlot
         ico={clear}
         label={t(lang.Page.Sidebar.Clear)}
         name="clear"
         isOpen={tab === 'clear'}
         on:toggle={(e) => toggle(e.detail.name)}>
-        <NewChat />
-      </SidebarSlot>
+      </SidebarSlot> -->
     {#if $StateStore.useHistory}
       <SidebarSlot
         ico={history}

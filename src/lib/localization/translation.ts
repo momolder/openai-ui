@@ -63,7 +63,12 @@ export const lang = {
         Placeholder: {
           en: 'Send a message...',
           de: 'Schreib eine Nachricht...'
-        }
+        },
+        ChatInfo: {
+          en: 'The chatbot can make mistakes. Consider checking important information.',
+          de: 'Der Chatbot kann Fehler machen, bitte prüfen Sie wichtige Informationen.'
+        },
+        
       }
     },
     History: {

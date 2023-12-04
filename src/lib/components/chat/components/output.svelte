@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { ChatRole, type ChatMessage } from '$lib/models/Contracts';
   import { ConversationStore } from '$lib/services/state-management';
   import { afterUpdate, onDestroy } from 'svelte';
   import Message from './message.svelte';
+  import type { ChatMessage } from '$lib/models/Contracts';
 
   let messages: ChatMessage[];
   let last: ChatMessage | undefined;
@@ -20,7 +20,7 @@
   });
 </script>
 
-<div class="cmp overflow-y-auto flex flex-col md:px-[15%]" bind:this={chatOutputDiv}>
+<div class="cmp overflow-y-auto flex flex-col md:px-[25%]" bind:this={chatOutputDiv}>
   {#each messages as message, index}
     <Message {message} />
   {/each}
