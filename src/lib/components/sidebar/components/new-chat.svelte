@@ -8,8 +8,8 @@
   }
 </script>
 <div>
-    <label for="newChat">{t(lang.Page.Sidebar.Clear)}</label>
-<button name="newChat" data-testid="inputClearButton" class="btn" type="button" on:click={clearChat}>
-  <img class="ico" src={clear} alt="clear chat" />
+    <!-- <label for="newChat">{t(lang.Page.Sidebar.Clear)}</label> -->
+<button name="newChat" data-testid="inputClearButton" class="btn p-2" type="button" on:click={clearChat}>
+  <img class="ico h-5 w-5" src={clear} alt="clear chat" />
 </button>
 </div>

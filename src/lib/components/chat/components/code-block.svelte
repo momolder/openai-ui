@@ -31,9 +31,9 @@
   }
 </script>
 
-<div class="bg-dark-cmp">
-  <pre>{lang}</pre>
+<div class="bg-light-highlight dark:bg-dark-highlight rounded-lg flex flex-col my-4">
+  <div class="text-sm p-2">{lang}</div>
 {#await highlight().then( (c) => c?.codeToHtml( text, { lang: isNullOrWhitespace(lang) ? 'bash' : lang, theme: themingService.isDark() ? darkTheme : lightTheme } ) ) then code}
-          <div class="overflow-x-auto overscroll-contain bg-light-base dark:bg-dark-base p-2"><code>{@html code}</code></div>
+          <div class="rounded-b-lg overflow-x-auto bg-light-base dark:bg-dark-base p-2"><code>{@html code}</code></div>
 {/await}
 </div>
