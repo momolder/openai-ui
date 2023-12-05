@@ -80,7 +80,7 @@
 
 <div class="cmp flex flex-col items-center justify-center gap-2">
   <form on:submit={sendPrompt} on:reset={cancel} class="cmp">
-    <div class="cmp p-4 flex justify-end bg-light-input dark:bg-dark-input rounded-xl">
+    <div class="cmp p-4 flex justify-end bg-light-input dark:bg-dark-input rounded-xl border border-light-highlight dark:border-dark-highlight">
       <!-- svelte-ignore a11y-autofocus -->
       <textarea
         bind:this={textAreaHtml}

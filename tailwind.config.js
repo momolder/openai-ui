@@ -11,22 +11,18 @@ export default {
       '2xl': '1536px',
     },
     colors: {
-      'dark-base': 'rgb(36 41 46)', // github-dark
+      'dark-base': 'rgb(51 65 85)', // slate-700
       'dark-flat': 'rgb(107 114 128)', // gray-500
-      'dark-cmp': 'rgb(51 65 85)', // slate-700
+      'dark-cmp': 'rgb(36 41 46)', // github-dark
       'dark-input': 'rgb(0 0 0)', // black
       'dark-highlight': 'rgb(75 85 99)', // gray-600
       'dark-text': 'rgb(255 255 255)', // white
-      'dark-chat-user': 'rgb(20 83 45)', // green-900
-      'dark-chat-assistant': 'rgb(51 65 85)', // slate-700
-      'light-base': 'rgb(255 255 255)', // github-light
+      'light-base': 'rgb(203 213 225)', // slate-300
       'light-flat': 'rgb(107 114 128)', // gray-500
-      'light-cmp': 'rgb(203 213 225)', // slate-300
+      'light-cmp': 'rgb(255 255 255)', // github-light
       'light-input': 'rgb(255 255 255)', // white
       'light-highlight': 'rgb(156 163 175)', // gray-400
       'light-text': 'rgb(0 0 0)', // black
-      'light-chat-user': 'rgb(34 197 94)', // green-500
-      'light-chat-assistant': 'rgb(203 213 225)', // slate-300
       warn: 'rgb(250 204 21)' // text-yellow-400
       // 'rgb(36 41 46)', // github-dark
       // 'rgb(255 255 255)', // github-light

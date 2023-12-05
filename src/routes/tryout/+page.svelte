@@ -6,7 +6,6 @@
   import Header from '$lib/components/header.svelte';
   import History from '$lib/components/sidebar/components/history.svelte';
   import Sidebar from '$lib/components/sidebar/sidebar.svelte';
-  import Welcome from '$lib/components/welcome.svelte';
 </script>
 
 <div>
