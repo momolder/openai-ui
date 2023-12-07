@@ -35,15 +35,22 @@ class ConversationService {
           quitReading = done;
           if (quitReading || !value) continue;
 
-          for (const char of chunkString(value, 4)) {
+          for (const sequence of chunkString(value, 4)) {
             await new Promise((f) => setTimeout(f, 10));
-            conv.messages[conv.messages.length - 1].content += char;
+            conv.messages[conv.messages.length - 1].content += sequence;
             ConversationStore.set(conv);
           }
         }
+        // Workaround for streaming issues in markdown
+        const clone = JSON.parse(JSON.stringify(conv));
+        conv.messages[conv.messages.length - 1].content = '';
+        ConversationStore.set(conv);
+        await new Promise((f) => setTimeout(f, 10));
+        ConversationStore.set(clone);
         reader.releaseLock();
       })
       .catch(ToastErrors);
+
     if (!conversation.isFollowed && get(StateStore).autosave) {
       await this.follow();
     } else if (conversation.isFollowed) {

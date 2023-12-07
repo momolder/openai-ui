@@ -20,7 +20,7 @@
   });
 </script>
 
-<div class="cmp overflow-y-auto flex flex-col md:px-[25%]" bind:this={chatOutputDiv}>
+<div class="cmp overflow-y-auto flex flex-col md:px-[22%]" bind:this={chatOutputDiv}>
   {#each messages as message, index}
     <Message {message} />
   {/each}
