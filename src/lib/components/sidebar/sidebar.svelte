@@ -25,7 +25,7 @@
 </script>
 
 <div data-testid="sidebar" class="cmp flex flex-col justify-between">
-  <div class="cmp flex flex-col">
+  <div class="cmp flex flex-col overflow-hidden">
     <NewChat />
     <!-- <SidebarSlot
         ico={clear}
