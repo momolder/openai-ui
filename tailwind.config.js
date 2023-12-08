@@ -13,13 +13,15 @@ export default {
     colors: {
       'dark-base': 'rgb(51 65 85)', // slate-700
       'dark-flat': 'rgb(107 114 128)', // gray-500
-      'dark-cmp': 'rgb(36 41 46)', // github-dark
+      'dark-cmp': 'rgb(0 0 0)', // github-dark
+      'dark-codeblock': 'rgb(36 41 46)', // github-dark
       'dark-input': 'rgb(0 0 0)', // black
       'dark-highlight': 'rgb(75 85 99)', // gray-600
       'dark-text': 'rgb(255 255 255)', // white
       'light-base': 'rgb(203 213 225)', // slate-300
       'light-flat': 'rgb(107 114 128)', // gray-500
-      'light-cmp': 'rgb(255 255 255)', // github-light
+      'light-cmp': 'rgb(255 255 255)', // white
+      'light-codeblock': 'rgb(255 255 255)', // github-light
       'light-input': 'rgb(255 255 255)', // white
       'light-highlight': 'rgb(156 163 175)', // gray-400
       'light-text': 'rgb(0 0 0)', // black
