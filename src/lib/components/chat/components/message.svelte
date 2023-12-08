@@ -4,13 +4,14 @@
   import CodeBlock from './code-block.svelte';
   import history from '$lib/assets/history.svg';
   import List from './list.svelte';
+  import { lang, t } from '$lib/localization/translation';
 
   export let message: ChatMessage = {} as ChatMessage;
 </script>
 
 <div class="flex flex-col justify-stretch">
   <div class="cmp overflow-hidden p-3 whitespace-pre-wrap break-words">
-    <span class="font-bold text-lg px-[5%]">{message.role === ChatRole.User ? 'You' : 'Bot'}</span>
+    <span class="font-bold text-lg px-[5%]">{message.role === ChatRole.User ? t(lang.Page.Chat.Message.Role.User) : t(lang.Page.Chat.Message.Role.Agent)}</span>
     <div class="cmp overflow-hidden px-[5%]">
       <SvelteMarkdown source={message.content} renderers={{ code: CodeBlock, list: List }} />
     </div>
