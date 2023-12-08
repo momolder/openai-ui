@@ -1,6 +1,7 @@
 # OpenAI-UI
 
 The OpenAI UI is designed to be a simple [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/chatgpt-quickstart?tabs=command-line%2Cpython&pivots=programming-language-studio) frontend. The application is written in [Svelte](https://svelte.dev/). The App focuses on:
+
 - Easy to setup and integrate
 - Easy to customise
 - 100% Azure compatible
@@ -186,14 +187,3 @@ Clean up:
 ```bash
 az group delete --no-wait --name rg-openai-ui
 ```
-
-## TODOs
-
-- e2e tests against azure
-- cancel request / resonse
-- modify last request
-- ENV config for language
-- user Entra ID icon & bot icon (bot.svg == logo.svg)
-- document upload
-- hyperlinks to documents
-- TTS

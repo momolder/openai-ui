@@ -1,11 +1,10 @@
-import { ThemeStore } from "./state-management";
+import { ThemeStore } from './state-management';
 
 class ThemingService {
   public updateTheme(choice?: string) {
     if (choice) localStorage.theme = choice;
     else localStorage.removeItem('theme');
     this.loadTheme();
-    ThemeStore.set(localStorage.theme);
   }
 
   public loadTheme() {
@@ -19,6 +18,7 @@ class ThemingService {
       document.documentElement.classList.remove('dark');
       localStorage.theme = 'light';
     }
+    ThemeStore.set(localStorage.theme as string);
   }
 
   public toggleTheme() {

@@ -44,11 +44,12 @@
     <button
       class="btn h-4 flex flex-row items-center gap-1 text-sm"
       type="button"
-      on:click={async (e) => await copyToClipboard()}
+      on:click={async () => await copyToClipboard()}
       ><img class="ico h-4 w-4" src={clipboard} alt="logo" />Copy code</button>
   </div>
   {#await highlight().then( (c) => c?.codeToHtml( text, { lang: isNullOrWhitespace(lang) ? 'bash' : lang, theme: themingService.isDark() ? darkTheme : lightTheme } ) ) then code}
     <div class="rounded-b-lg overflow-x-auto bg-light-codeblock dark:bg-dark-codeblock p-2">
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
       <code>{@html code}</code>
     </div>
   {/await}

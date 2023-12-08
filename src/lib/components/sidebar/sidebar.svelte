@@ -11,7 +11,6 @@
   import { createEventDispatcher } from 'svelte';
   import user from '$lib/assets/user.svg';
   import User from './components/user.svelte';
-  import clear from '$lib/assets/clear.svg';
   import NewChat from './components/new-chat.svelte';
 
   const dispatch = createEventDispatcher();

@@ -67,7 +67,7 @@ export const lang = {
         ChatInfo: {
           en: 'The chatbot can make mistakes. Consider checking important information.',
           de: 'Der Chatbot kann Fehler machen, bitte prüfen Sie wichtige Informationen.'
-        },
+        }
       },
       Message: {
         Role: {
@@ -84,7 +84,7 @@ export const lang = {
           en: 'Regenerate last answer',
           de: 'Letzte Antwort neu generieren'
         }
-      },
+      }
     },
     History: {
       Empty: {
