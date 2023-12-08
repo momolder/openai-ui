@@ -2,7 +2,7 @@ import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, StateStore, UserStore } from './state-management';
 import { v4 as uuid } from 'uuid';
 import { ToastErrors } from './error-handler';
-import { ChatRole, type Conversation } from '$lib/models/Contracts';
+import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
 import { chunkString } from '$lib/helper';
 
 class ConversationService {
@@ -58,6 +58,16 @@ class ConversationService {
         method: 'PUT',
         body: JSON.stringify(get(ConversationStore))
       });
+    }
+  }
+
+  public async regenerate(message: ChatMessage) {
+    const conversation = get(ConversationStore);
+    const index = conversation.messages.indexOf(message);
+    if (index > 0) {
+      conversation.messages.splice(index);
+      const lastPromt = conversation.messages.pop();
+      if (lastPromt && lastPromt.role === ChatRole.User) this.getResponse(lastPromt.content);
     }
   }
 

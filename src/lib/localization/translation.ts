@@ -79,6 +79,10 @@ export const lang = {
             en: 'Bot',
             de: 'Bot'
           }
+        },
+        Regenerate: {
+          en: 'Regenerate last answer',
+          de: 'Letzte Antwort neu generieren'
         }
       },
     },
