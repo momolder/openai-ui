@@ -12,4 +12,3 @@ export const LanguageStore = writable<string>('en');
 export const HistoryStore = writable<Conversation[]>([]);
 export const UserStore = writable<UserInformation>();
 export const ThemeStore = writable<string>();
-

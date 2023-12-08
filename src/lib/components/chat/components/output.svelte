@@ -5,12 +5,10 @@
   import type { ChatMessage } from '$lib/models/Contracts';
 
   let messages: ChatMessage[];
-  let last: ChatMessage | undefined;
   let chatOutputDiv: HTMLDivElement;
 
   const unsubscriber = ConversationStore.subscribe((c) => {
     messages = c.messages;
-    last = c.messages.at(-1);
   });
 
   onDestroy(unsubscriber);
@@ -21,7 +19,7 @@
 </script>
 
 <div class="cmp overflow-y-auto flex flex-col md:px-[22%]" bind:this={chatOutputDiv}>
-  {#each messages as message, index}
+  {#each messages as message}
     <Message {message} />
   {/each}
 </div>

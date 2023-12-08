@@ -42,7 +42,7 @@ class ConversationService {
           }
         }
         // Workaround for streaming issues in markdown
-        const clone = JSON.parse(JSON.stringify(conv));
+        const clone = JSON.parse(JSON.stringify(conv)) as Conversation;
         conv.messages[conv.messages.length - 1].content = '';
         ConversationStore.set(conv);
         await new Promise((f) => setTimeout(f, 10));
@@ -67,7 +67,8 @@ class ConversationService {
     if (index > 0) {
       conversation.messages.splice(index);
       const lastPromt = conversation.messages.pop();
-      if (lastPromt && lastPromt.role === ChatRole.User) this.getResponse(lastPromt.content);
+      if (lastPromt && lastPromt.role === ChatRole.User) 
+        await this.getResponse(lastPromt.content);
     }
   }
 

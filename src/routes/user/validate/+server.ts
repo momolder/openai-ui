@@ -5,7 +5,9 @@ import { env } from '$env/dynamic/private';
 
 export function GET({ request }: RequestEvent): Response {
   const principalString = request.headers.get('X-MS-CLIENT-PRINCIPAL');
-  const token = principalString ? JSON.parse(atob(principalString)) as ClientPrincipal : {} as ClientPrincipal;
+  const token = principalString
+    ? (JSON.parse(atob(principalString)) as ClientPrincipal)
+    : ({} as ClientPrincipal);
 
   if (env.App_ClaimName && env.App_ClaimValue) {
     if (token.claims.find((c) => c.typ === env.App_ClaimName && c.val.match(`${env.App_ClaimValue}`))) {
