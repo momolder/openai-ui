@@ -106,8 +106,8 @@ export const lang = {
         de: 'Seite neu laden um die Sprache zu ändern'
       },
       Autosave: {
-        en: 'Automatic saving',
-        de: 'Automatisches Speichern'
+        en: 'Enable history',
+        de: 'Verlauf aktivieren'
       },
       ThemeDark: {
         en: 'Theme dark',
