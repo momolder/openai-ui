@@ -68,8 +68,19 @@ export const lang = {
           en: 'The chatbot can make mistakes. Consider checking important information.',
           de: 'Der Chatbot kann Fehler machen, bitte prüfen Sie wichtige Informationen.'
         },
-        
-      }
+      },
+      Message: {
+        Role: {
+          User: {
+            en: 'You',
+            de: 'Sie'
+          },
+          Agent: {
+            en: 'Bot',
+            de: 'Bot'
+          }
+        }
+      },
     },
     History: {
       Empty: {
