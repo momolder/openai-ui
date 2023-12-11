@@ -18,7 +18,7 @@
     <div
       data-testid={testid}
       class="w-11 h-[25px] rounded-full peer
-    bg-light-highlight dark:bg-dark-highlight peer-checked:bg-light-flat dark:peer-checked:bg-dark-flat after:bg-light-cmp dark:after:bg-dark-cmp
+    bg-light-flat dark:bg-dark-flat peer-checked:bg-light-highlight dark:peer-checked:bg-dark-highlight after:bg-light-cmp dark:after:bg-dark-cmp
     peer-checked:after:translate-x-full
     after:absolute after:top-[3px] after:left-[2px]
     after:rounded-full after:h-5 after:w-5 after:transition-all" />
