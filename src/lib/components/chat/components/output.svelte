@@ -2,13 +2,13 @@
   import { ConversationStore } from '$lib/services/state-management';
   import { afterUpdate, onDestroy } from 'svelte';
   import Message from './message.svelte';
-  import type { ChatMessage } from '$lib/models/Contracts';
+  import { ChatRole, type ChatMessage } from '$lib/models/Contracts';
 
   let messages: ChatMessage[];
   let chatOutputDiv: HTMLDivElement;
 
   const unsubscriber = ConversationStore.subscribe((c) => {
-    messages = c.messages;
+    messages = c.messages.filter(m => m.role === ChatRole.Assistant || m.role === ChatRole.User);
   });
 
   onDestroy(unsubscriber);
