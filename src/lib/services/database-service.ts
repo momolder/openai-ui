@@ -43,7 +43,7 @@ export default class DatabaseService {
       .read();
     if (resource) {
       resource.messages = conversation.messages;
-      await this.db.item(conversation.id, conversation.userId).replace(resource);
+      await this.db.item(conversation.id, conversation.userId).replace(conversation);
       return resource;
     }
     return undefined;

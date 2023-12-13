@@ -14,15 +14,16 @@ const extensions = {
         indexName: env.AiSearch_IndexName,
         shouldRestrictResultScope: false,
         inScope: false,
-        strictness: 1,
+        strictness: 3,
         queryType: 'simple',
         fieldsMapping: {
+          // idField: '',
           // "contentFields":[""],
-          // "titleField": AZURE_SEARCH_TITLE_COLUMN if AZURE_SEARCH_TITLE_COLUMN else None,
-          // urlField: 'metadata_storage_path'
+          titleField: 'metadata_title',
+          urlField: 'metadata_storage_path'
           // "filepathField": AZURE_SEARCH_FILENAME_COLUMN if AZURE_SEARCH_FILENAME_COLUMN else None,
           // "vectorFields": AZURE_SEARCH_VECTOR_COLUMNS.split("|") if AZURE_SEARCH_VECTOR_COLUMNS else []
-      }
+        }
       }
     }
   ]
@@ -59,16 +60,17 @@ export async function POST({ request }: RequestEvent) {
   const stream = new ReadableStream({
     async start(controller) {
       try {
-      for await (const update of chatStream) {
-        for (const choice of update.choices) {
-        const delta = choice.delta;
-          if (delta !== undefined) {
-            controller.enqueue(JSON.stringify(delta));
+        for await (const update of chatStream) {
+          for (const choice of update.choices) {
+            const delta = choice.delta;
+            if (delta !== undefined) {
+              controller.enqueue(JSON.stringify(delta));
+            }
           }
         }
+      } catch (e) {
+        console.error(e);
       }
-      
-    }catch(e) {console.error(e)}
       controller.close();
     }
   });
