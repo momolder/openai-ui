@@ -25,7 +25,7 @@
 
 <div data-testid="sidebar" class="cmp flex flex-col justify-between">
   <div class="cmp flex flex-col overflow-hidden">
-    <NewChat />
+    <NewChat showLabel={tab != ''} />
     <!-- <SidebarSlot
         ico={clear}
         label={t(lang.Page.Sidebar.Clear)}
@@ -35,6 +35,7 @@
       </SidebarSlot> -->
     {#if $StateStore.useHistory}
       <SidebarSlot
+        showLabel={tab != ''}
         ico={history}
         label={t(lang.Page.Sidebar.History)}
         name="history"
@@ -44,6 +45,7 @@
       </SidebarSlot>
     {/if}
     <SidebarSlot
+      showLabel={tab != ''}
       ico={settings}
       label={t(lang.Page.Sidebar.Settings)}
       name="settings"
@@ -52,6 +54,7 @@
       <Settings />
     </SidebarSlot>
     <SidebarSlot
+      showLabel={tab != ''}
       ico={help}
       label={t(lang.Page.Sidebar.Help)}
       name="help"
@@ -62,6 +65,7 @@
   </div>
   <div class="w-full">
     <SidebarSlot
+      showLabel={tab != ''}
       ico={user}
       label={t(lang.Page.Sidebar.User)}
       name="user"
