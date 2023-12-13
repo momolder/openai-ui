@@ -5,6 +5,7 @@ export interface Conversation {
   isFollowed: boolean;
   userId: string;
   date: Date;
+  citations: Citation[];
 }
 
 export interface ChatMessage {
@@ -15,12 +16,14 @@ export interface ChatMessage {
 }
 
 export interface ToolMessage {
-  citations: Citation[] | undefined;
+  citations: Citation[];
 }
 
 export interface Citation {
-  
+  id: number;
+  title: string;
   url: string;
+  content: string;
 }
 
 export interface UserInformation {
