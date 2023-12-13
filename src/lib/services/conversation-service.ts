@@ -3,7 +3,7 @@ import { ConversationStore, HistoryStore, StateStore, UserStore } from './state-
 import { v4 as uuid } from 'uuid';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
-import { chunkString } from '$lib/helper';
+import { chunkString, type SvelteFetch } from '$lib/helper';
 
 class ConversationService {
   public async getResponse(userPrompt: string) {
@@ -87,8 +87,10 @@ class ConversationService {
     });
   }
 
-  public async loadHistory(): Promise<void> {
-    await (await fetch(`/history/user/${get(UserStore).id}`))
+  public async loadHistory(
+    svelteFetch: SvelteFetch
+  ): Promise<void> {
+    await (await svelteFetch(`/history/user/${get(UserStore).id}`))
       .json()
       .then(HistoryStore.set)
       .catch(ToastErrors);
@@ -129,7 +131,7 @@ class ConversationService {
 
   public async unfollow(entry: Conversation) {
     await fetch(`/history`, { method: 'DELETE', body: JSON.stringify(entry) }).catch(ToastErrors);
-    await this.loadHistory();
+    await this.loadHistory(fetch);
     ConversationStore.update((u) => {
       if (u.id === entry.id) u.isFollowed = false;
       return u;

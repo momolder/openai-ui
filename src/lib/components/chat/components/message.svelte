@@ -24,7 +24,7 @@
   {#if message.role === ChatRole.Assistant}
     <div class="px-[5%]">
       <Tooltip position="automatic" text={t(lang.Page.Chat.Message.Regenerate)}>
-        <button class="btn self-start" type="button" on:click={conversationService.regenerate(message)}>
+        <button class="btn self-start" type="button" on:click={() => conversationService.regenerate(message)}>
           <img src={redo} alt="redo" class="ico h-5 w-5" />
         </button>
       </Tooltip>
