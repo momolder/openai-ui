@@ -11,6 +11,16 @@ export interface ChatMessage {
   role: ChatRole;
   content: string;
   name: string;
+  context: {messages: ChatMessage[]} | undefined;
+}
+
+export interface ToolMessage {
+  citations: Citation[] | undefined;
+}
+
+export interface Citation {
+  
+  url: string;
 }
 
 export interface UserInformation {

@@ -8,8 +8,8 @@ import { chunkString, type SvelteFetch } from '$lib/helper';
 class ConversationService {
   public async getResponse(userPrompt: string) {
     const conversation = get(ConversationStore);
-    const message = { content: userPrompt, role: ChatRole.User, name: 'prompt' };
-    const response = { content: '', role: ChatRole.Assistant, name: 'response' };
+    const message = { content: userPrompt, role: ChatRole.User, name: 'prompt', context: undefined };
+    const response = { content: '', role: ChatRole.Assistant, name: 'response', context: undefined };
     ConversationStore.update((u) => {
       u.messages.push(message);
       u.messages.push(response);
@@ -34,11 +34,24 @@ class ConversationService {
           const { done, value } = await reader.read();
           quitReading = done;
           if (quitReading || !value) continue;
-
-          for (const sequence of chunkString(value, 4)) {
-            await new Promise((f) => setTimeout(f, 10));
-            conv.messages[conv.messages.length - 1].content += sequence;
-            ConversationStore.set(conv);
+          const r = value.split(/(?<=\})\s*(?=\{)/);
+          for (const x of r) {
+            const y = JSON.parse(x) as ChatMessage;
+            if(y.context && y.context.messages.length > 0) {
+              console.log(y);
+              // const toolMessages = y.context.messages.filter(m => m.role === ChatRole.Tool).flatMap(m => JSON.parse(m.content) as ToolMessage[]);
+              y.context.messages.forEach(message => {
+                conv.messages = [message, ...conv.messages];
+              });
+              ConversationStore.set(conv);
+            }
+            if (y.content) {
+              for (const sequence of chunkString(y.content, 4)) {
+                await new Promise((f) => setTimeout(f, 10));
+                conv.messages[conv.messages.length - 1].content += sequence;
+                ConversationStore.set(conv);
+              }
+            }
           }
         }
         // Workaround for streaming issues in markdown
@@ -67,8 +80,7 @@ class ConversationService {
     if (index > 0) {
       conversation.messages.splice(index);
       const lastPromt = conversation.messages.pop();
-      if (lastPromt && lastPromt.role === ChatRole.User) 
-        await this.getResponse(lastPromt.content);
+      if (lastPromt && lastPromt.role === ChatRole.User) await this.getResponse(lastPromt.content);
     }
   }
 
@@ -108,7 +120,7 @@ class ConversationService {
   public async follow(): Promise<void> {
     const currentConversation = get(ConversationStore);
     currentConversation.isFollowed = true;
-    currentConversation.title = currentConversation.messages.at(0)?.content ?? 'undefined';
+    currentConversation.title = currentConversation.messages.filter(m => m.role === ChatRole.User).at(0)?.content ?? 'undefined';
     const addedConversation = await fetch(`/history`, {
       method: 'POST',
       body: JSON.stringify(currentConversation)
