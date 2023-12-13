@@ -4,6 +4,7 @@ import conversationService from '$lib/services/conversation-service';
 import { LanguageStore, StateStore } from '$lib/services/state-management';
 import { get } from 'svelte/store';
 import { browser } from '$app/environment';
+import type { LayoutLoadEvent } from './$types';
 
 export const ssr = false;
 function adjustHeight() {
@@ -12,7 +13,7 @@ function adjustHeight() {
   container.style.height = viewHeight;
 }
 
-export async function load() {
+export async function load(event: LayoutLoadEvent) {
   if (browser) {
     adjustHeight(); // Initial call to set the height
 
@@ -27,8 +28,8 @@ export async function load() {
     });
     themingService.loadTheme();
     stateService.loadState();
-    await stateService.loadUser();
+    await stateService.loadUser(event.fetch);
     conversationService.new();
-    if (get(StateStore).useHistory) await conversationService.loadHistory();
+    if (get(StateStore).useHistory) await conversationService.loadHistory(event.fetch);
   }
 }

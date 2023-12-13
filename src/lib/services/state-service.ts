@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import { env } from '$env/dynamic/public';
-import { isNullOrWhitespace } from '$lib/helper';
+import { isNullOrWhitespace, type SvelteFetch } from '$lib/helper';
 import type { ClientPrincipal, State, UserInformation } from '$lib/models/Contracts';
 import { ToastErrors } from './error-handler';
 import { StateStore, UserStore } from './state-management';
@@ -24,9 +24,11 @@ class StateService {
     }
   }
 
-  public async loadUser(): Promise<void> {
-    const r = await fetch(`/user`, { method: 'GET' });
-    await r
+  public async loadUser(
+    svelteFetch: SvelteFetch
+  ): Promise<void> {
+    const response = await svelteFetch(`/user`, { method: 'GET' });
+    await response
       .json()
       .then((user) => {
         UserStore.set(user as UserInformation);
@@ -40,9 +42,11 @@ class StateService {
       .catch(ToastErrors);
   }
 
-  public async validateUser(): Promise<boolean> {
+  public async validateUser(
+    svelteFetch: SvelteFetch
+  ): Promise<boolean> {
     let isValid = false;
-    await fetch(`/user/validate`, { method: 'GET' })
+    await svelteFetch(`/user/validate`, { method: 'GET' })
       .then((ok) => {
         isValid = ok.status === 200;
       })

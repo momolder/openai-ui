@@ -11,3 +11,5 @@ export function chunkString(input: string, chunkSize: number): string[] {
   }
   return result;
 }
+
+export type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
