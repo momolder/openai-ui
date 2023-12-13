@@ -3,6 +3,7 @@
 
   const dispatch = createEventDispatcher();
 
+  export let showLabel = false;
   export let name: string;
   export let label: string;
   export let isOpen = false;
@@ -13,9 +14,13 @@
   }
 </script>
 
-<button data-testid="sidebar{name}Button" class="sidebar-btn p-2" on:click={() => toggle()} type="button">
+<button
+  data-testid="sidebar {name}Button"
+  class="sidebar-btn p-2 w-full"
+  on:click={() => toggle()}
+  type="button">
   <img class="ico h-5 w-5" src={ico} alt="{name}icon" />
-  <p class="{isOpen ? 'visible' : 'hidden'} text-center justify-self-center">{label}</p>
+  <p class="{showLabel ? 'visible' : 'hidden'} text-center justify-self-center">{label}</p>
 </button>
 {#if isOpen}
   <div class="cmp overflow-hidden overflow-y-auto p-5">
