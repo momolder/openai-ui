@@ -7,8 +7,8 @@
   import Settings from './components/settings.svelte';
   import settings from '$lib/assets/settings.svg';
   import SidebarSlot from './components/sidebar-slot.svelte';
-  import { StateStore } from '$lib/services/state-management';
-  import { createEventDispatcher } from 'svelte';
+  import { StateStore, IsOpenStore } from '$lib/services/state-management';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import user from '$lib/assets/user.svg';
   import User from './components/user.svelte';
   import NewChat from './components/new-chat.svelte';
@@ -21,6 +21,15 @@
     else tab = selectedTab;
     dispatch('toggle', { isOpen: tab != '' });
   }
+
+  const unsubscriber = IsOpenStore.subscribe((c) => {
+    if(!c){
+      toggle('');
+    }
+  });
+
+  onDestroy(unsubscriber);
+  
 </script>
 
 <div data-testid="sidebar" class="cmp flex flex-col justify-between">
