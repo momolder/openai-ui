@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { IsOpenStore } from '$lib/services/state-management';
 
   const dispatch = createEventDispatcher();
 
@@ -11,6 +12,9 @@
 
   function toggle() {
     dispatch('toggle', { name: name });
+    if (!$IsOpenStore){
+      $IsOpenStore = true;
+    } 
   }
 </script>
 
