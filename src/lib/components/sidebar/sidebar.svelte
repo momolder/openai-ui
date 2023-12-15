@@ -23,16 +23,15 @@
   }
 
   const unsubscriber = IsOpenStore.subscribe((c) => {
-    if(!c){
+    if (!c) {
       toggle('');
     }
   });
 
   onDestroy(unsubscriber);
-  
 </script>
 
-<div data-testid="sidebar" class="cmp flex flex-col justify-between {$IsOpenStore? "pr-9" : ""} md:p-2">
+<div data-testid="sidebar" class="cmp flex flex-col justify-between {$IsOpenStore ? 'pr-9' : ''} md:p-2">
   <div class="cmp flex flex-col overflow-hidden">
     <NewChat showLabel={tab != ''} />
     <!-- <SidebarSlot
