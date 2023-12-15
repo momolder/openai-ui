@@ -12,9 +12,7 @@
 
   function toggle() {
     dispatch('toggle', { name: name });
-    if (!$IsOpenStore){
-      $IsOpenStore = true;
-    } 
+    $IsOpenStore = isOpen? false : true;
   }
 </script>
 
