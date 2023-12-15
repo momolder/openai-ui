@@ -2,8 +2,15 @@
   import Header from '$lib/components/header.svelte';
   import Chat from '$lib/components/chat/chat.svelte';
   import Sidebar from '$lib/components/sidebar/sidebar.svelte';
+  import cheronLeft from '$lib/assets/chevronLeft.svg';
+  import verticalLine from '$lib/assets/verticalLine.svg';
+  import { IsOpenStore } from '$lib/services/state-management';
 
   let sidebarOpen = false;
+
+  function toggle() {
+    $IsOpenStore = false;
+  }
 </script>
 
 <div class="cmp flex flex-row overflow-hidden">
@@ -17,6 +24,12 @@
     <Header />
     <div class="cmp overflow-hidden">
       <Chat />
+    </div>
+    <div>
+      <button class="absolute top-1/2 group md:right-auto {sidebarOpen? "right-0 p-1" : "hidden"}" type="button" on:click={() => toggle()} >
+        <img class="icon h-7 w-7 {sidebarOpen? "" : "hidden"} group-hover:hidden dark:invert" src={verticalLine} alt="close-sidebar-icon"/>
+        <img class="icon h-7 w-7 hidden dark:invert {sidebarOpen? "group-hover:block" : ""}" src={cheronLeft} alt="close-sidebar-hover-icon"/>
+      </button>
     </div>
   </div>
 </div>

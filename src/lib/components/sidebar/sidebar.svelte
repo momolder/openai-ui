@@ -32,7 +32,7 @@
   
 </script>
 
-<div data-testid="sidebar" class="cmp flex flex-col justify-between">
+<div data-testid="sidebar" class="cmp flex flex-col justify-between {$IsOpenStore? "pr-9" : ""} md:p-2">
   <div class="cmp flex flex-col overflow-hidden">
     <NewChat showLabel={tab != ''} />
     <!-- <SidebarSlot
