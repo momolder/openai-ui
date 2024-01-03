@@ -7,7 +7,6 @@
   import { IsOpenStore } from '$lib/services/state-management';
 
   let sidebarOpen = false;
-
 </script>
 
 <div class="cmp flex flex-row overflow-hidden">
@@ -26,7 +25,7 @@
       <button
         class="absolute top-1/2 group md:right-auto {sidebarOpen ? 'right-0 p-1' : 'hidden'}"
         type="button"
-        on:click={() => $IsOpenStore = false }>
+        on:click={() => ($IsOpenStore = false)}>
         <img
           class="icon h-7 w-7 {sidebarOpen ? '' : 'hidden'} group-hover:hidden dark:invert"
           src={verticalLine}

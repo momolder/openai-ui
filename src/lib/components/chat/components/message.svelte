@@ -1,13 +1,13 @@
 <script lang="ts">
   import { ChatRole, type ChatMessage } from '$lib/models/Contracts';
-  import SvelteMarkdown from 'svelte-markdown';
-  import CodeBlock from './code-block.svelte';
   import redo from '$lib/assets/redo.svg';
-  import List from './list.svelte';
   import { lang, t } from '$lib/localization/translation';
   import Tooltip from '$lib/components/controls/tooltip.svelte';
   import conversationService from '$lib/services/conversation-service';
-  import TextBlock from './textBlock.svelte';
+  import SvelteMarkdown from 'svelte-markdown';
+  import CodeBlock from './renderer/code-block.svelte';
+  import List from './renderer/list.svelte';
+  import TextBlock from './renderer/text-block.svelte';
 
   export let message: ChatMessage = {} as ChatMessage;
 </script>
@@ -25,7 +25,10 @@
   {#if message.role === ChatRole.Assistant}
     <div class="px-[5%]">
       <Tooltip position="automatic" text={t(lang.Page.Chat.Message.Regenerate)}>
-        <button class="btn self-start" type="button" on:click={() => conversationService.regenerate(message)}>
+        <button
+          class="btn self-start"
+          type="button"
+          on:click={() => conversationService.regenerateMessage(message)}>
           <img src={redo} alt="redo" class="ico h-5 w-5" />
         </button>
       </Tooltip>
