@@ -25,7 +25,8 @@ export default class DatabaseService {
   public async getHistory(userId: string): Promise<Conversation[]> {
     const { resources } = await this.db.items
       .query({
-        query: 'SELECT * from conversation WHERE conversation.userId = @userId',
+        query:
+          'SELECT * from conversation WHERE conversation.userId = @userId ORDER BY conversation.date DESC',
         parameters: [{ name: '@userId', value: userId }]
       })
       .fetchAll();
@@ -40,13 +41,8 @@ export default class DatabaseService {
   public async updateHistory(conversation: Conversation): Promise<Conversation | undefined> {
     const { resource }: ItemResponse<Conversation> = await this.db
       .item(conversation.id, conversation.userId)
-      .read();
-    if (resource) {
-      resource.messages = conversation.messages;
-      await this.db.item(conversation.id, conversation.userId).replace(conversation);
-      return resource;
-    }
-    return undefined;
+      .replace(conversation);
+    return resource;
   }
 
   public async deleteHistory(conversation: Conversation): Promise<void> {

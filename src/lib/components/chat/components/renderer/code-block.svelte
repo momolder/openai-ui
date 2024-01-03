@@ -38,7 +38,7 @@
 </script>
 
 <div
-  class="bg-light-highlight dark:bg-dark-base rounded-lg flex flex-col my-4 border border-light-highlight dark:border-dark-base">
+  class="bg-light-highlight dark:bg-dark-highlight rounded-lg flex flex-col my-4 border border-light-highlight dark:border-dark-highlight">
   <div class="flex flex-row justify-between px-4 py-2">
     <div class="text-sm">{lang}</div>
     <button

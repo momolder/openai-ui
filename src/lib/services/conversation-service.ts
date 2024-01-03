@@ -1,16 +1,16 @@
 import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, StateStore, UserStore } from './state-management';
-import { v4 as uuid } from 'uuid';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type ChatMessage, type Conversation, type ToolMessage } from '$lib/models/Contracts';
 import { chunkString, type SvelteFetch } from '$lib/helper';
 
 class ConversationService {
-  public async getResponse(userPrompt: string) {
+  public async respondTo(userPrompt: string) {
     const conversation = get(ConversationStore);
     const message = { content: userPrompt, role: ChatRole.User, name: 'prompt', context: undefined };
     const response = { content: '', role: ChatRole.Assistant, name: 'response', context: undefined };
     ConversationStore.update((u) => {
+      u.date = new Date();
       u.messages.push(message);
       u.messages.push(response);
       return u;
@@ -35,8 +35,8 @@ class ConversationService {
           if (quitReading || !value) continue;
           await this.updateStore(value);
         }
-        await this.workaroundMarkdownIssues();
         this.updateCitations();
+        await this.workaroundMarkdownIssues();
         reader.releaseLock();
       })
       .catch(ToastErrors);
@@ -48,78 +48,23 @@ class ConversationService {
         method: 'PUT',
         body: JSON.stringify(get(ConversationStore))
       });
+      await this.loadHistory(fetch);
     }
   }
 
-  private async updateStore(value: string) {
-    const conv = get(ConversationStore);
-    const jsonBlocks = value.split(/(?<=\})\s*(?=\{)/);
-    for (const json of jsonBlocks) {
-      const message = JSON.parse(json) as ChatMessage;
-      if (message.context && message.context.messages.length > 0) {
-        const citations = message.context.messages
-          .filter((m) => m.role === ChatRole.Tool)
-          .flatMap((m) => JSON.parse(m.content) as ToolMessage[])
-          .flatMap((m) => m.citations);
-        // TODO: Do citations need to be stored per message or globally?
-        citations
-          .reverse()
-          .forEach((c) => conv.citations.push({ ...c, id: (conv.citations.at(-1)?.id ?? -1) + 1 }));
-        ConversationStore.set(conv);
-      }
-      if (message.content) {
-        for (const sequence of chunkString(message.content, 4)) {
-          await new Promise((f) => setTimeout(f, 10));
-          conv.messages[conv.messages.length - 1].content += sequence;
-          ConversationStore.set(conv);
-        }
-      }
-    }
-  }
-
-  private async workaroundMarkdownIssues() {
-    // Workaround for streaming issues in markdown
-    const conv = get(ConversationStore);
-    const clone = JSON.parse(JSON.stringify(conv)) as Conversation;
-    conv.messages[conv.messages.length - 1].content = '';
-    ConversationStore.set(conv);
-    await new Promise((f) => setTimeout(f, 10));
-    ConversationStore.set(clone);
-  }
-
-  private updateCitations() {
-    const conv = get(ConversationStore);
-    const lastResponse = conv.messages.at(-1);
-    if (!lastResponse) return;
-    const matches = lastResponse.content.matchAll(/\[doc(\d+)\]/g);
-    for (const match of matches) {
-      const docNum = match.at(1) ?? 0;
-      // const base64Url = conv.citations.at(0)?.url ?? "";
-      lastResponse.content = lastResponse.content.replace(
-        `doc${docNum}`,
-        `doc${conv.citations.at(-docNum)?.id}`
-      );
-    }
-    ConversationStore.set(conv);
-  }
-
-  public async regenerate(message: ChatMessage) {
+  public async regenerateMessage(message: ChatMessage) {
     const conversation = get(ConversationStore);
     const index = conversation.messages.indexOf(message);
     if (index > 0) {
       conversation.messages.splice(index);
       const lastPromt = conversation.messages.pop();
-      if (lastPromt && lastPromt.role === ChatRole.User) await this.getResponse(lastPromt.content);
+      if (lastPromt && lastPromt.role === ChatRole.User) await this.respondTo(lastPromt.content);
     }
   }
 
-  public load(entry: Conversation): void {
-    ConversationStore.set(entry);
-  }
-
-  public new() {
+  public newConversation() {
     ConversationStore.set({
-      id: uuid().toString(),
+      id: crypto.randomUUID(),
       messages: [],
       citations: [],
       title: '',
@@ -127,6 +72,10 @@ class ConversationService {
       userId: get(UserStore).id,
       date: new Date()
     });
+  }
+
+  public loadConversation(entry: Conversation): void {
+    ConversationStore.set(entry);
   }
 
   public async loadHistory(svelteFetch: SvelteFetch): Promise<void> {
@@ -158,10 +107,7 @@ class ConversationService {
       .catch(ToastErrors);
 
     if (addedConversation) {
-      HistoryStore.update((u) => {
-        u = [addedConversation, ...u];
-        return u;
-      });
+      await this.loadHistory(fetch);
       ConversationStore.update((u) => {
         u.isFollowed = addedConversation.isFollowed;
         u.title = addedConversation.title;
@@ -177,6 +123,58 @@ class ConversationService {
       if (u.id === entry.id) u.isFollowed = false;
       return u;
     });
+  }
+
+  private async updateStore(value: string) {
+    const conv = get(ConversationStore);
+    const jsonBlocks = value.split(/(?<=\})\s*(?=\{)/);
+    for (const json of jsonBlocks) {
+      const message = JSON.parse(json) as ChatMessage;
+      if (message.context && message.context.messages.length > 0) {
+        const citations = message.context.messages
+          .filter((m) => m.role === ChatRole.Tool)
+          .flatMap((m) => JSON.parse(m.content) as ToolMessage[])
+          .flatMap((m) => m.citations);
+        // TODO: Do citations need to be stored per message or globally?
+        citations
+          .reverse()
+          .forEach((c) => (conv.citations = [{ ...c, id: conv.citations.length + 1 }, ...conv.citations]));
+        ConversationStore.set(conv);
+      }
+      if (message.content) {
+        for (const sequence of chunkString(message.content, 4)) {
+          await new Promise((f) => setTimeout(f, 10));
+          conv.messages[conv.messages.length - 1].content += sequence;
+          ConversationStore.set(conv);
+        }
+      }
+    }
+  }
+
+  private async workaroundMarkdownIssues() {
+    // Workaround for streaming issues in markdown
+    const conv = get(ConversationStore);
+    const clone = JSON.parse(JSON.stringify(conv)) as Conversation;
+    conv.messages[conv.messages.length - 1].content = '';
+    ConversationStore.set(conv);
+    await new Promise((f) => setTimeout(f, 10));
+    ConversationStore.set(clone);
+  }
+
+  private updateCitations() {
+    const conv = get(ConversationStore);
+    const lastResponse = conv.messages.at(-1);
+    if (!lastResponse) return;
+    const matches = lastResponse.content.matchAll(/\[doc(\d+)\]/g);
+    for (const match of matches) {
+      const docNum = Number.parseInt(match[1]);
+      // const base64Url = conv.citations.at(0)?.url ?? "";
+      lastResponse.content = lastResponse.content.replace(
+        match[0],
+        `[doc${conv.citations.at(docNum - 1)?.id}]`
+      );
+    }
+    ConversationStore.set(conv);
   }
 }
 

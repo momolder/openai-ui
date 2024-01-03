@@ -15,7 +15,7 @@
   }
 
   function loadEntry(entry: Conversation): void {
-    conversationService.load(entry);
+    conversationService.loadConversation(entry);
   }
 
   async function clearHistory(): Promise<void> {

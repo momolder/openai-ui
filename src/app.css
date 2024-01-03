@@ -53,7 +53,7 @@ body {
     @apply h-full w-full;
   }
   .cmp-raised {
-    @apply cmp bg-light-cmp dark:bg-dark-cmp shadow dark:shadow-light-flat shadow-dark-flat;
+    @apply cmp bg-light-cmp dark:bg-dark-cmp;
   }
   .ext-link {
     @apply underline font-bold;

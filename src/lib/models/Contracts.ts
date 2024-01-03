@@ -12,7 +12,7 @@ export interface ChatMessage {
   role: ChatRole;
   content: string;
   name: string;
-  context: {messages: ChatMessage[]} | undefined;
+  context: { messages: ChatMessage[] } | undefined;
 }
 
 export interface ToolMessage {

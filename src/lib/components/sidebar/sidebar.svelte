@@ -33,7 +33,7 @@
 
 <div data-testid="sidebar" class="cmp flex flex-col justify-between {$IsOpenStore ? 'pr-9' : ''} md:p-2">
   <div class="cmp flex flex-col overflow-hidden">
-    <NewChat showLabel={tab != ''} label={t(lang.Page.Sidebar.Clear)}/>
+    <NewChat showLabel={tab != ''} label={t(lang.Page.Sidebar.Clear)} />
     <!-- <SidebarSlot
         ico={clear}
         label={t(lang.Page.Sidebar.Clear)}

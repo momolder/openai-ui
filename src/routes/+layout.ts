@@ -29,7 +29,7 @@ export async function load(event: LayoutLoadEvent) {
     themingService.loadTheme();
     stateService.loadState();
     await stateService.loadUser(event.fetch);
-    conversationService.new();
+    conversationService.newConversation();
     if (get(StateStore).useHistory) await conversationService.loadHistory(event.fetch);
   }
 }

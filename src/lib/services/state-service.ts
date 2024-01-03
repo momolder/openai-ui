@@ -24,9 +24,7 @@ class StateService {
     }
   }
 
-  public async loadUser(
-    svelteFetch: SvelteFetch
-  ): Promise<void> {
+  public async loadUser(svelteFetch: SvelteFetch): Promise<void> {
     const response = await svelteFetch(`/user`, { method: 'GET' });
     await response
       .json()
@@ -42,9 +40,7 @@ class StateService {
       .catch(ToastErrors);
   }
 
-  public async validateUser(
-    svelteFetch: SvelteFetch
-  ): Promise<boolean> {
+  public async validateUser(svelteFetch: SvelteFetch): Promise<boolean> {
     let isValid = false;
     await svelteFetch(`/user/validate`, { method: 'GET' })
       .then((ok) => {

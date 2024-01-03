@@ -14,7 +14,7 @@
       processing = true;
       const prompt = userPrompt;
       userPrompt = '';
-      await conversationService.getResponse(prompt).finally(() => {
+      await conversationService.respondTo(prompt).finally(() => {
         processing = false;
       });
     }

@@ -11,6 +11,6 @@
     data-testid="welcomeStartButton"
     class="btn text-lg border py-1 px-2 rounded-lg"
     on:click={() => {
-      conversationService.getResponse(t(lang.Page.Welcome.StartButtonPrompt));
+      conversationService.respondTo(t(lang.Page.Welcome.StartButtonPrompt));
     }}>{t(lang.Page.Welcome.StartButton)}</button>
 </div>
