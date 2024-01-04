@@ -4,10 +4,7 @@
   import { lang, t } from '$lib/localization/translation';
   import Tooltip from '$lib/components/controls/tooltip.svelte';
   import conversationService from '$lib/services/conversation-service';
-  import SvelteMarkdown from 'svelte-markdown';
-  import CodeBlock from './renderer/code-block.svelte';
-  import List from './renderer/list.svelte';
-  import TextBlock from './renderer/text-block.svelte';
+  import MessageRenderer from './renderer/message-renderer.svelte';
 
   export let message: ChatMessage = {} as ChatMessage;
 </script>
@@ -19,7 +16,7 @@
         ? t(lang.Page.Chat.Message.Role.User)
         : t(lang.Page.Chat.Message.Role.Agent)}</span>
     <div class="cmp overflow-hidden px-[5%]">
-      <SvelteMarkdown source={message.content} renderers={{ code: CodeBlock, list: List, text: TextBlock }} />
+      <MessageRenderer message={message} />
     </div>
   </div>
   {#if message.role === ChatRole.Assistant}
