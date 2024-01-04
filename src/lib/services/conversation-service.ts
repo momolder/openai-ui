@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, StateStore, UserStore } from './state-management';
 import { ToastErrors } from './error-handler';
-import { ChatRole, type ChatMessage, type Conversation, type ToolMessage } from '$lib/models/Contracts';
+import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
 import { chunkString, type SvelteFetch } from '$lib/helper';
 
 class ConversationService {
@@ -35,7 +35,6 @@ class ConversationService {
           if (quitReading || !value) continue;
           await this.updateStore(value);
         }
-        this.updateCitations();
         await this.workaroundMarkdownIssues();
         reader.releaseLock();
       })
@@ -131,14 +130,7 @@ class ConversationService {
     for (const json of jsonBlocks) {
       const message = JSON.parse(json) as ChatMessage;
       if (message.context && message.context.messages.length > 0) {
-        const citations = message.context.messages
-          .filter((m) => m.role === ChatRole.Tool)
-          .flatMap((m) => JSON.parse(m.content) as ToolMessage[])
-          .flatMap((m) => m.citations);
-        // TODO: Do citations need to be stored per message or globally?
-        citations
-          .reverse()
-          .forEach((c) => (conv.citations = [{ ...c, id: conv.citations.length + 1 }, ...conv.citations]));
+        conv.messages[conv.messages.length - 1].context = message.context;
         ConversationStore.set(conv);
       }
       if (message.content) {
