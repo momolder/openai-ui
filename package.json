@@ -6,7 +6,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "predeploy:zip": "(npm run build) && copy .\\package.json .\\build\\package.json && copy .\\package-lock.json .\\build\\package-lock.json && cd ./build && npm ci --omit dev && cd..",
-    "deploy:zip": "(pwsh -command \"Compress-Archive -Path ./build/* -DestinationPath release.zip -force\") && az webapp deployment source config-zip --resource-group rg-openai-ui --name openai-ui --src release.zip",
+    "deploy:zip": "(pwsh -command \"Compress-Archive -Path ./build/* -DestinationPath release.zip -force\") && az webapp deployment source config-zip --resource-group rg-openai-ui --name openai-ui-dev --src release.zip",
     "docker:build": "docker build --pull --rm -f \"Dockerfile\" -t openaiui:latest \".\" --progress=plain",
     "predocker:run": "npm run docker:build",
     "docker:run": "docker run --rm -d -p 80:80/tcp openaiui:latest --openai",
