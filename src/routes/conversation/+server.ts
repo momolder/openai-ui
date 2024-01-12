@@ -18,7 +18,7 @@ const extensions = {
       indexName: env.AiSearch_IndexName,
       inScope: false,
       strictness: 3,
-      queryType: 'simple',
+      queryType: env.AiSearch_QueryType,
       fieldsMapping: {
         // idField: '',
         // "contentFields":[""],

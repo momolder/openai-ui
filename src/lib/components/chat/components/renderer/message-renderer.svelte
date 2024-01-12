@@ -20,21 +20,27 @@
   let downloadLink = '';
 
   function prepare() {
-    parts = [];
-    const matches = message.content.matchAll(/\[doc(\d+)\]/g);
-    let text = message.content;
+    try {
+      parts = [];
+      const matches = message.content.matchAll(/\[doc(\d+)\]/g);
+      let text = message.content;
 
-    for (const match of matches) {
-      const split = text.split(match[0]);
-      parts.push({
-        content: split[0],
-        docName: `[${citations?.at(Number.parseInt(match[1]) - 1)?.title}]`,
-        docId: match[1]
-      });
-      text = split[1];
-    }
-    if (text && parts.length > 0) {
-      parts.push({ content: text, docName: undefined, docId: undefined });
+      for (const match of matches) {
+        const split = text.split(match[0]);
+        parts.push({
+          content: split[0],
+          docName: `[${citations?.at(Number.parseInt(match[1]) - 1)?.title}]`,
+          docId: match[1]
+        });
+        text = split.slice(1).join(match[0]);
+      }
+      if (text && parts.length > 0) {
+        parts.push({ content: text, docName: undefined, docId: undefined });
+      }
+    } catch (e) {
+      console.warn('updating the citations failed. Links are not generated, but the message is still displayed correctly.');
+      console.error(e);
+      parts = [];
     }
   }
 
