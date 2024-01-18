@@ -13,3 +13,4 @@ export const HistoryStore = writable<Conversation[]>([]);
 export const UserStore = writable<UserInformation>();
 export const ThemeStore = writable<string>();
 export const IsOpenStore = writable<boolean>(false);
+export const IsStreaming = writable<boolean>(false);

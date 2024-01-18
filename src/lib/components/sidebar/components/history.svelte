@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { HistoryStore } from '$lib/services/state-management';
+  import { HistoryStore, IsStreaming } from '$lib/services/state-management';
   import unfollow from '$lib/assets/unfollow.svg';
   import { lang, t } from '$lib/localization/translation';
   import conversationService from '$lib/services/conversation-service';
   import type { Conversation } from '$lib/models/Contracts';
+  import { get } from 'svelte/store';
 
   let history: Conversation[] = [];
   HistoryStore.subscribe((h) => {
@@ -15,6 +16,9 @@
   }
 
   function loadEntry(entry: Conversation): void {
+    if(get(IsStreaming)) {
+      conversationService.cancel();
+    }
     conversationService.loadConversation(entry);
   }
 
