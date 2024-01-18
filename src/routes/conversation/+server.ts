@@ -9,26 +9,42 @@ import type { RequestEvent } from './$types';
 import { env } from '$env/dynamic/private';
 import { isNullOrWhitespace } from '$lib/helper';
 
-const extensions = {
-  extensions: [
-    {
-      type: 'AzureCognitiveSearch',
-      endpoint: env.AiSearch_Endpoint,
-      key: env.AiSearch_Key,
-      indexName: env.AiSearch_IndexName,
-      inScope: false,
-      strictness: 3,
-      queryType: env.AiSearch_QueryType,
-      fieldsMapping: {
-        // idField: '',
-        // "contentFields":[""],
-        titleField: 'metadata_title',
-        urlField: 'metadata_storage_path'
-        // "filepathField": AZURE_SEARCH_FILENAME_COLUMN if AZURE_SEARCH_FILENAME_COLUMN else None,
-        // "vectorFields": AZURE_SEARCH_VECTOR_COLUMNS.split("|") if AZURE_SEARCH_VECTOR_COLUMNS else []
-      }
-    }
-  ] as AzureChatExtensionConfiguration[]
+const simpleSearch = {
+  type: 'AzureCognitiveSearch',
+  endpoint: env.AiSearch_Endpoint,
+  key: env.AiSearch_Key,
+  indexName: env.AiSearch_IndexName,
+  inScope: false,
+  strictness: 3,
+  queryType: env.AiSearch_QueryType,
+  fieldsMapping: {
+    // idField: '',
+    // "contentFields":[""],
+    titleField: 'metadata_title',
+    urlField: 'metadata_storage_path'
+    // "filepathField": AZURE_SEARCH_FILENAME_COLUMN if AZURE_SEARCH_FILENAME_COLUMN else None,
+    // "vectorFields": AZURE_SEARCH_VECTOR_COLUMNS.split("|") if AZURE_SEARCH_VECTOR_COLUMNS else []
+  }
+};
+
+const vectorSearch = {
+  type: 'AzureCognitiveSearch',
+  endpoint: env.AiSearch_Endpoint,
+  key: env.AiSearch_Key,
+  indexName: env.AiSearch_IndexName,
+  inScope: false,
+  strictness: 3,
+  queryType: env.AiSearch_QueryType,
+  embeddingKey: env.OpenAi_Key,
+  embeddingEndpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`,
+  fieldsMapping: {
+    // idField: '',
+    // "contentFields":[""],
+    titleField: 'metadata_title',
+    urlField: 'metadata_storage_path'
+    // "filepathField": AZURE_SEARCH_FILENAME_COLUMN if AZURE_SEARCH_FILENAME_COLUMN else None,
+    // "vectorFields": AZURE_SEARCH_VECTOR_COLUMNS.split("|") if AZURE_SEARCH_VECTOR_COLUMNS else []
+  }
 };
 
 export async function POST({ request }: RequestEvent) {
@@ -57,7 +73,15 @@ export async function POST({ request }: RequestEvent) {
     presencePenalty: Number.parseFloat(env.OpenAi_PresencePenalty),
     topP: Number.parseFloat(env.OpenAi_NucleusSamplingFactor),
     stop: [env.OpenAi_StopSequences],
-    azureExtensionOptions: isNullOrWhitespace(env.AiSearch_Key) ? undefined : extensions
+    azureExtensionOptions: {
+      extensions: [
+        isNullOrWhitespace(env.AiSearch_Key)
+          ? undefined
+          : env.AiSearch_QueryType === 'simple'
+            ? simpleSearch
+            : vectorSearch
+      ] as AzureChatExtensionConfiguration[]
+    }
   });
 
   const stream = new ReadableStream({
