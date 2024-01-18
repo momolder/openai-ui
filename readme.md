@@ -16,6 +16,26 @@ To get the app up and running, several environment variables are required. To ea
 
 ```json
   {
+    "name": "AiSearch_Endpoint",
+    "value": "your ai search endpoint",
+    "slotSetting": false
+  },
+  {
+    "name": "AiSearch_IndexName",
+    "value": "gyour ai search index name",
+    "slotSetting": false
+  },
+  {
+    "name": "AiSearch_Key",
+    "value": "your ai search key",
+    "slotSetting": false
+  },
+  {
+    "name": "AiSearch_QueryType",
+    "value": "'simple', 'semantic', 'vector', 'vectorSimpleHybrid' or 'vectorSemanticHybrid",
+    "slotSetting": false
+  },
+  {
     "name": "App_ClaimName",
     "value": "",
     "slotSetting": false
@@ -43,6 +63,11 @@ To get the app up and running, several environment variables are required. To ea
   {
     "name": "OpenAi_Deployment",
     "value": "your OpenAI deployment",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAi_Embedding",
+    "value": "your OpenAI embedding deployment name",
     "slotSetting": false
   },
   {
@@ -93,6 +118,11 @@ To get the app up and running, several environment variables are required. To ea
   {
     "name": "OpenAi_PastMessagesIncluded",
     "value": "10",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAi_ApiVersion",
+    "value": "2023-10-01-preview",
     "slotSetting": false
   },
   {
