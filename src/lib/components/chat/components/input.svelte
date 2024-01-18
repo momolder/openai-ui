@@ -4,24 +4,24 @@
   import wait from '$lib/assets/wait.svg';
   import { lang, t } from '$lib/localization/translation';
   import { isNullOrWhitespace } from '$lib/helper';
+  import { onDestroy } from 'svelte';
+  import { IsStreaming } from '$lib/services/state-management';
 
   let userPrompt = '';
-  let processing = false;
   let textAreaHtml: HTMLTextAreaElement;
+  let streaming = false;
+  const unsubscriber = IsStreaming.subscribe(s => streaming = s);
 
   async function sendPrompt(): Promise<void> {
-    if (!processing) {
-      processing = true;
+    if (!streaming) {
       const prompt = userPrompt;
       userPrompt = '';
-      await conversationService.respondTo(prompt).finally(() => {
-        processing = false;
-      });
+      await conversationService.respondTo(prompt);
     }
   }
 
   function cancel() {
-    console.warn('not implemented...');
+    conversationService.cancel();
   }
 
   async function handleInput(event: KeyboardEvent) {
@@ -33,6 +33,8 @@
       await sendPrompt();
     }
   }
+
+  onDestroy(unsubscriber);
 </script>
 
 <div class="cmp flex flex-col items-center justify-center gap-2">
@@ -49,8 +51,8 @@
         on:keydown={(e) => handleInput(e)}
         required
         autofocus />
-      {#if processing}
-        <button class="btn min-w-max" type="reset" disabled={!processing}>
+      {#if streaming}
+        <button class="btn min-w-max" type="reset" disabled={!streaming}>
           <img class="ico" src={wait} alt="wait" />
         </button>
       {:else}
@@ -58,7 +60,7 @@
           data-testid="inputSendButton"
           class="btn p-2 bg-dark-base dark:bg-light-base border border-light-cmp dark:border-dark-cmp rounded-lg"
           type="submit"
-          disabled={processing || !userPrompt}>
+          disabled={streaming || !userPrompt}>
           <img class="ico h-4 w-5 invert dark:invert-0" src={send} alt="send" />
         </button>
       {/if}

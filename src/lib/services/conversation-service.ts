@@ -1,11 +1,17 @@
 import { get } from 'svelte/store';
-import { ConversationStore, HistoryStore, StateStore, UserStore } from './state-management';
+import { ConversationStore, HistoryStore, IsStreaming, StateStore, UserStore } from './state-management';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
-import { chunkString, type SvelteFetch } from '$lib/helper';
+import type { SvelteFetch } from '$lib/helper';
 
 class ConversationService {
+  private doCancel = false;
+  public cancel() {
+    this.doCancel = true;
+  }
+
   public async respondTo(userPrompt: string) {
+    IsStreaming.set(true);
     const conversation = get(ConversationStore);
     const message = { content: userPrompt, role: ChatRole.User, name: 'prompt', context: undefined };
     const response = { content: '', role: ChatRole.Assistant, name: 'response', context: undefined };
@@ -29,16 +35,21 @@ class ConversationService {
           throw new Error('Failed to read response');
         }
         let quitReading = false;
-        while (!quitReading) {
+        while (!quitReading && !this.doCancel) {
           const { done, value } = await reader.read();
           quitReading = done;
           if (quitReading || !value) continue;
-          await this.updateStore(value);
+          this.updateStore(value);
         }
-        await this.workaroundMarkdownIssues();
+        this.workaroundMarkdownIssues();
         reader.releaseLock();
+        if(this.doCancel) {
+          this.doCancel = false;
+        }
       })
-      .catch(ToastErrors);
+      .catch(ToastErrors)
+      .finally(() => {IsStreaming.set(false)});
+
 
     if (!conversation.isFollowed && get(StateStore).autosave) {
       await this.follow();
@@ -124,7 +135,7 @@ class ConversationService {
     });
   }
 
-  private async updateStore(value: string) {
+  private updateStore(value: string) {
     const conv = get(ConversationStore);
     const jsonBlocks = value.split(/(?<=\})\s*(?=\{)/);
     for (const json of jsonBlocks) {
@@ -134,22 +145,18 @@ class ConversationService {
         ConversationStore.set(conv);
       }
       if (message.content) {
-        for (const sequence of chunkString(message.content, 4)) {
-          await new Promise((f) => setTimeout(f, 10));
-          conv.messages[conv.messages.length - 1].content += sequence;
+          conv.messages[conv.messages.length - 1].content += message.content;
           ConversationStore.set(conv);
-        }
       }
     }
   }
 
-  private async workaroundMarkdownIssues() {
+  private workaroundMarkdownIssues() {
     // Workaround for streaming issues in markdown
     const conv = get(ConversationStore);
     const clone = JSON.parse(JSON.stringify(conv)) as Conversation;
     conv.messages[conv.messages.length - 1].content = '';
     ConversationStore.set(conv);
-    await new Promise((f) => setTimeout(f, 10));
     ConversationStore.set(clone);
   }
 
