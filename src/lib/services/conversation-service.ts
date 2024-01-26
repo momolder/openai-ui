@@ -80,7 +80,8 @@ class ConversationService {
       title: '',
       isFollowed: false,
       userId: get(UserStore).id,
-      date: new Date()
+      date: new Date(),
+      useDocumentSearch: true
     });
   }
 

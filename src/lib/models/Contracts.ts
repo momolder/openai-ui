@@ -6,6 +6,7 @@ export interface Conversation {
   userId: string;
   date: Date;
   citations: Citation[];
+  useDocumentSearch: boolean;
 }
 
 export interface ChatMessage {
