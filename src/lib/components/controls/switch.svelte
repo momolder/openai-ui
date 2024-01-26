@@ -4,23 +4,33 @@
   const dispatch = createEventDispatcher();
   export let label: string;
   export let value: boolean;
-  export let testid = '';
+  export let size: 's' | 'm' = 'm';
 
   function click() {
     dispatch('click', { value: value });
   }
+
+  function getClass() {
+    let xclass =
+      'rounded-full peer bg-light-flat dark:bg-dark-flat peer-checked:bg-light-highlight dark:peer-checked:bg-dark-highlight after:bg-light-cmp dark:after:bg-dark-cmp peer-checked:after:translate-x-full after:absolute';
+    switch (size) {
+      case 's':
+        xclass +=
+          ' w-9 h-[17px] after:top-[2px] after:left-[1.5px] after:rounded-full after:h-4 after:w-4 after:transition-all';
+        break;
+      case 'm':
+        xclass +=
+          ' w-11 h-[25px] after:top-[3px] after:left-[2px] after:rounded-full after:h-5 after:w-5 after:transition-all';
+        break;
+    }
+    return xclass;
+  }
 </script>
 
-<div class="flex justify-between py-2">
-  <span class="whitespace-nowrap">{label}</span>
+<div class="flex justify-between {size === 's' ? 'py-1' : 'py-2'}">
+  <span class="whitespace-nowrap {size === 's' ? 'text-sm mr-1' : ''}">{label}</span>
   <label class="relative inline-flex items-center cursor-pointer">
     <input type="checkbox" on:click={click} checked={value} class="sr-only peer" />
-    <div
-      data-testid={testid}
-      class="w-11 h-[25px] rounded-full peer
-    bg-light-flat dark:bg-dark-flat peer-checked:bg-light-highlight dark:peer-checked:bg-dark-highlight after:bg-light-cmp dark:after:bg-dark-cmp
-    peer-checked:after:translate-x-full
-    after:absolute after:top-[3px] after:left-[2px]
-    after:rounded-full after:h-5 after:w-5 after:transition-all" />
+    <div class={getClass()} />
   </label>
 </div>

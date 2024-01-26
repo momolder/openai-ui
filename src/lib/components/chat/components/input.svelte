@@ -5,7 +5,9 @@
   import { lang, t } from '$lib/localization/translation';
   import { isNullOrWhitespace } from '$lib/helper';
   import { onDestroy } from 'svelte';
-  import { IsStreaming } from '$lib/services/state-management';
+  import { IsStreaming, ConversationStore } from '$lib/services/state-management';
+  import Switch from '$lib/components/controls/switch.svelte';
+  import stateService from '$lib/services/state-service';
 
   let userPrompt = '';
   let textAreaHtml: HTMLTextAreaElement;
@@ -38,6 +40,15 @@
 </script>
 
 <div class="cmp flex flex-col items-center justify-center gap-2">
+  {#if stateService.useDocumentSearch()}
+    <div class="cmp flex justify-end">
+      <Switch
+        label={t(lang.Page.Chat.Input.UseDocumentSearch)}
+        on:click={() => ($ConversationStore.useDocumentSearch = !$ConversationStore.useDocumentSearch)}
+        value={$ConversationStore.useDocumentSearch}
+        size="s" />
+    </div>
+  {/if}
   <form on:submit={sendPrompt} on:reset={cancel} class="cmp">
     <div
       class="cmp p-4 flex justify-end bg-light-input dark:bg-dark-input rounded-xl border border-light-highlight dark:border-dark-highlight">

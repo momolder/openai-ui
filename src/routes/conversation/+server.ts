@@ -3,69 +3,41 @@ import {
   AzureKeyCredential,
   OpenAIClient,
   type ChatRequestMessage,
-  type AzureChatExtensionConfiguration
+  type AzureChatExtensionConfiguration,
+  type AzureCognitiveSearchChatExtensionConfiguration,
+  type AzureCognitiveSearchQueryType
 } from '@azure/openai';
 import type { RequestEvent } from './$types';
 import { env } from '$env/dynamic/private';
-import { isNullOrWhitespace } from '$lib/helper';
+import { env as publicEnv } from '$env/dynamic/public';
 
-const simpleSearch = {
+const searchConfiguration: AzureCognitiveSearchChatExtensionConfiguration = {
   type: 'AzureCognitiveSearch',
   endpoint: env.AiSearch_Endpoint,
   key: env.AiSearch_Key,
   indexName: env.AiSearch_IndexName,
-  inScope: false,
-  strictness: 3,
-  queryType: env.AiSearch_QueryType,
+  semanticConfiguration: env.AiSearch_SemanticConfiguration,
+  queryType: env.AiSearch_QueryType as AzureCognitiveSearchQueryType,
+  roleInformation: env.OpenAi_SystemMessage,
   fieldsMapping: {
-    // idField: '',
-    // "contentFields":[""],
-    titleField: 'metadata_title',
-    urlField: 'metadata_storage_path'
-    // "filepathField": AZURE_SEARCH_FILENAME_COLUMN if AZURE_SEARCH_FILENAME_COLUMN else None,
-    // "vectorFields": AZURE_SEARCH_VECTOR_COLUMNS.split("|") if AZURE_SEARCH_VECTOR_COLUMNS else []
-  }
-};
-
-const vectorSearch = {
-  type: 'AzureCognitiveSearch',
-  endpoint: env.AiSearch_Endpoint,
-  key: env.AiSearch_Key,
-  indexName: env.AiSearch_IndexName,
-  inScope: false,
+    contentFieldsSeparator: '\n',
+    contentFields: env.AiSearch_ContentFields.split('|').map((field) => field.trim()),
+    filepathField: env.AiSearch_FilePathField,
+    titleField: env.AiSearch_TitleField,
+    urlField: env.AiSearch_UrlField
+  },
+  inScope: true,
   strictness: 3,
-  queryType: env.AiSearch_QueryType,
+  topNDocuments: 2,
   embeddingKey: env.OpenAi_Key,
-  embeddingEndpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`,
-  fieldsMapping: {
-    // idField: '',
-    // "contentFields":[""],
-    titleField: 'metadata_title',
-    urlField: 'metadata_storage_path'
-    // "filepathField": AZURE_SEARCH_FILENAME_COLUMN if AZURE_SEARCH_FILENAME_COLUMN else None,
-    // "vectorFields": AZURE_SEARCH_VECTOR_COLUMNS.split("|") if AZURE_SEARCH_VECTOR_COLUMNS else []
-  }
+  embeddingEndpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`
 };
 
 export async function POST({ request }: RequestEvent) {
   const client = new OpenAIClient(env.OpenAi_Endpoint, new AzureKeyCredential(env.OpenAi_Key));
   const conversation = (await request.json()) as Conversation;
-  let mappedMessages: ChatRequestMessage[] = conversation.messages.map((m) => {
-    return {
-      content: m.content,
-      name: m.name,
-      role: m.role.toString()
-    } as ChatRequestMessage;
-  });
-  const pastMessagesIncluded = Number.parseInt(env.OpenAi_PastMessagesIncluded);
-  mappedMessages =
-    mappedMessages.length > pastMessagesIncluded
-      ? mappedMessages.slice(-pastMessagesIncluded)
-      : mappedMessages;
-  mappedMessages = [
-    { role: ChatRole.System, content: env.OpenAi_SystemMessage, name: 'system' },
-    ...mappedMessages
-  ];
+  const mappedMessages: ChatRequestMessage[] = mapMessages(conversation);
+
   const chatStream = await client.streamChatCompletions(env.OpenAi_Deployment, mappedMessages, {
     maxTokens: Number.parseInt(env.OpenAi_MaxTokens),
     temperature: Number.parseFloat(env.OpenAi_Temperature),
@@ -74,13 +46,10 @@ export async function POST({ request }: RequestEvent) {
     topP: Number.parseFloat(env.OpenAi_NucleusSamplingFactor),
     stop: [env.OpenAi_StopSequences],
     azureExtensionOptions: {
-      extensions: [
-        isNullOrWhitespace(env.AiSearch_Key)
-          ? undefined
-          : env.AiSearch_QueryType === 'simple'
-            ? simpleSearch
-            : vectorSearch
-      ] as AzureChatExtensionConfiguration[]
+      extensions:
+        publicEnv.PUBLIC_App_UseDocumentSearch && conversation.useDocumentSearch
+          ? ([searchConfiguration] as AzureChatExtensionConfiguration[])
+          : undefined
     }
   });
 
@@ -107,4 +76,26 @@ export async function POST({ request }: RequestEvent) {
       'content-type': 'plain/text'
     }
   });
+}
+
+function mapMessages(conversation: Conversation) {
+  let mappedMessages: ChatRequestMessage[] = conversation.messages.map((m) => {
+    return {
+      content: m.content,
+      name: m.name,
+      role: m.role.toString()
+    } as ChatRequestMessage;
+  });
+
+  const pastMessagesIncluded = Number.parseInt(env.OpenAi_PastMessagesIncluded);
+
+  mappedMessages =
+    mappedMessages.length > pastMessagesIncluded
+      ? mappedMessages.slice(-pastMessagesIncluded)
+      : mappedMessages;
+  mappedMessages = [
+    { role: ChatRole.System, content: env.OpenAi_SystemMessage, name: 'system' },
+    ...mappedMessages
+  ];
+  return mappedMessages;
 }

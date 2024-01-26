@@ -49,6 +49,10 @@ class StateService {
       .catch(ToastErrors);
     return isValid;
   }
+
+  public useDocumentSearch(): boolean {
+    return env.PUBLIC_App_UseDocumentSearch === 'true';
+  }
 }
 
 const stateService: StateService = new StateService();

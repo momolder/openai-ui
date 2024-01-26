@@ -67,6 +67,10 @@ export const lang = {
         ChatInfo: {
           en: 'The chatbot can make mistakes. Consider checking important information.',
           de: 'Der Chatbot kann Fehler machen, bitte prüfen Sie wichtige Informationen.'
+        },
+        UseDocumentSearch: {
+          en: 'Search documents',
+          de: 'Dokumente durchsuchen'
         }
       },
       Message: {
