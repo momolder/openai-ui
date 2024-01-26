@@ -16,7 +16,7 @@
         ? t(lang.Page.Chat.Message.Role.User)
         : t(lang.Page.Chat.Message.Role.Agent)}</span>
     <div class="cmp overflow-hidden px-[5%]">
-      <MessageRenderer message={message} />
+      <MessageRenderer {message} />
     </div>
   </div>
   {#if message.role === ChatRole.Assistant}

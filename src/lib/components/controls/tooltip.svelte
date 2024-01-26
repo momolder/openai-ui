@@ -1,7 +1,6 @@
 <script lang="ts">
   export let text = '';
   export let position: 'top' | 'bottom' | 'automatic' = 'automatic';
-  export let testid = '';
   let visible = false;
   let isMouseOver = false;
   let tooltipX = 0;
@@ -48,7 +47,6 @@
 </div>
 
 <div
-  data-testid={testid}
   bind:this={tooltipDiv}
   class="{visible ? 'visible' : 'collapse'} text-center z-50 absolute bg-light-base dark:bg-dark-base"
   style="left: {tooltipX}px; top: {tooltipY}px;">

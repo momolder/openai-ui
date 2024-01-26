@@ -17,7 +17,6 @@
   let showDialog = false;
   let dialogHeader = '';
   let dialogContent = '';
-  let downloadLink = '';
 
   function prepare() {
     try {
@@ -38,7 +37,9 @@
         parts.push({ content: text, docName: undefined, docId: undefined });
       }
     } catch (e) {
-      console.warn('updating the citations failed. Links are not generated, but the message is still displayed correctly.');
+      console.warn(
+        'updating the citations failed. Links are not generated, but the message is still displayed correctly.'
+      );
       console.error(e);
       parts = [];
     }
@@ -50,7 +51,6 @@
     if (!citation) return;
     dialogHeader = citation?.title ?? '';
     dialogContent = citation?.content ?? '';
-    downloadLink = citation?.url ?? '';
     showDialog = true;
   }
 

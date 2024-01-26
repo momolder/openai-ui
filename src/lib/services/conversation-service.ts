@@ -2,7 +2,7 @@ import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, IsStreaming, StateStore, UserStore } from './state-management';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
-import type { SvelteFetch } from '$lib/helper';
+import { chunkString, type SvelteFetch } from '$lib/helper';
 
 class ConversationService {
   private doCancel = false;
@@ -39,17 +39,18 @@ class ConversationService {
           const { done, value } = await reader.read();
           quitReading = done;
           if (quitReading || !value) continue;
-          this.updateStore(value);
+          await this.updateStore(value);
         }
         this.workaroundMarkdownIssues();
         reader.releaseLock();
-        if(this.doCancel) {
+        if (this.doCancel) {
           this.doCancel = false;
         }
       })
       .catch(ToastErrors)
-      .finally(() => {IsStreaming.set(false)});
-
+      .finally(() => {
+        IsStreaming.set(false);
+      });
 
     if (!conversation.isFollowed && get(StateStore).autosave) {
       await this.follow();
@@ -136,18 +137,25 @@ class ConversationService {
     });
   }
 
-  private updateStore(value: string) {
+  private async updateStore(value: string) {
     const conv = get(ConversationStore);
     const jsonBlocks = value.split(/(?<=\})\s*(?=\{)/);
     for (const json of jsonBlocks) {
-      const message = JSON.parse(json) as ChatMessage;
-      if (message.context && message.context.messages.length > 0) {
-        conv.messages[conv.messages.length - 1].context = message.context;
-        ConversationStore.set(conv);
-      }
-      if (message.content) {
-          conv.messages[conv.messages.length - 1].content += message.content;
+      try {
+        const message = JSON.parse(json) as ChatMessage;
+        if (message.context && message.context.messages.length > 0) {
+          conv.messages[conv.messages.length - 1].context = message.context;
           ConversationStore.set(conv);
+        }
+        if (message.content) {
+          for (const sequence of chunkString(message.content, 4)) {
+            await new Promise((f) => setTimeout(f, 10));
+            conv.messages[conv.messages.length - 1].content += sequence;
+            ConversationStore.set(conv);
+          }
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   }
@@ -159,22 +167,6 @@ class ConversationService {
     conv.messages[conv.messages.length - 1].content = '';
     ConversationStore.set(conv);
     ConversationStore.set(clone);
-  }
-
-  private updateCitations() {
-    const conv = get(ConversationStore);
-    const lastResponse = conv.messages.at(-1);
-    if (!lastResponse) return;
-    const matches = lastResponse.content.matchAll(/\[doc(\d+)\]/g);
-    for (const match of matches) {
-      const docNum = Number.parseInt(match[1]);
-      // const base64Url = conv.citations.at(0)?.url ?? "";
-      lastResponse.content = lastResponse.content.replace(
-        match[0],
-        `[doc${conv.citations.at(docNum - 1)?.id}]`
-      );
-    }
-    ConversationStore.set(conv);
   }
 }
 

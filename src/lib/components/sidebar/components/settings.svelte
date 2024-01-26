@@ -24,21 +24,15 @@
 
 <div class="cmp">
   <Select
-    testid="settingsLanguage"
     items={supportedLanguages}
     selectedItem={$LanguageStore}
     on:select={changeLanguage}
     label={t(lang.Page.Settings.Language)} />
   {#if $StateStore.useHistory}
     <Switch
-      testid="settingsAutosave"
       label={t(lang.Page.Settings.Autosave)}
       on:click={() => ($StateStore.autosave = !$StateStore.autosave)}
       value={$StateStore.autosave} />
   {/if}
-  <Switch
-    testid="settingsTheme"
-    label={t(lang.Page.Settings.ThemeDark)}
-    on:click={toggleTheme}
-    value={!themingService.isLight()} />
+  <Switch label={t(lang.Page.Settings.ThemeDark)} on:click={toggleTheme} value={!themingService.isLight()} />
 </div>
