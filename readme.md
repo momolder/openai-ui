@@ -14,137 +14,33 @@ There are many ways to use the app. A basic way to get started, is to set up an 
 
 To get the app up and running, several environment variables are required. To easily get them into azure, use the advanced edit and add the following json elements to the settings.
 
-```json
-  {
-    "name": "AiSearch_Endpoint",
-    "value": "your ai search endpoint",
-    "slotSetting": false
-  },
-  {
-    "name": "AiSearch_IndexName",
-    "value": "gyour ai search index name",
-    "slotSetting": false
-  },
-  {
-    "name": "AiSearch_Key",
-    "value": "your ai search key",
-    "slotSetting": false
-  },
-  {
-    "name": "AiSearch_QueryType",
-    "value": "'simple', 'semantic', 'vector', 'vectorSimpleHybrid' or 'vectorSemanticHybrid",
-    "slotSetting": false
-  },
-  {
-    "name": "App_ClaimName",
-    "value": "",
-    "slotSetting": false
-  },
-  {
-    "name": "App_ClaimValue",
-    "value": "",
-    "slotSetting": false
-  },
-  {
-    "name": "Database_AccountEndpoint",
-    "value": "your database endpoint",
-    "slotSetting": false
-  },
-  {
-    "name": "Database_AccountKey",
-    "value": "your database account key",
-    "slotSetting": false
-  },
-  {
-    "name": "Database_DatabaseName",
-    "value": "History",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_Deployment",
-    "value": "your OpenAI deployment",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_Embedding",
-    "value": "your OpenAI embedding deployment name",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_Endpoint",
-    "value": "your OpenAI endpoint",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_Key",
-    "value": "your OpenAI key",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_MaxTokens",
-    "value": "800",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_Temperature",
-    "value": "0.7",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_FrequencyPenalty",
-    "value": "0.0",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_PresencePenalty",
-    "value": "0.0",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_NucleusSamplingFactor",
-    "value": "0.95",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_StopSequences",
-    "value": "<|im_end|>",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_SystemMessage",
-    "value": "You are an AI assistant that helps people find information.",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_PastMessagesIncluded",
-    "value": "10",
-    "slotSetting": false
-  },
-  {
-    "name": "OpenAi_ApiVersion",
-    "value": "2023-10-01-preview",
-    "slotSetting": false
-  },
-  {
-    "name": "PORT",
-    "value": "80",
-    "slotSetting": false
-  },
-  {
-    "name": "PUBLIC_App_Autosave",
-    "value": "true",
-    "slotSetting": false
-  },
-  {
-    "name": "PUBLIC_App_UseHistory",
-    "value": "true",
-    "slotSetting": false
-  },
-  {
-    "name": "PUBLIC_App_UseMock",
-    "value": "false",
-    "slotSetting": false
-  }
+```bash
+AiSearch_Endpoint"your ai search endpoint"
+AiSearch_IndexName"gyour ai search index name"
+AiSearch_Key"your ai search key"
+AiSearch_QueryType"'simple', 'semantic', 'vector', 'vectorSimpleHybrid' or 'vectorSemanticHybrid"
+App_ClaimName""
+App_ClaimValue""
+Database_AccountEndpoint"your database endpoint"
+Database_AccountKey"your database account key"
+Database_DatabaseName"History"
+OpenAi_Deployment"your OpenAI deployment"
+OpenAi_Embedding"your OpenAI embedding deployment name"
+OpenAi_Endpoint"your OpenAI endpoint"
+OpenAi_Key"your OpenAI key"
+OpenAi_MaxTokens"800"
+OpenAi_Temperature"0.7"
+OpenAi_FrequencyPenalty"0.0"
+OpenAi_PresencePenalty"0.0"
+OpenAi_NucleusSamplingFactor"0.95"
+OpenAi_StopSequences"<|im_end|>"
+OpenAi_SystemMessage"You are an AI assistant that helps people find information."
+OpenAi_PastMessagesIncluded"10"
+OpenAi_ApiVersion"2023-10-01-preview"
+PORT"80"
+PUBLIC_App_Autosave"true"
+PUBLIC_App_UseHistory"true"
+PUBLIC_App_UseMock"false"
 ```
 
 ### Debug
