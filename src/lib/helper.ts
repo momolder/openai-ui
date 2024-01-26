@@ -1,5 +1,7 @@
+import { supportedLanguages } from './localization/translation';
+
 export function isNullOrWhitespace(input: string | null | undefined): boolean {
-  return input == null ? true : input.trim() === '';
+  return !input || input.trim() === '';
 }
 
 export function chunkString(input: string, chunkSize: number): string[] {
@@ -10,6 +12,17 @@ export function chunkString(input: string, chunkSize: number): string[] {
     result.push(chunk);
   }
   return result;
+}
+
+export function getFirstAvailableLanguage(): string {
+  const cachedLanguage = localStorage.getItem('language');
+  if (!cachedLanguage || isNullOrWhitespace(cachedLanguage)) {
+    const browserLanguages = navigator.languages.map((l) => l.substring(0, 2));
+    const supportedLang = supportedLanguages.find((l) => browserLanguages.includes(l.value))?.value;
+    if (supportedLang) return supportedLang;
+    else return 'en';
+  }
+  return cachedLanguage;
 }
 
 export type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;

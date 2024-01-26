@@ -5,6 +5,7 @@ import { LanguageStore, StateStore } from '$lib/services/state-management';
 import { get } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { LayoutLoadEvent } from './$types';
+import { getFirstAvailableLanguage } from '$lib/helper';
 
 export const ssr = false;
 function adjustHeight() {
@@ -20,8 +21,7 @@ export async function load(event: LayoutLoadEvent) {
     window.addEventListener('resize', adjustHeight);
     window.addEventListener('orientationchange', adjustHeight);
 
-    const language = localStorage.getItem('language') ?? get(LanguageStore);
-    LanguageStore.set(language);
+    LanguageStore.set(getFirstAvailableLanguage());
     LanguageStore.subscribe((l) => {
       document.documentElement.setAttribute('lang', l);
       localStorage.setItem('language', l);
