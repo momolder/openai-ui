@@ -15,7 +15,7 @@ export default class DatabaseService {
   async init(): Promise<DatabaseService> {
     const { database } = await this.client.databases.createIfNotExists({ id: env.Database_DatabaseName });
     const { container } = await database.containers.createIfNotExists({
-      id: 'Conversations',
+      id: env.Database_CollectionName,
       partitionKey: { paths: ['/userId'] }
     });
     this.db = container;

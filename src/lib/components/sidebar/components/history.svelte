@@ -16,7 +16,7 @@
   }
 
   function loadEntry(entry: Conversation): void {
-    if(get(IsStreaming)) {
+    if (get(IsStreaming)) {
       conversationService.cancel();
     }
     conversationService.loadConversation(entry);
@@ -28,7 +28,7 @@
 </script>
 
 {#if !history || history.length === 0}
-  <div data-testid="historyEmpty">{t(lang.Page.History.Empty)}</div>
+  <div>{t(lang.Page.History.Empty)}</div>
 {:else}
   <div class="flex justify-start items-center">
     {t(lang.Page.History.ClearAll)}
@@ -38,17 +38,11 @@
   </div>
 {/if}
 <div class="cmp">
-  {#each history as historyEntry, index}
+  {#each history as historyEntry}
     <div class="flex justify-between">
-      <button
-        data-testid="historyLoadButton-{index}"
-        class="btn text-start w-full truncate"
-        on:click={() => loadEntry(historyEntry)}>{historyEntry.title}</button>
-      <button
-        data-testid="historyUnfollowButton-{index}"
-        class="btn min-w-max"
-        type="button"
-        on:click={async () => deleteEntry(historyEntry)}>
+      <button class="btn text-start w-full truncate" on:click={() => loadEntry(historyEntry)}
+        >{historyEntry.title}</button>
+      <button class="btn min-w-max" type="button" on:click={async () => deleteEntry(historyEntry)}>
         <img class="ico w-5 ml-2" src={unfollow} alt="remove conversation from chat" />
       </button>
     </div>

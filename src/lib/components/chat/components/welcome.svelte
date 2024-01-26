@@ -8,7 +8,6 @@
   <img class="ico h-24 w-24" src={logo} alt="logo" />
   <h3>{t(lang.Page.Welcome.Message)}</h3>
   <button
-    data-testid="welcomeStartButton"
     class="btn text-lg border py-1 px-2 rounded-lg"
     on:click={() => {
       conversationService.respondTo(t(lang.Page.Welcome.StartButtonPrompt));

@@ -12,7 +12,7 @@
   let userPrompt = '';
   let textAreaHtml: HTMLTextAreaElement;
   let streaming = false;
-  const unsubscriber = IsStreaming.subscribe(s => streaming = s);
+  const unsubscriber = IsStreaming.subscribe((s) => (streaming = s));
 
   async function sendPrompt(): Promise<void> {
     if (!streaming) {
@@ -55,7 +55,6 @@
       <!-- svelte-ignore a11y-autofocus -->
       <textarea
         bind:this={textAreaHtml}
-        data-testid="inputMessageInput"
         class="max-h-[200px] outline-none overflow-x-auto w-full resize-none bg-light-input dark:bg-dark-input"
         placeholder={t(lang.Page.Chat.Input.Placeholder)}
         bind:value={userPrompt}
@@ -68,7 +67,6 @@
         </button>
       {:else}
         <button
-          data-testid="inputSendButton"
           class="btn p-2 bg-dark-base dark:bg-light-base border border-light-cmp dark:border-dark-cmp rounded-lg"
           type="submit"
           disabled={streaming || !userPrompt}>
