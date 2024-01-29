@@ -6,7 +6,8 @@ export const StateStore = writable<State>({
   useMock: true,
   useHistory: false,
   autosave: false,
-  version: '1'
+  version: '1',
+  sidebarSlot: ''
 });
 export const LanguageStore = writable<string>('en');
 export const HistoryStore = writable<Conversation[]>([]);

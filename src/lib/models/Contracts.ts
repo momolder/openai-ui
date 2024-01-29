@@ -44,6 +44,7 @@ export interface State {
   useMock: boolean;
   autosave: boolean;
   version: string;
+  sidebarSlot: string;
 }
 
 export interface ClientPrincipal {
