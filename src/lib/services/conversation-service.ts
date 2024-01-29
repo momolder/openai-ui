@@ -91,14 +91,11 @@ class ConversationService {
   }
 
   public async loadHistory(svelteFetch: SvelteFetch): Promise<void> {
-    await (await svelteFetch(`/history/user/${get(UserStore).id}`))
-      .json()
-      .then(HistoryStore.set)
-      .catch(ToastErrors);
+    await (await svelteFetch(`/history/user/me`)).json().then(HistoryStore.set).catch(ToastErrors);
   }
 
   public async clearHistory(): Promise<void> {
-    await fetch(`/history/user/${get(UserStore).id}`, { method: 'DELETE' }).catch(ToastErrors);
+    await fetch(`/history/user/me`, { method: 'DELETE' }).catch(ToastErrors);
     ConversationStore.update((c) => {
       c.isFollowed = false;
       return c;
