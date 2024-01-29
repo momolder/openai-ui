@@ -2,9 +2,10 @@ import { json } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
 import type { ClientPrincipal } from '$lib/models/Contracts';
 import { env } from '$env/dynamic/private';
+import { constants } from '$lib/constants';
 
 export function GET({ request }: RequestEvent): Response {
-  const principalString = request.headers.get('X-MS-CLIENT-PRINCIPAL');
+  const principalString = request.headers.get(constants.principalString);
   const token = principalString
     ? (JSON.parse(atob(principalString)) as ClientPrincipal)
     : ({} as ClientPrincipal);
