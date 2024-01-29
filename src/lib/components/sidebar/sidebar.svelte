@@ -7,40 +7,28 @@
   import Settings from './components/settings.svelte';
   import settings from '$lib/assets/settings.svg';
   import SidebarSlot from './components/sidebar-slot.svelte';
-  import { StateStore, IsOpenStore } from '$lib/services/state-management';
-  import { createEventDispatcher, onDestroy } from 'svelte';
+  import { StateStore } from '$lib/services/state-management';
+  import { onDestroy } from 'svelte';
   import user from '$lib/assets/user.svg';
   import User from './components/user.svelte';
   import NewChat from './components/new-chat.svelte';
 
-  const dispatch = createEventDispatcher();
-  let tab: '' | 'history' | 'help' | 'settings' | 'user' | 'clear' = '';
+  let tab: string;
 
   function toggle(selectedTab: typeof tab) {
-    if (tab === selectedTab) tab = '';
-    else tab = selectedTab;
-    dispatch('toggle', { isOpen: tab != '' });
+    tab = tab === selectedTab ? '' : selectedTab;
   }
 
-  const unsubscriber = IsOpenStore.subscribe((c) => {
-    if (!c) {
-      toggle('');
-    }
+  const unsubscriber = StateStore.subscribe((c) => {
+    tab = c.sidebarSlot;
   });
 
   onDestroy(unsubscriber);
 </script>
 
-<div class="cmp flex flex-col justify-between {$IsOpenStore ? 'pr-9' : ''} md:p-2">
+<div class="cmp flex flex-col justify-between {$StateStore.sidebarSlot ? 'pr-9' : ''} md:p-2">
   <div class="cmp flex flex-col overflow-hidden">
     <NewChat showLabel={tab != ''} label={t(lang.Page.Sidebar.Clear)} />
-    <!-- <SidebarSlot
-        ico={clear}
-        label={t(lang.Page.Sidebar.Clear)}
-        name="clear"
-        isOpen={tab === 'clear'}
-        on:toggle={(e) => toggle(e.detail.name)}>
-      </SidebarSlot> -->
     {#if $StateStore.useHistory}
       <SidebarSlot
         showLabel={tab != ''}
@@ -57,8 +45,7 @@
       ico={settings}
       label={t(lang.Page.Sidebar.Settings)}
       name="settings"
-      isOpen={tab === 'settings'}
-      on:toggle={(e) => toggle(e.detail.name)}>
+      isOpen={tab === 'settings'}>
       <Settings />
     </SidebarSlot>
     <SidebarSlot
@@ -66,8 +53,7 @@
       ico={help}
       label={t(lang.Page.Sidebar.Help)}
       name="help"
-      isOpen={tab === 'help'}
-      on:toggle={(e) => toggle(e.detail.name)}>
+      isOpen={tab === 'help'}>
       <Help />
     </SidebarSlot>
   </div>
@@ -77,8 +63,7 @@
       ico={user}
       label={t(lang.Page.Sidebar.User)}
       name="user"
-      isOpen={tab === 'user'}
-      on:toggle={(e) => toggle(e.detail.name)}>
+      isOpen={tab === 'user'}>
       <User />
     </SidebarSlot>
   </div>

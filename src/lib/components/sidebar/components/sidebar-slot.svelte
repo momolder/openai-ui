@@ -1,8 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import { IsOpenStore } from '$lib/services/state-management';
-
-  const dispatch = createEventDispatcher();
+  import { StateStore } from '$lib/services/state-management';
 
   export let showLabel = false;
   export let name: string;
@@ -11,8 +8,7 @@
   export let ico: string;
 
   function toggle() {
-    dispatch('toggle', { name: name });
-    $IsOpenStore = !isOpen;
+    $StateStore.sidebarSlot = $StateStore.sidebarSlot === name ? '' : name;
   }
 </script>
 
