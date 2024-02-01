@@ -54,6 +54,7 @@
       class="cmp p-4 flex justify-end bg-light-input dark:bg-dark-input rounded-xl border border-light-highlight dark:border-dark-highlight">
       <!-- svelte-ignore a11y-autofocus -->
       <textarea
+        data-testid="chat-input"
         bind:this={textAreaHtml}
         class="max-h-[200px] outline-none overflow-x-auto w-full resize-none bg-light-input dark:bg-dark-input"
         placeholder={t(lang.Page.Chat.Input.Placeholder)}

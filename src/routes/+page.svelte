@@ -10,14 +10,15 @@
 
 <div class="cmp flex flex-row overflow-hidden">
   <div
+    data-testid="sidebar"
     class="h-full overflow-hidden {$StateStore.sidebarSlot
       ? 'w-screen min-w-full md:w-96 md:min-w-0'
       : 'w-max'}">
     <Sidebar />
   </div>
-  <div class="cmp-raised overflow-hidden flex flex-col">
+  <div data-testid="header" class="cmp-raised overflow-hidden flex flex-col">
     <Header />
-    <div class="cmp overflow-hidden">
+    <div data-testid="chat" class="cmp overflow-hidden">
       <Chat />
     </div>
     <div>

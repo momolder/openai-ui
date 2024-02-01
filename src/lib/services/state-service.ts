@@ -18,6 +18,7 @@ class StateService {
         }
         u.autosave = u.useHistory && u.autosave;
         u.version = env.PUBLIC_App_Version;
+        u.sidebarSlot = '';
         return u;
       });
       StateStore.subscribe((s) => (localStorage.state = JSON.stringify(s)));
