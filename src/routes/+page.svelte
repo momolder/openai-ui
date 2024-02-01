@@ -25,14 +25,14 @@
         class="absolute top-1/2 group md:right-auto right-0 p-1"
         type="button"
         on:click={() => ($StateStore.sidebarSlot = $StateStore.sidebarSlot === '' ? 'history' : '')}>
-          <img
-            class="icon h-7 w-7 group-hover:hidden dark:invert"
-            src={verticalLine}
-            alt="close-sidebar-icon" />
-          <img
-            class="icon h-7 w-7 hidden dark:invert group-hover:block"
-            src={$StateStore.sidebarSlot ? chevronLeft : chevronRight}
-            alt="close-sidebar-hover-icon" />
+        <img
+          class="icon h-7 w-7 group-hover:hidden dark:invert"
+          src={verticalLine}
+          alt="close-sidebar-icon" />
+        <img
+          class="icon h-7 w-7 hidden dark:invert group-hover:block"
+          src={$StateStore.sidebarSlot ? chevronLeft : chevronRight}
+          alt="close-sidebar-hover-icon" />
       </button>
     </div>
   </div>

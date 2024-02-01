@@ -1,4 +1,5 @@
 import { supportedLanguages } from './localization/translation';
+import { env } from '$env/dynamic/public';
 
 export function isNullOrWhitespace(input: string | null | undefined): boolean {
   return !input || input.trim() === '';
@@ -26,3 +27,7 @@ export function getFirstAvailableLanguage(): string {
 }
 
 export type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
+
+export function fullUri(uri: string): string {
+  return `${env.PUBLIC_App_UseMock ? '/fake' : ''}${uri}`;
+}

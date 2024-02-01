@@ -2,7 +2,7 @@ import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, IsStreaming, StateStore, UserStore } from './state-management';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
-import { chunkString, type SvelteFetch } from '$lib/helper';
+import { chunkString, fullUri, type SvelteFetch } from '$lib/helper';
 
 class ConversationService {
   private doCancel = false;
@@ -21,7 +21,7 @@ class ConversationService {
       u.messages.push(response);
       return u;
     });
-    await fetch(`/conversation`, {
+    await fetch(fullUri('/conversation'), {
       method: 'POST',
       body: JSON.stringify(conversation),
       headers: {
@@ -55,7 +55,7 @@ class ConversationService {
     if (!conversation.isFollowed && get(StateStore).autosave) {
       await this.follow();
     } else if (conversation.isFollowed) {
-      await fetch(`/history`, {
+      await fetch(fullUri('/history'), {
         method: 'PUT',
         body: JSON.stringify(get(ConversationStore))
       });
@@ -91,11 +91,11 @@ class ConversationService {
   }
 
   public async loadHistory(svelteFetch: SvelteFetch): Promise<void> {
-    await (await svelteFetch(`/history/user/me`)).json().then(HistoryStore.set).catch(ToastErrors);
+    await (await svelteFetch(fullUri('/history/user/me'))).json().then(HistoryStore.set).catch(ToastErrors);
   }
 
   public async clearHistory(): Promise<void> {
-    await fetch(`/history/user/me`, { method: 'DELETE' }).catch(ToastErrors);
+    await fetch(fullUri('/history/user/me'), { method: 'DELETE' }).catch(ToastErrors);
     ConversationStore.update((c) => {
       c.isFollowed = false;
       return c;
@@ -108,7 +108,7 @@ class ConversationService {
     currentConversation.isFollowed = true;
     currentConversation.title =
       currentConversation.messages.filter((m) => m.role === ChatRole.User).at(0)?.content ?? 'undefined';
-    const addedConversation = await fetch(`/history`, {
+    const addedConversation = await fetch(fullUri('/history'), {
       method: 'POST',
       body: JSON.stringify(currentConversation)
     })
@@ -126,7 +126,7 @@ class ConversationService {
   }
 
   public async unfollow(entry: Conversation) {
-    await fetch(`/history`, { method: 'DELETE', body: JSON.stringify(entry) }).catch(ToastErrors);
+    await fetch(fullUri('/history'), { method: 'DELETE', body: JSON.stringify(entry) }).catch(ToastErrors);
     await this.loadHistory(fetch);
     ConversationStore.update((u) => {
       if (u.id === entry.id) u.isFollowed = false;
