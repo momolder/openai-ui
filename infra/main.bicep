@@ -15,7 +15,7 @@ param resourceGroupName string = ''
 
 // app service plan
 param appServicePlanName string = ''
-param appServicePlanSku string = 'B1'
+param appServicePlanSku string = 'F1'
 
 // app
 param appServiceName string = ''
@@ -31,10 +31,11 @@ param storageAccountName string = ''
 
 // ai search
 param searchServiceName string = ''
-param searchServiceSku string = 'standard'
+@allowed(['disabled', 'free', 'standard'])
+param searchServiceSku string = 'free'
 param searchIndexName string = 'gpt-search'
 @allowed(['simple', 'vector', 'semantic', 'vectorSimpleHybrid','vectorSemanticHybrid'])
-param searchQueryType string = 'vectorSemanticHybrid'
+param searchQueryType string = 'simple'
 @allowed(['disabled', 'free', 'standard'])
 param searchSemanticSearch string = 'free'
 param semanticConfiguration string = ''
