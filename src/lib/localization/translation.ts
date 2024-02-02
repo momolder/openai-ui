@@ -122,6 +122,12 @@ export const lang = {
         de: 'Dunkles Layout'
       }
     },
+    Help: {
+      ReleaseNotes: {
+        en: "Release Notes",
+        de: 'Release Notes'
+      }
+    },
     Tooltip: {
       Header: {
         Theme: {
