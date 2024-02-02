@@ -44,7 +44,8 @@
   "dependencies": {
     "@azure/cosmos": "^4.0.0",
     "@azure/openai": "^1.0.0-beta.9",
-    "@azure/storage-blob": "^12.17.0"
+    "@azure/storage-blob": "^12.17.0",
+    "jspdf": "^2.5.1"
   },
   "type": "module"
 }

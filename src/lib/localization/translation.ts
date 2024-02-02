@@ -106,6 +106,10 @@ export const lang = {
       ClearOne: {
         en: 'Delete chat',
         de: 'Chat löschen'
+      },
+      DownloadPdf: {
+        en: 'Download Pdf',
+        de: 'Pdf herunterladen'
       }
     },
     Settings: {

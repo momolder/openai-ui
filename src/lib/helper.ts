@@ -36,3 +36,7 @@ export function fullUri(uri: string): string {
 export async function copyToClipboard(text: string) {
   await navigator.clipboard.writeText(text).catch(ToastErrors);
 }
+
+export function toFilesystemSafeName(name: string): string {
+  return name.replace(/[<>:"/\\|?*\s]/g, '');
+}
