@@ -1,5 +1,6 @@
 import { supportedLanguages } from './localization/translation';
 import { env } from '$env/dynamic/public';
+import { ToastErrors } from './services/error-handler';
 
 export function isNullOrWhitespace(input: string | null | undefined): boolean {
   return !input || input.trim() === '';
@@ -30,4 +31,8 @@ export type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefi
 
 export function fullUri(uri: string): string {
   return `${env.PUBLIC_App_UseMock ? '/fake' : ''}${uri}`;
+}
+
+export async function copyToClipboard(text: string) {
+  await navigator.clipboard.writeText(text).catch(ToastErrors);
 }

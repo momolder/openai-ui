@@ -9,12 +9,8 @@
 </script>
 
 <div class="cmp text-justify">
-  <h4 class="mb-3">Version: {$StateStore.version}</h4>
-  <button type="button" class="ico-btn text-lg" on:click={() => (showDialog = true)}>
-    <img class="ico h-6 w-6" src={hint} alt="{name}icon" />
-    {t(lang.Page.Help.ReleaseNotes)}</button>
-  <hr />
 
+  <h4>{t(lang.Page.Help.About)}</h4>
   {#if $StateStore.useHistory}
     <p>
       Alle Eingaben werden innerhalb des OpenAI Azure Tennants gespeichert und zur Anzeige des Verlaufs
@@ -28,6 +24,12 @@
   <a class="ext-link" href="https://learn.microsoft.com/en-us/legal/cognitive-services/openai/data-privacy">
     Microsofts Data Privacy Erklärung
   </a>
+  <hr class=my-2 />
+  <h4 class="">Version: {$StateStore.version}</h4>
+  <button type="button" class="ico-btn text-lg p-2 w-full rounded-none" on:click={() => (showDialog = true)}>
+    <img class="ico h-6 w-6" src={hint} alt="{name}icon" />
+    {t(lang.Page.Help.ReleaseNotes)}</button>
+
 </div>
 
 <Dialog bind:showDialog>

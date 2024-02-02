@@ -1,7 +1,6 @@
 <script lang="ts">
   import clipboard from '$lib/assets/clipboard.svg';
-  import { isNullOrWhitespace } from '$lib/helper';
-  import { ToastErrors } from '$lib/services/error-handler';
+  import { copyToClipboard, isNullOrWhitespace } from '$lib/helper';
   import themingService from '$lib/services/theming-service';
   import { getHighlighter, setCDN, type Lang, type Highlighter, BUNDLED_LANGUAGES } from 'shiki';
   export let lang: string;
@@ -31,10 +30,6 @@
     }
     return highlighter;
   }
-
-  async function copyToClipboard() {
-    await navigator.clipboard.writeText(text).catch(ToastErrors);
-  }
 </script>
 
 <div
@@ -44,7 +39,7 @@
     <button
       class="btn h-4 flex flex-row items-center gap-1 text-sm"
       type="button"
-      on:click={async () => await copyToClipboard()}
+      on:click={async () => await copyToClipboard(text)}
       ><img class="ico h-4 w-4" src={clipboard} alt="logo" />Copy code</button>
   </div>
   {#await highlight().then( (c) => c?.codeToHtml( text, { lang: isNullOrWhitespace(lang) ? 'bash' : lang, theme: themingService.isDark() ? darkTheme : lightTheme } ) ) then code}

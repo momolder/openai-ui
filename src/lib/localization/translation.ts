@@ -87,6 +87,10 @@ export const lang = {
         Regenerate: {
           en: 'Regenerate last answer',
           de: 'Letzte Antwort neu generieren'
+        },
+        Copy: {
+          en: 'Copy to clipboard',
+          de: 'Nachricht in die Zwischenablage kopieren'
         }
       }
     },
@@ -126,6 +130,10 @@ export const lang = {
       ReleaseNotes: {
         en: "Release Notes",
         de: 'Release Notes'
+      },
+      About: {
+        en: "About",
+        de: 'Über'
       }
     },
     Tooltip: {

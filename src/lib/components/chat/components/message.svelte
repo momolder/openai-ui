@@ -1,10 +1,12 @@
 <script lang="ts">
   import { ChatRole, type ChatMessage } from '$lib/models/Contracts';
   import redo from '$lib/assets/redo.svg';
+  import clipboard from '$lib/assets/clipboard.svg';
   import { lang, t } from '$lib/localization/translation';
   import Tooltip from '$lib/components/controls/tooltip.svelte';
   import conversationService from '$lib/services/conversation-service';
   import MessageRenderer from './renderer/message-renderer.svelte';
+  import { copyToClipboard } from '$lib/helper';
 
   export let message: ChatMessage = {} as ChatMessage;
 </script>
@@ -21,6 +23,11 @@
   </div>
   {#if message.role === ChatRole.Assistant}
     <div class="px-[5%]">
+      <Tooltip position="automatic" text={t(lang.Page.Chat.Message.Copy)}>
+        <button class="btn self-start" type="button" on:click={() => copyToClipboard(message.content)}>
+          <img src={clipboard} alt="redo" class="ico h-5 w-5" />
+        </button>
+      </Tooltip>
       <Tooltip position="automatic" text={t(lang.Page.Chat.Message.Regenerate)}>
         <button
           class="btn self-start"
