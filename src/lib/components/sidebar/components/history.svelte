@@ -9,7 +9,7 @@
   import MenuItem from '$lib/components/controls/context-menu/components/menu-item.svelte';
 
   let history: Conversation[] = [];
-  HistoryStore.subscribe((h) => history = h);
+  HistoryStore.subscribe((h) => (history = h));
 
   async function deleteEntry(entry: Conversation): Promise<void> {
     await conversationService.unfollow(entry);

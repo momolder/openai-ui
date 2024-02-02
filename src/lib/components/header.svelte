@@ -9,6 +9,6 @@
     ><img class="ico h-14 w-14" src={logo} alt="logo" />
   </a>
   {#if $StateStore.useMock}
-    <h1 class="text-warn">{t(lang.Page.Header.Mock)}</h1>
+    <h1 class="cmp text-warn flex justify-center">{t(lang.Page.Header.Mock)}</h1>
   {/if}
 </div>

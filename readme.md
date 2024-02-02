@@ -49,7 +49,8 @@ To debug the application setup a .env file for the Environment variables describ
 
 ```bash
 npm install
-npm run dev
+cp .env.example .env.test
+npm run dev -- --mode test
 ```
 
 ### Build

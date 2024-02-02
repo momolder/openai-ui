@@ -43,7 +43,7 @@ export default {
       // 'rgb(71 85 105)', // slate-600
       // 'rgb(51 65 85)', // slate-700
     },
-    extend: { 
+    extend: {
       animation: {
         'bounce-fast': 'bounce 1s infinite',
         'bounce-normal': 'bounce 2s infinite',
