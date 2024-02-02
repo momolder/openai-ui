@@ -12,7 +12,7 @@
 
   function getClass() {
     let xclass =
-      'rounded-full peer bg-light-flat dark:bg-dark-flat peer-checked:bg-light-highlight dark:peer-checked:bg-dark-highlight after:bg-light-cmp dark:after:bg-dark-cmp peer-checked:after:translate-x-full after:absolute';
+      'rounded-full peer bg-light-contrast dark:bg-dark-contrast peer-checked:bg-light-highlight dark:peer-checked:bg-dark-highlight after:bg-light-base dark:after:bg-dark-base peer-checked:after:translate-x-full after:absolute';
     switch (size) {
       case 's':
         xclass +=

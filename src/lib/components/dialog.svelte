@@ -15,7 +15,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     on:click|stopPropagation
-    class="cmp flex flex-col bg-light-cmp dark:bg-dark-cmp dark:border-dark-highlight dark:border text-light-text dark:text-dark-text">
+    class="cmp flex flex-col bg-light-base dark:bg-dark-base dark:border-dark-highlight dark:border text-light-text dark:text-dark-text">
     <div class="flex flex-row justify-between px-2">
       <div class="pt-4">
         <slot name="header" />

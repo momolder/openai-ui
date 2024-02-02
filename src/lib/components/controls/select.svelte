@@ -15,10 +15,10 @@
 
 <div class="flex justify-between py-2">
   <span>{label}</span>
-  <select class="rounded bg-light-cmp dark:bg-dark-cmp outline-none" on:change={select}>
+  <select class="rounded bg-light-base dark:bg-dark-base outline-none" on:change={select}>
     {#each items as item}
       <option
-        class="bg-light-cmp dark:bg-dark-cmp outline-none"
+        class="bg-light-base dark:bg-dark-base outline-none"
         value={item.value}
         selected={item.value === selectedItem}>{item.label}</option>
     {/each}

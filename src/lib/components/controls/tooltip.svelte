@@ -48,7 +48,7 @@
 
 <div
   bind:this={tooltipDiv}
-  class="{visible ? 'visible' : 'collapse'} text-center z-50 absolute bg-light-base dark:bg-dark-base"
+  class="{visible ? 'visible' : 'collapse'} text-center z-50 absolute bg-light-cmp dark:bg-dark-cmp"
   style="left: {tooltipX}px; top: {tooltipY}px;">
   {text}
 </div>

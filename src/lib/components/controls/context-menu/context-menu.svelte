@@ -26,6 +26,7 @@
 
 <button
   type="button"
+  class="flex text-2xl align-baseline"
   bind:this={toggleButton}
   on:click={(e) => {
     $isOpen = !$isOpen;
@@ -36,7 +37,7 @@
   <div
     bind:this={contextMenuDiv}
     transition:fade={{ duration: 100 }}
-    class="absolute border-2 border-dark-cmp"
+    class="absolute bg-light-overlay dark:bg-dark-overlay max-w-fit p-2 flex flex-col rounded-lg"
     style="top: {toggleButton.offsetTop + toggleButton.offsetHeight}px; left: {toggleButton.offsetLeft +
       toggleButton.offsetWidth}px;">
     <slot />

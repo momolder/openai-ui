@@ -68,7 +68,7 @@
         </button>
       {:else}
         <button
-          class="btn p-2 bg-dark-base dark:bg-light-base border border-light-cmp dark:border-dark-cmp rounded-lg"
+          class="btn p-2 bg-dark-cmp dark:bg-light-cmp border border-light-base dark:border-dark-base rounded-lg"
           type="submit"
           disabled={streaming || !userPrompt}>
           <img class="ico h-4 w-5 invert dark:invert-0" src={send} alt="send" />

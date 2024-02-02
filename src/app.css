@@ -3,22 +3,22 @@
 @tailwind utilities;
 
 :root {
-  @apply bg-light-base text-light-text;
+  @apply bg-light-cmp text-light-text;
 }
 :root[class~='dark'] {
-  @apply bg-dark-base text-dark-text;
+  @apply bg-dark-cmp text-dark-text;
 }
 *::-webkit-scrollbar {
   @apply w-2;
 }
 *::-webkit-scrollbar-track {
-  @apply bg-light-base dark:bg-dark-base rounded;
+  @apply bg-light-cmp dark:bg-dark-cmp rounded;
 }
 *::-webkit-scrollbar-thumb {
   @apply bg-light-highlight dark:bg-dark-highlight rounded;
 }
 *::-webkit-scrollbar-thumb:hover {
-  @apply bg-light-flat dark:bg-dark-flat;
+  @apply bg-light-contrast dark:bg-dark-contrast;
 }
 body {
   width: 100vw;
@@ -53,7 +53,7 @@ body {
     @apply h-full w-full;
   }
   .cmp-raised {
-    @apply cmp bg-light-cmp dark:bg-dark-cmp;
+    @apply cmp bg-light-base dark:bg-dark-base;
   }
   .ext-link {
     @apply underline font-bold;
