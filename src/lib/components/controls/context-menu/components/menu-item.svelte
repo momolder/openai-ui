@@ -18,7 +18,7 @@
   };
 </script>
 
-<button class="sidebar-btn text-sm p-1 h-6 {type === 'warning' ? 'text-warn' : type === 'error' ? 'text-error' : ''}" disabled={isDisabled} on:click={handleClick}>
+<button class="ico-btn text-sm p-1 h-6 {type === 'warning' ? 'text-warn' : type === 'error' ? 'text-error' : ''}" disabled={isDisabled} on:click={handleClick}>
   {#if icon}
     <img class="ico h-5 w-5" src={icon} alt="{name}icon" />
   {/if}

@@ -43,8 +43,8 @@ body {
   .btn {
     @apply disabled:cursor-not-allowed hover:bg-light-highlight  hover:dark:bg-dark-highlight h-10 disabled:opacity-20;
   }
-  .sidebar-btn {
-    @apply btn flex flex-nowrap items-center justify-start gap-4 text-xl;
+  .ico-btn {
+    @apply btn flex flex-nowrap items-center justify-start gap-4;
   }
   .ico {
     @apply h-full w-full dark:invert;

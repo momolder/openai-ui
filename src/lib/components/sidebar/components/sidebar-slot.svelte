@@ -12,7 +12,7 @@
   }
 </script>
 
-<button class="sidebar-btn p-2 w-full" on:click={() => toggle()} type="button">
+<button class="ico-btn text-xl p-2 w-full" on:click={() => toggle()} type="button">
   <img class="ico h-5 w-5" src={ico} alt="{name}icon" />
   <p class="{showLabel ? 'visible' : 'hidden'} text-center justify-self-center">{label}</p>
 </button>
