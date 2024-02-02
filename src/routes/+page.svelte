@@ -23,7 +23,7 @@
     </div>
     <div>
       <button
-        class="absolute top-1/2 group md:right-auto right-0 p-1"
+        class="absolute top-1/2 group right-0 {$StateStore.sidebarSlot ? 'md:right-auto' : 'right-auto'} p-1"
         type="button"
         on:click={() => ($StateStore.sidebarSlot = $StateStore.sidebarSlot === '' ? 'history' : '')}>
         <img
