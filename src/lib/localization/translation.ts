@@ -98,6 +98,10 @@ export const lang = {
       ClearAll: {
         en: 'Delete history',
         de: 'Verlauf löschen'
+      },
+      ClearOne: {
+        en: 'Delete chat',
+        de: 'Chat löschen'
       }
     },
     Settings: {
