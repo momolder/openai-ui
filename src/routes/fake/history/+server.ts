@@ -5,7 +5,7 @@ import { fakeHistory } from './history-cache';
 export async function POST({ request }: RequestEvent): Promise<Response> {
   const conversation = (await request.json()) as Conversation;
   fakeHistory.update((h) => {
-    h.push(conversation);
+    h = [conversation, ...h];
     return h;
   });
   return json(conversation);
