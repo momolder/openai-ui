@@ -4,16 +4,20 @@
   import SvelteMarkdown from 'svelte-markdown';
   import CodeBlock from './code-block.svelte';
   import List from './list.svelte';
-  import NoParagraph from './no-paragraph.svelte';
 
   export let message: ChatMessage;
+  interface Part {
+    content: string;
+    docName: string | undefined;
+    docId: string | undefined;
+  }
 
   const citations = message.context?.messages
     .filter((m) => m.role === ChatRole.Tool)
     .flatMap((m) => JSON.parse(m.content) as ToolMessage[])
     .flatMap((m) => m.citations);
 
-  let parts: { content: string; docName: string | undefined; docId: string | undefined }[] = [];
+  let parts: Part[] = [];
   let showDialog = false;
   let dialogHeader = '';
   let dialogContent = '';
@@ -28,7 +32,7 @@
         const split = text.split(match[0]);
         parts.push({
           content: split[0],
-          docName: `[${citations?.at(Number.parseInt(match[1]) - 1)?.title}]`,
+          docName: `${citations?.at(Number.parseInt(match[1]) - 1)?.title}`,
           docId: match[1]
         });
         text = split.slice(1).join(match[0]);
@@ -54,20 +58,23 @@
     showDialog = true;
   }
 
+  function distinct(parts: Part[]): Part[] {
+    return parts
+      .filter((value, index, array) => array.findIndex((part) => part.docId === value.docId) === index)
+      .filter((part) => part.docId !== undefined);
+  }
+
   prepare();
 </script>
 
 {#if parts.length > 0}
-  <p>
-    {#each parts as part}
-      <SvelteMarkdown
-        source={part.content}
-        renderers={{ code: CodeBlock, list: List, paragraph: NoParagraph }} />
-      {#if part.docName}
-        <button type="button" on:click={() => openDialog(part.docId)}>{part.docName}</button>
-      {/if}
-    {/each}
-  </p>
+  <SvelteMarkdown
+    source={parts.map((p) => (p.docId ? `${p.content} [${p.docId}]` : p.content)).join('')}
+    renderers={{ code: CodeBlock, list: List }} />
+  <hr />
+  {#each distinct(parts) as part, index}
+    <div><button type="button" on:click={() => openDialog(part?.docId)}>[{part?.docId}] {part?.docName}</button></div>
+  {/each}
 {:else}
   <SvelteMarkdown source={message.content} renderers={{ code: CodeBlock, list: List }} />
 {/if}

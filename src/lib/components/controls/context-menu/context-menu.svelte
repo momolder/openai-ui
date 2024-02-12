@@ -15,10 +15,9 @@
   });
 
   function handleDocumentClick(event: MouseEvent) {
-    if (!event.target || !contextMenuDiv) return;
-    if (event.target && !contextMenuDiv.contains(event.target as Node) && !event.defaultPrevented) {
+    if (!event.target || !contextMenuDiv || (event.target && toggleButton === event.target)) return;
+    if (event.target && !contextMenuDiv.contains(event.target as Node) && !event.defaultPrevented)
       $isOpen = false;
-    }
   }
 
   onDestroy(unsubscriber);
@@ -29,8 +28,8 @@
   class="flex text-2xl align-baseline"
   bind:this={toggleButton}
   on:click={(e) => {
+    console.log(`click toggle button - toggle from ${$isOpen}`);
     $isOpen = !$isOpen;
-    e.stopImmediatePropagation();
   }}>...</button>
 
 {#if $isOpen}
@@ -38,8 +37,8 @@
     bind:this={contextMenuDiv}
     transition:fade={{ duration: 100 }}
     class="absolute bg-light-overlay dark:bg-dark-overlay max-w-fit p-2 flex flex-col rounded-lg"
-    style="top: {toggleButton.offsetTop + toggleButton.offsetHeight}px; left: {toggleButton.offsetLeft +
-      toggleButton.offsetWidth}px;">
+    style:top={`${toggleButton?.offsetTop + toggleButton?.offsetHeight}px`}
+    style:left={`${toggleButton?.offsetLeft + toggleButton?.offsetWidth}px`}>
     <slot />
   </div>
 {/if}

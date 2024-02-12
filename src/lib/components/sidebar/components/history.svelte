@@ -1,6 +1,6 @@
 <script lang="ts">
   import { HistoryStore, IsStreaming } from '$lib/services/state-management';
-  import unfollow from '$lib/assets/unfollow.svg';
+  import unfollow from '$lib/assets/recyclebin.svg';
   import download from '$lib/assets/download.svg';
   import { lang, t } from '$lib/localization/translation';
   import conversationService from '$lib/services/conversation-service';

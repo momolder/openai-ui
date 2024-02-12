@@ -47,7 +47,7 @@ export async function POST({ request }: RequestEvent) {
     stop: [env.OpenAi_StopSequences],
     azureExtensionOptions: {
       extensions:
-        publicEnv.PUBLIC_App_UseDocumentSearch && conversation.useDocumentSearch
+        publicEnv.PUBLIC_App_UseDocumentSearch === 'true' && conversation.useDocumentSearch
           ? ([searchConfiguration] as AzureChatExtensionConfiguration[])
           : undefined
     }

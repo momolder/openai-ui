@@ -30,7 +30,7 @@ export function getFirstAvailableLanguage(): string {
 export type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
 
 export function fullUri(uri: string): string {
-  return `${env.PUBLIC_App_UseMock ? '/fake' : ''}${uri}`;
+  return `${env.PUBLIC_App_UseMock === 'true' ? '/fake' : ''}${uri}`;
 }
 
 export async function copyToClipboard(text: string) {
