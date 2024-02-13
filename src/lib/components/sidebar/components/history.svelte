@@ -10,12 +10,13 @@
   import MenuItem from '$lib/components/controls/context-menu/components/menu-item.svelte';
   import { jsPDF } from 'jspdf';
   import { toFilesystemSafeName } from '$lib/helper';
+  import { showMessageBox } from '$lib/components/controls/message-box/message-box';
 
   let history: Conversation[] = [];
   HistoryStore.subscribe((h) => (history = h));
 
   async function deleteEntry(entry: Conversation): Promise<void> {
-    await conversationService.unfollow(entry);
+    if((await showMessageBox('warning', "Wollen Sie den Chat wirklich löschen?", "Chat löschen")) === true) await conversationService.unfollow(entry);
   }
 
   function loadEntry(entry: Conversation): void {
@@ -67,23 +68,22 @@
     </ContextMenu>
   </div>
 {/if}
-<div class="cmp">
-  {#each history as historyEntry}
-    <div class="flex justify-between gap-2">
-      <button class="btn text-start w-full truncate" on:click={() => loadEntry(historyEntry)}
-        >{historyEntry.title}</button>
-      <ContextMenu>
-        <MenuItem
-          text={t(lang.Page.History.DownloadPdf)}
-          type="normal"
-          icon={download}
-          on:click={() => downloadPdf([historyEntry])} />
-        <MenuItem
-          text={t(lang.Page.History.ClearOne)}
-          type="error"
-          icon={unfollow}
-          on:click={() => deleteEntry(historyEntry)} />
-      </ContextMenu>
-    </div>
-  {/each}
-</div>
+
+{#each history as historyEntry}
+  <div class="flex justify-between gap-2">
+    <button class="btn text-start w-full truncate" on:click={() => loadEntry(historyEntry)}
+      >{historyEntry.title}</button>
+    <ContextMenu>
+      <MenuItem
+        text={t(lang.Page.History.DownloadPdf)}
+        type="normal"
+        icon={download}
+        on:click={() => downloadPdf([historyEntry])} />
+      <MenuItem
+        text={t(lang.Page.History.ClearOne)}
+        type="error"
+        icon={unfollow}
+        on:click={() => deleteEntry(historyEntry)} />
+    </ContextMenu>
+  </div>
+{/each}

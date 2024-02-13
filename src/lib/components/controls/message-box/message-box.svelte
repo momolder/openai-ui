@@ -1,0 +1,37 @@
+<script lang="ts">
+  import { MessageBoxStore } from './message-box';
+
+  let dialog: HTMLDialogElement;
+
+  function close(ok: boolean) {
+    $MessageBoxStore.ok = ok;
+    $MessageBoxStore.showMessage = false;
+    dialog.close();
+  }
+
+  $: if ($MessageBoxStore.showMessage) dialog.showModal();
+</script>
+
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
+<dialog bind:this={dialog} class="overflow-hidden">
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div
+    class="cmp flex flex-col bg-light-base dark:bg-dark-base border border-light-highlight dark:border-dark-highlight  text-light-text dark:text-dark-text">
+    <div class="flex flex-row justify-between bg-light-overlay dark:bg-dark-overlay">
+      <div class="cmp px-2 py-1 flex flex-row items-center justify-start">
+        <img class="ico h-8 w-8" src={$MessageBoxStore.icon} alt="messagebox icon" />
+        <h4 class="pl-4">{$MessageBoxStore.title}</h4>
+      </div>
+    </div>
+    <hr />
+    <p class="cmp p-2 overflow-auto">
+      {$MessageBoxStore.message}
+    </p>
+    
+    <div class="flex flex-row justify-between">
+      <!-- svelte-ignore a11y-autofocus -->
+      <button class="btn rounded-none px-2" autofocus on:click={() => close(true)}>{$MessageBoxStore.okLabel}</button>
+      <button class="btn rounded-none px-2" on:click={() => close(false)}>{$MessageBoxStore.cancelLabel}</button>
+    </div>
+  </div>
+</dialog>

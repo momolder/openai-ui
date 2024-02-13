@@ -1,4 +1,5 @@
 <script lang="ts">
+  import MessageBox from '$lib/components/controls/message-box/message-box.svelte';
   import '../app.css';
   import { SvelteToast } from '@zerodevx/svelte-toast';
 
@@ -10,3 +11,4 @@
 
 <slot />
 <SvelteToast options={toastOptions} />
+<MessageBox />
