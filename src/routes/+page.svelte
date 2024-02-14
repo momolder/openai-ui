@@ -8,17 +8,18 @@
   import { StateStore } from '$lib/services/state-management';
 </script>
 
-<div class="cmp flex flex-row overflow-hidden">
+<div class="cmp flex flex-row overflow-hidden  print:overflow-visible">
   <div
     data-testid="sidebar"
     class="h-full overflow-hidden {$StateStore.sidebarSlot
       ? 'w-screen min-w-full md:w-96 md:min-w-0'
-      : 'w-max'}">
+      : 'w-max'} print:hidden">
     <Sidebar />
   </div>
-  <div data-testid="header" class="cmp-raised overflow-hidden flex flex-col">
+  <!-- TODO: Fix testid -->
+  <div data-testid="header" class="cmp-raised overflow-hidden flex flex-col print:overflow-visible">
     <Header />
-    <div data-testid="chat" class="cmp overflow-hidden">
+    <div data-testid="chat" class="cmp overflow-hidden print:overflow-visible">
       <Chat />
     </div>
     <div>

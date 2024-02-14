@@ -18,7 +18,7 @@
   });
 </script>
 
-<div class="cmp overflow-y-auto flex flex-col md:px-[22%]" bind:this={chatOutputDiv}>
+<div class="cmp overflow-y-auto flex flex-col md:px-[22%] print:overflow-visible" bind:this={chatOutputDiv}>
   {#each messages as message (message)}
     <Message {message} />
   {/each}
