@@ -37,7 +37,7 @@ param searchIndexName string = 'gpt-search'
 @allowed(['simple', 'vector', 'semantic', 'vectorSimpleHybrid','vectorSemanticHybrid'])
 param searchQueryType string = 'simple'
 @allowed(['disabled', 'free', 'standard'])
-param searchSemanticSearch string = 'free'
+param searchSemanticSearch string = 'disabled'
 param semanticConfiguration string = ''
 param filePathField string = ''
 param titleField string = ''
@@ -96,7 +96,7 @@ module appServicePlan 'core/host/appserviceplan.bicep' = {
 }
 
 module app 'core/host/appservice.bicep' = {
-  name: 'web'
+  name: 'app'
   scope: resourceGroup
   params: {
     name: !empty(appServiceName) ? appServiceName : '${abbrs.webSitesAppService}${environmentName}'
@@ -109,6 +109,9 @@ module app 'core/host/appservice.bicep' = {
     // authClientSecret: authClientSecret
     // authClientId: authClientId
     // authIssuerUri: authIssuerUri
+    // free tier limitations:
+    use32BitWorkerProcess: true
+    alwaysOn: false
     appSettings: {
       // Frontend
       PUBLIC_App_UseHistory: 'true'
@@ -157,6 +160,7 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
     name: !empty(openAiResourceName) ? openAiResourceName : '${abbrs.cognitiveServicesAccounts}${environmentName}'
     location: secondaryLocation
     tags: tags
+    publicNetworkAccess: 'Enabled'
     sku: {
       name: openAiSku
     }
@@ -168,6 +172,7 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
           name: openAIDeployment
           version: '0613'
         }
+        raiPolicyName: 'Microsoft.Default'
         capacity: 10
       }
       {
@@ -242,6 +247,7 @@ module cosmos 'core/database/db.bicep' = {
     accountName: !empty(cosmosAccountName) ? cosmosAccountName : '${abbrs.documentDBDatabaseAccounts}${environmentName}'
     location: location
     tags: tags
+    publicNetworkAccess: 'Enabled'
     principalIds: [principalId]
     databaseName: cosmosDatabaseName
     collectionName: cosmosCollectionName

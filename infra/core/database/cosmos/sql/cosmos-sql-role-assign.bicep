@@ -1,6 +1,5 @@
 metadata description = 'Creates a SQL role assignment under an Azure Cosmos DB account.'
 param accountName string
-
 param roleDefinitionId string
 param principalId string = ''
 

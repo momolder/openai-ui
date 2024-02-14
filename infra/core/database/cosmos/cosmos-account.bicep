@@ -2,9 +2,10 @@ metadata description = 'Creates an Azure Cosmos DB account.'
 param name string
 param location string = resourceGroup().location
 param tags object = {}
-
 @allowed([ 'GlobalDocumentDB', 'MongoDB', 'Parse' ])
 param kind string
+@allowed(['Disabled', 'Enabled'])
+param publicNetworkAccess string = 'Enabled'
 
 resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
   name: name
@@ -13,6 +14,11 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
   tags: tags
   properties: {
     consistencyPolicy: { defaultConsistencyLevel: 'Session' }
+    enableAnalyticalStorage: false
+    analyticalStorageConfiguration: {
+      schemaType: 'WellDefined'
+    }
+    defaultIdentity: 'FirstPartyIdentity'
     locations: [
       {
         locationName: location
@@ -23,8 +29,10 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
     databaseAccountOfferType: 'Standard'
     enableAutomaticFailover: false
     enableMultipleWriteLocations: false
+    enableFreeTier: true
     apiProperties: (kind == 'MongoDB') ? { serverVersion: '4.0' } : {}
     capabilities: [ { name: 'EnableServerless' } ]
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 

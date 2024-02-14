@@ -3,9 +3,10 @@ param accountName string
 param databaseName string
 param location string = resourceGroup().location
 param tags object = {}
-
 param containers array = []
 param principalIds array = []
+@allowed(['Disabled', 'Enabled'])
+param publicNetworkAccess string = 'Enabled'
 
 module cosmos 'cosmos-sql-account.bicep' = {
   name: 'cosmos-sql-account'
@@ -13,6 +14,7 @@ module cosmos 'cosmos-sql-account.bicep' = {
     name: accountName
     location: location
     tags: tags
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 
@@ -28,6 +30,25 @@ resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-05-15
       resource: {
         id: container.id
         partitionKey: { paths: [ container.partitionKey ] }
+        conflictResolutionPolicy: {
+          mode: 'LastWriterWins'
+          conflictResolutionPath: '/_ts'
+          conflictResolutionProcedure: ''
+        }
+        indexingPolicy: {
+          indexingMode: 'consistent'
+          automatic: true
+          includedPaths: [
+            {
+              path: '/*'
+            }
+          ]
+          excludedPaths: [
+            {
+              path: '/"_etag"/?'
+            }
+          ]
+        }
       }
       options: {}
     }

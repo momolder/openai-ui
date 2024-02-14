@@ -2,6 +2,8 @@ metadata description = 'Creates an Azure Cosmos DB for NoSQL account.'
 param name string
 param location string = resourceGroup().location
 param tags object = {}
+@allowed(['Disabled', 'Enabled'])
+param publicNetworkAccess string = 'Enabled'
 
 module cosmos '../../cosmos/cosmos-account.bicep' = {
   name: 'cosmos-account'
@@ -10,6 +12,7 @@ module cosmos '../../cosmos/cosmos-account.bicep' = {
     location: location
     tags: tags
     kind: 'GlobalDocumentDB'
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 

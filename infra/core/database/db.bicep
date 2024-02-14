@@ -1,11 +1,9 @@
 param accountName string
 param location string = resourceGroup().location
 param tags object = {}
-
 param databaseName string = 'db_conversation_history'
 param collectionName string = 'conversations'
 param principalIds array = []
-
 param containers array = [
   {
     name: collectionName
@@ -13,6 +11,8 @@ param containers array = [
     partitionKey: '/userId'
   }
 ]
+@allowed(['Disabled', 'Enabled'])
+param publicNetworkAccess string = 'Enabled'
 
 module cosmos 'cosmos/sql/cosmos-sql-db.bicep' = {
   name: 'cosmos-sql'
@@ -23,6 +23,7 @@ module cosmos 'cosmos/sql/cosmos-sql-db.bicep' = {
     containers: containers
     tags: tags
     principalIds: principalIds
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 

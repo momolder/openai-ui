@@ -13,24 +13,21 @@ resource search 'Microsoft.Search/searchServices@2021-04-01-preview' = {
   name: name
   location: location
   tags: tags
-  identity: {
-    type: 'SystemAssigned'
-  }
   properties: {
-    authOptions: authOptions
-    disableLocalAuth: false
-    disabledDataExfiltrationOptions: []
-    encryptionWithCmk: {
-      enforcement: 'Unspecified'
-    }
+    replicaCount: 1
+    partitionCount: 1
     hostingMode: 'default'
+    publicNetworkAccess: 'Enabled'
     networkRuleSet: {
       bypass: 'None'
       ipRules: []
     }
-    partitionCount: 1
-    publicNetworkAccess: 'Enabled'
-    replicaCount: 1
+    encryptionWithCmk: {
+      enforcement: 'Unspecified'
+    }
+    authOptions: authOptions
+    disableLocalAuth: false
+    disabledDataExfiltrationOptions: []
     semanticSearch: semanticSearch
   }
   sku: sku

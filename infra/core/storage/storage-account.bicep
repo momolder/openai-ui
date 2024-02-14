@@ -49,6 +49,8 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
       name: container.name
       properties: {
         publicAccess: contains(container, 'publicAccess') ? container.publicAccess : 'None'
+        defaultEncryptionScope: '$account-encryption-key'
+        denyEncryptionScopeOverride: false
       }
     }]
   }

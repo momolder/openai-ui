@@ -4,10 +4,12 @@ param tags object = {}
 
 param customSubDomainName string = name
 param deployments array = []
+@allowed(['Disabled', 'Enabled'])
 param publicNetworkAccess string = 'Enabled'
 param sku object = {
   name: 'S0'
 }
+param networkAcls object = {}
 
 resource account 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: name
@@ -17,6 +19,7 @@ resource account 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   properties: {
     customSubDomainName: customSubDomainName
     publicNetworkAccess: publicNetworkAccess
+    networkAcls: networkAcls
   }
   sku: sku
 }
@@ -28,6 +31,7 @@ resource deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01
   properties: {
     model: deployment.model
     raiPolicyName: contains(deployment, 'raiPolicyName') ? deployment.raiPolicyName : null
+    versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
   }
   sku: {
     name: 'Standard'
