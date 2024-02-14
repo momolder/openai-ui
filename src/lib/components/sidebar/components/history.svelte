@@ -16,7 +16,8 @@
   HistoryStore.subscribe((h) => (history = h));
 
   async function deleteEntry(entry: Conversation): Promise<void> {
-    if((await showMessageBox('warning', "Wollen Sie den Chat wirklich löschen?", "Chat löschen")) === true) await conversationService.unfollow(entry);
+    if ((await showMessageBox('warning', t(lang.Page.History.QuestionClearOne), t(lang.Page.History.ClearOne))) === true)
+      await conversationService.unfollow(entry);
   }
 
   function loadEntry(entry: Conversation): void {
@@ -27,43 +28,80 @@
   }
 
   async function clearHistory(): Promise<void> {
+    if ((await showMessageBox('warning', t(lang.Page.History.QuestionClearAll), t(lang.Page.History.ClearAll))) === true)
     await conversationService.clearHistory();
   }
 
-  async function downloadPdf(entries: Conversation[]) {
-    let doc = new jsPDF();
-    doc.setLineWidth(180);
-    let text = entries.flatMap((entry) => conversationToStringArray(doc, entry));
-
-    doc.text(text, 10, 10);
-    doc.save(toFilesystemSafeName(entries.length > 1 ? 'history' : entries[0].title));
+  function downloadJson(entries: Conversation[]) {
+    const json = entries.map((e) => {
+      return {
+        date: new Date(e.date).toLocaleString(),
+        title: e.title.substring(0, 30)+'...',
+        message: e.messages.map((m) => {
+          return { role: m.role, content: m.content };
+        })
+      };
+    });
+    var a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(json, undefined, 2));
+    a.download = 'history.json';
+    document.body.append(a);
+    a.click();
+    a.remove();
   }
 
-  function conversationToStringArray(doc: jsPDF, entry: Conversation): string[] {
-    return [
-      ...doc.splitTextToSize(entry.title, doc.getLineWidth()),
-      '\n',
-      '\n',
-      ...entry.messages.flatMap((message) => messageToStringArray(doc, message))
-    ];
-  }
+  // function downloadHtml(entries: Conversation[]) {
+  //   let result = '';
+  //   entries.forEach((e) => {
+  //     result += '\n\n**' + new Date(e.date).toDateString() + '**';
+  //     e.messages.forEach((m) => {
+  //       result += '\n\n**' + m.role + '**\n\n';
+  //       result += m.content;
+  //     });
+  //   });
+  //   const html = marked.parse(result);
+  //   var a = document.createElement('a');
+  //   a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(html.toString());
+  //   a.download = 'history.html';
+  //   document.body.append(a);
+  //   a.click();
+  //   a.remove();
+  // }
 
-  function messageToStringArray(doc: jsPDF, message: ChatMessage): string[] {
-    return [`${message.role}`, ...doc.splitTextToSize(message.content, doc.getLineWidth()), '\n'];
-  }
+  // async function downloadPdf(entries: Conversation[]) {
+  //   let doc = new jsPDF();
+  //   doc.setLineWidth(180);
+  //   let text = entries.flatMap((entry) => conversationToStringArray(doc, entry));
+
+  //   doc.text(text, 10, 10);
+  //   doc.save(toFilesystemSafeName('history'));
+  // }
+
+  // function conversationToStringArray(doc: jsPDF, entry: Conversation): string[] {
+  //   return [
+  //     ...doc.splitTextToSize(entry.title, doc.getLineWidth()),
+  //     '\n',
+  //     '\n',
+  //     ...entry.messages.flatMap((message) => messageToStringArray(doc, message))
+  //   ];
+  // }
+
+  // function messageToStringArray(doc: jsPDF, message: ChatMessage): string[] {
+  //   return [`${message.role}`, ...doc.splitTextToSize(message.content, doc.getLineWidth()), '\n'];
+  // }
 </script>
 
 {#if !history || history.length === 0}
   <div>{t(lang.Page.History.Empty)}</div>
 {:else}
   <div class="flex items-center justify-between">
-    {t(lang.Page.History.ClearAll)}
+    {t(lang.Page.History.AllHistoryEntries)}
     <ContextMenu>
       <MenuItem
-        text={t(lang.Page.History.DownloadPdf)}
+        text={t(lang.Page.History.DownloadJson)}
         type="normal"
         icon={download}
-        on:click={() => downloadPdf($HistoryStore)} />
+        on:click={() => downloadJson($HistoryStore)} />
       <MenuItem text={t(lang.Page.History.ClearAll)} type="error" icon={unfollow} on:click={clearHistory} />
     </ContextMenu>
   </div>
@@ -75,10 +113,10 @@
       >{historyEntry.title}</button>
     <ContextMenu>
       <MenuItem
-        text={t(lang.Page.History.DownloadPdf)}
+        text={t(lang.Page.History.DownloadJson)}
         type="normal"
         icon={download}
-        on:click={() => downloadPdf([historyEntry])} />
+        on:click={() => downloadJson([historyEntry])} />
       <MenuItem
         text={t(lang.Page.History.ClearOne)}
         type="error"

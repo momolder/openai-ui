@@ -99,17 +99,33 @@ export const lang = {
         en: 'No history available',
         de: 'Kein Verlauf vorhanden'
       },
+      AllHistoryEntries: {
+        en: 'All history',
+        de: 'Gesamter Verlauf'
+      },
       ClearAll: {
         en: 'Delete history',
         de: 'Verlauf löschen'
+      },
+      QuestionClearAll: {
+        en: 'Do you want to delete the chat history?',
+        de: 'Wollen Sie wirklich den gesamten Verlauf löschen?'
       },
       ClearOne: {
         en: 'Delete chat',
         de: 'Chat löschen'
       },
+      QuestionClearOne: {
+        en: 'Do you want to delete the chat?',
+        de: 'Wollen Sie den Chat wirklich löschen?'
+      },
       DownloadPdf: {
         en: 'Download Pdf',
         de: 'Pdf herunterladen'
+      },
+      DownloadJson: {
+        en: 'Download JSON',
+        de: 'JSON herunterladen'
       }
     },
     Settings: {
