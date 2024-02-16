@@ -119,11 +119,11 @@
   <div class="flex items-center justify-between">
     {t(lang.Page.History.AllHistoryEntries)}
     <ContextMenu>
-      <MenuItem
+      <!-- <MenuItem
         text={t(lang.Page.History.DownloadJson)}
         type="normal"
         icon={download}
-        on:click={() => downloadJson($HistoryStore)} />
+        on:click={() => downloadJson($HistoryStore)} /> -->
       <MenuItem text={t(lang.Page.History.ClearAll)} type="error" icon={unfollow} on:click={clearHistory} />
     </ContextMenu>
   </div>
@@ -139,11 +139,11 @@
         type="normal"
         icon={clear}
         on:click={() => rename(historyEntry)} />
-      <MenuItem
+      <!-- <MenuItem
         text={t(lang.Page.History.DownloadJson)}
         type="normal"
         icon={download}
-        on:click={() => downloadJson([historyEntry])} />
+        on:click={() => downloadJson([historyEntry])} /> -->
       <MenuItem
         text={t(lang.Page.History.ClearOne)}
         type="error"
