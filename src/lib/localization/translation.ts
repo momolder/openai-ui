@@ -126,6 +126,10 @@ export const lang = {
       DownloadJson: {
         en: 'Download JSON',
         de: 'JSON herunterladen'
+      },
+      Rename: {
+        en: 'Rename',
+        de: 'Umbenennen'
       }
     },
     Settings: {

@@ -2,21 +2,26 @@
   import { HistoryStore, IsStreaming } from '$lib/services/state-management';
   import unfollow from '$lib/assets/recyclebin.svg';
   import download from '$lib/assets/download.svg';
+  import clear from '$lib/assets/clear.svg';
   import { lang, t } from '$lib/localization/translation';
   import conversationService from '$lib/services/conversation-service';
-  import type { Conversation, ChatMessage } from '$lib/models/Contracts';
+  import type { Conversation } from '$lib/models/Contracts';
   import { get } from 'svelte/store';
   import ContextMenu from '$lib/components/controls/context-menu/context-menu.svelte';
   import MenuItem from '$lib/components/controls/context-menu/components/menu-item.svelte';
-  import { jsPDF } from 'jspdf';
-  import { toFilesystemSafeName } from '$lib/helper';
-  import { showMessageBox } from '$lib/components/controls/message-box/message-box';
+  import { MessageBoxStore, showMessageBox } from '$lib/components/controls/message-box/message-box';
 
   let history: Conversation[] = [];
   HistoryStore.subscribe((h) => (history = h));
 
   async function deleteEntry(entry: Conversation): Promise<void> {
-    if ((await showMessageBox('warning', t(lang.Page.History.QuestionClearOne), t(lang.Page.History.ClearOne))) === true)
+    if (
+      (await showMessageBox(
+        'warning',
+        t(lang.Page.History.QuestionClearOne),
+        t(lang.Page.History.ClearOne)
+      )) === true
+    )
       await conversationService.unfollow(entry);
   }
 
@@ -28,15 +33,21 @@
   }
 
   async function clearHistory(): Promise<void> {
-    if ((await showMessageBox('warning', t(lang.Page.History.QuestionClearAll), t(lang.Page.History.ClearAll))) === true)
-    await conversationService.clearHistory();
+    if (
+      (await showMessageBox(
+        'warning',
+        t(lang.Page.History.QuestionClearAll),
+        t(lang.Page.History.ClearAll)
+      )) === true
+    )
+      await conversationService.clearHistory();
   }
 
   function downloadJson(entries: Conversation[]) {
     const json = entries.map((e) => {
       return {
         date: new Date(e.date).toLocaleString(),
-        title: e.title.substring(0, 30)+'...',
+        title: e.title.substring(0, 30) + '...',
         message: e.messages.map((m) => {
           return { role: m.role, content: m.content };
         })
@@ -48,6 +59,17 @@
     document.body.append(a);
     a.click();
     a.remove();
+  }
+
+  async function rename(entry: Conversation) {
+    if (
+      (await showMessageBox('info', '', t(lang.Page.History.Rename), undefined, undefined, undefined, {
+        type: 'text',
+        placeholder: entry.title
+      })) === true
+    ) {
+      await conversationService.renameConversation(entry, $MessageBoxStore.input?.value ?? entry.title);
+    }
   }
 
   // function downloadHtml(entries: Conversation[]) {
@@ -112,6 +134,11 @@
     <button class="btn text-start w-full truncate" on:click={() => loadEntry(historyEntry)}
       >{historyEntry.title}</button>
     <ContextMenu>
+      <MenuItem
+        text={t(lang.Page.History.Rename)}
+        type="normal"
+        icon={clear}
+        on:click={() => rename(historyEntry)} />
       <MenuItem
         text={t(lang.Page.History.DownloadJson)}
         type="normal"

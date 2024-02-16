@@ -160,6 +160,21 @@ class ConversationService {
     });
   }
 
+  public async renameConversation(entry: Conversation, title: string)  {
+    entry.title = title;
+    await fetch(fullUri('/history'), {
+      method: 'PUT',
+      body: JSON.stringify(entry)
+    })
+      .then(async (x) => (await x.json()) as Conversation)
+      .catch(ToastErrors);
+      await this.loadHistory(fetch);
+      ConversationStore.update((u) => {
+        if (u.id === entry.id) u.title = title;
+        return u;
+      });
+  }
+
   private updateStore(message: ChatMessage) {
     const conv = get(ConversationStore);
     if (message.context && message.context.messages.length > 0) {
