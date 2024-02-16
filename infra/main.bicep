@@ -53,6 +53,7 @@ param openAiResourceName string = ''
 param openAiSku string = 'S0'
 param openAIModel string = 'gpt-4'
 param openAIDeployment string = openAIModel
+param openAIVersion string = '0613'
 param openAITemperature string = '0.7'
 param openAIMaxTokens int = 800
 param openAIStopSequence string = '<|im_end|>'
@@ -117,6 +118,8 @@ module app 'core/host/appservice.bicep' = {
       PUBLIC_App_UseHistory: 'true'
       PUBLIC_App_Version: 'dev'
       PUBLIC_App_Autosave: 'true'
+      PUBLIC_App_UseMock: 'false'
+      PUBLIC_App_UseDocumentSearch: 'false'
 
       // OpenAI
       OpenAi_Endpoint: openAi.outputs.endpoint
@@ -170,7 +173,7 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
         model: {
           format: 'OpenAI'
           name: openAIDeployment
-          version: '0613'
+          version: openAIVersion
         }
         raiPolicyName: 'Microsoft.Default'
         capacity: 10
