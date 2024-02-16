@@ -2,7 +2,7 @@ import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, IsStreaming, StateStore, UserStore } from './state-management';
 import { ToastErrors } from './error-handler';
 import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
-import { chunkString, fullUri, type SvelteFetch } from '$lib/helper';
+import { fullUri, type SvelteFetch } from '$lib/helper';
 
 class ConversationService {
   private doCancel = false;
@@ -30,7 +30,7 @@ class ConversationService {
       }
     })
       .then(async (c) => {
-        const reader = c.body?.pipeThrough(new TextDecoderStream()).getReader();
+        const reader = this.processStream(c);
         if (!reader) {
           throw new Error('Failed to read response');
         }
@@ -39,7 +39,7 @@ class ConversationService {
           const { done, value } = await reader.read();
           quitReading = done;
           if (quitReading || !value) continue;
-          await this.updateStore(value);
+          this.updateStore(value);
         }
         this.workaroundMarkdownIssues();
         reader.releaseLock();
@@ -61,6 +61,32 @@ class ConversationService {
       });
       await this.loadHistory(fetch);
     }
+  }
+
+  private processStream(stream: Response): ReadableStreamDefaultReader<ChatMessage> | undefined {
+    let remaining = '';
+    return stream.body
+      ?.pipeThrough(new TextDecoderStream())
+      .pipeThrough(
+        new TransformStream<string, ChatMessage>({
+          transform: (chunk, controller) => {
+            remaining += chunk;
+            let index = 0;
+            while ((index = remaining.indexOf('}', index)) >= 0) {
+              const jsonStr = remaining.slice(0, index + 1);
+              try {
+                const parsed = JSON.parse(jsonStr) as ChatMessage;
+                controller.enqueue(parsed);
+                remaining = remaining.slice(index + 1);
+                index = 0;
+              } catch (error) {
+                index++;
+              }
+            }
+          }
+        })
+      )
+      .getReader();
   }
 
   public async regenerateMessage(message: ChatMessage) {
@@ -134,26 +160,15 @@ class ConversationService {
     });
   }
 
-  private async updateStore(value: string) {
+  private updateStore(message: ChatMessage) {
     const conv = get(ConversationStore);
-    const jsonBlocks = value.split(/(?<=\})\s*(?=\{)/);
-    for (const json of jsonBlocks) {
-      try {
-        const message = JSON.parse(json) as ChatMessage;
-        if (message.context && message.context.messages.length > 0) {
-          conv.messages[conv.messages.length - 1].context = message.context;
-          ConversationStore.set(conv);
-        }
-        if (message.content) {
-          for (const sequence of chunkString(message.content, 4)) {
-            await new Promise((f) => setTimeout(f, 10));
-            conv.messages[conv.messages.length - 1].content += sequence;
-            ConversationStore.set(conv);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
+    if (message.context && message.context.messages.length > 0) {
+      conv.messages[conv.messages.length - 1].context = message.context;
+      ConversationStore.set(conv);
+    }
+    if (message.content) {
+      conv.messages[conv.messages.length - 1].content += message.content;
+      ConversationStore.set(conv);
     }
   }
 
