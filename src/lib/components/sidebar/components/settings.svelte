@@ -7,8 +7,9 @@
   import themingService from '$lib/services/theming-service';
   import { toast } from '@zerodevx/svelte-toast';
 
-  const deployments = env.PUBLIC_OpenAi_Deployments?.length > 0 ? env.PUBLIC_OpenAi_Deployments?.split('|') : undefined;
-  let useAdvancedDeployment = deployments && $StateStore.deployment === deployments[1];
+  const deployments =
+    env.PUBLIC_OpenAi_Deployments?.length > 0 ? env.PUBLIC_OpenAi_Deployments?.split('|') : undefined;
+  let useAdvancedDeployment: boolean = (deployments && $StateStore.deployment === deployments[1]) === true;
 
   function changeLanguage(event: CustomEvent) {
     $LanguageStore = event.detail.value;
@@ -26,9 +27,6 @@
   }
 
   function toggleDeployment() {
-    
-    console.log(env.PUBLIC_OpenAi_Deployments)
-    console.log(deployments)
     useAdvancedDeployment = !useAdvancedDeployment;
     if (deployments) $StateStore.deployment = useAdvancedDeployment ? deployments[1] : deployments[0];
   }

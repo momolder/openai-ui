@@ -1,7 +1,14 @@
-import { env } from "$env/dynamic/private";
-import { env as publicEnv } from "$env/dynamic/public";
-import { ChatRole, type Conversation } from "$lib/models/Contracts";
-import { OpenAIClient, type ChatRequestMessage, AzureKeyCredential, type AzureChatExtensionConfiguration, type AzureCognitiveSearchQueryType, type AzureCognitiveSearchChatExtensionConfiguration } from "@azure/openai";
+import { env } from '$env/dynamic/private';
+import { env as publicEnv } from '$env/dynamic/public';
+import { ChatRole, type Conversation } from '$lib/models/Contracts';
+import {
+  OpenAIClient,
+  type ChatRequestMessage,
+  AzureKeyCredential,
+  type AzureChatExtensionConfiguration,
+  type AzureCognitiveSearchQueryType,
+  type AzureCognitiveSearchChatExtensionConfiguration
+} from '@azure/openai';
 
 const searchConfiguration: AzureCognitiveSearchChatExtensionConfiguration = {
   type: 'AzureCognitiveSearch',
@@ -37,9 +44,10 @@ export async function streamResponse(conversation: Conversation, deployment: str
     topP: Number.parseFloat(env.OpenAi_NucleusSamplingFactor),
     stop: [env.OpenAi_StopSequences],
     azureExtensionOptions: {
-      extensions: publicEnv.PUBLIC_App_UseDocumentSearch === 'true' && conversation.useDocumentSearch
-        ? ([searchConfiguration] as AzureChatExtensionConfiguration[])
-        : undefined
+      extensions:
+        publicEnv.PUBLIC_App_UseDocumentSearch === 'true' && conversation.useDocumentSearch
+          ? ([searchConfiguration] as AzureChatExtensionConfiguration[])
+          : undefined
     }
   });
 

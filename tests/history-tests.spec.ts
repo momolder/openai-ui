@@ -8,8 +8,8 @@ test.describe('OpenAI-UI base functionality', () => {
   });
 
   test('rename should rename a conversation', async ({ page }) => {
-  await page.getByRole('button', { name: lang.Page.Welcome.StartButton.en }).click();
-  await page.getByRole('button', { name: 'historyicon' }).click();
+    await page.getByRole('button', { name: lang.Page.Welcome.StartButton.en }).click();
+    await page.getByRole('button', { name: 'historyicon' }).click();
     await page.getByRole('button', { name: '...' }).nth(1).click();
     await page.getByRole('button', { name: 'contextMenuItemicon Rename' }).click();
     await page.getByTestId('message-box-input').fill('rename1');
@@ -19,8 +19,8 @@ test.describe('OpenAI-UI base functionality', () => {
 
   test('cancel a rename should not rename a conversation', async ({ page }) => {
     await page.getByRole('button', { name: lang.Page.Welcome.StartButton.en }).click();
-  await page.getByRole('button', { name: 'historyicon' }).click();
-  await page.getByRole('button', { name: '...' }).nth(1).click();
+    await page.getByRole('button', { name: 'historyicon' }).click();
+    await page.getByRole('button', { name: '...' }).nth(1).click();
     await page.getByRole('button', { name: 'contextMenuItemicon Rename' }).click();
     await page.getByTestId('message-box-input').fill('rename1');
     await page.getByTestId('message-box-cancel').click();

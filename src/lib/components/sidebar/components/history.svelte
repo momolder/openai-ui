@@ -1,7 +1,6 @@
 <script lang="ts">
   import { HistoryStore, IsStreaming } from '$lib/services/state-management';
   import unfollow from '$lib/assets/recyclebin.svg';
-  import download from '$lib/assets/download.svg';
   import clear from '$lib/assets/clear.svg';
   import { lang, t } from '$lib/localization/translation';
   import conversationService from '$lib/services/conversation-service';
@@ -43,23 +42,23 @@
       await conversationService.clearHistory();
   }
 
-  function downloadJson(entries: Conversation[]) {
-    const json = entries.map((e) => {
-      return {
-        date: new Date(e.date).toLocaleString(),
-        title: e.title.substring(0, 30) + '...',
-        message: e.messages.map((m) => {
-          return { role: m.role, content: m.content };
-        })
-      };
-    });
-    var a = document.createElement('a');
-    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(json, undefined, 2));
-    a.download = 'history.json';
-    document.body.append(a);
-    a.click();
-    a.remove();
-  }
+  // function downloadJson(entries: Conversation[]) {
+  //   const json = entries.map((e) => {
+  //     return {
+  //       date: new Date(e.date).toLocaleString(),
+  //       title: e.title.substring(0, 30) + '...',
+  //       message: e.messages.map((m) => {
+  //         return { role: m.role, content: m.content };
+  //       })
+  //     };
+  //   });
+  //   var a = document.createElement('a');
+  //   a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(json, undefined, 2));
+  //   a.download = 'history.json';
+  //   document.body.append(a);
+  //   a.click();
+  //   a.remove();
+  // }
 
   async function rename(entry: Conversation) {
     if (

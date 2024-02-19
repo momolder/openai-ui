@@ -72,8 +72,10 @@
     source={parts.map((p) => (p.docId ? `${p.content} [${p.docId}]` : p.content)).join('')}
     renderers={{ code: CodeBlock, list: List }} />
   <hr />
-  {#each distinct(parts) as part, index}
-    <div><button type="button" on:click={() => openDialog(part?.docId)}>[{part?.docId}] {part?.docName}</button></div>
+  {#each distinct(parts) as part}
+    <div>
+      <button type="button" on:click={() => openDialog(part?.docId)}>[{part?.docId}] {part?.docName}</button>
+    </div>
   {/each}
 {:else}
   <SvelteMarkdown source={message.content} renderers={{ code: CodeBlock, list: List }} />

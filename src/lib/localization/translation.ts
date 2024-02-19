@@ -156,11 +156,11 @@ export const lang = {
     },
     Help: {
       ReleaseNotes: {
-        en: "Release Notes",
+        en: 'Release Notes',
         de: 'Release Notes'
       },
       About: {
-        en: "About",
+        en: 'About',
         de: 'Über'
       }
     },

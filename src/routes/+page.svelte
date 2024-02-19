@@ -8,7 +8,7 @@
   import { StateStore } from '$lib/services/state-management';
 </script>
 
-<div class="cmp flex flex-row overflow-hidden  print:overflow-visible">
+<div class="cmp flex flex-row overflow-hidden print:overflow-visible">
   <div
     data-testid="sidebar"
     class="h-full overflow-hidden {$StateStore.sidebarSlot

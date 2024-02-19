@@ -12,9 +12,7 @@
   $: if ($MessageBoxStore.showMessage) dialog.showModal();
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog bind:this={dialog} class="overflow-hidden">
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="cmp flex flex-col bg-light-base dark:bg-dark-base border border-light-highlight dark:border-dark-highlight text-light-text dark:text-dark-text">
     <div class="flex flex-row justify-between bg-light-overlay dark:bg-dark-overlay">
@@ -28,12 +26,20 @@
       {$MessageBoxStore.message}
     </p>
     {#if $MessageBoxStore.input && $MessageBoxStore.input.type === 'text'}
-    <input data-testid="message-box-input" class="outline-none m-2 border-b-2 border-light-highlight dark:border-dark-highlight" type='text' placeholder={$MessageBoxStore.input.placeholder} bind:value={$MessageBoxStore.input.value} />
+      <input
+        data-testid="message-box-input"
+        class="outline-none m-2 border-b-2 border-light-highlight dark:border-dark-highlight"
+        type="text"
+        placeholder={$MessageBoxStore.input.placeholder}
+        bind:value={$MessageBoxStore.input.value} />
     {/if}
     <div class="flex flex-row justify-between">
       <!-- svelte-ignore a11y-autofocus -->
-      <button data-testid="message-box-ok" class="btn rounded-none px-2" autofocus on:click={() => close(true)}
-        >{$MessageBoxStore.okLabel}</button>
+      <button
+        data-testid="message-box-ok"
+        class="btn rounded-none px-2"
+        autofocus
+        on:click={() => close(true)}>{$MessageBoxStore.okLabel}</button>
       <button data-testid="message-box-cancel" class="btn rounded-none px-2" on:click={() => close(false)}
         >{$MessageBoxStore.cancelLabel}</button>
     </div>

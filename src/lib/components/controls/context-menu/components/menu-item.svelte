@@ -11,7 +11,7 @@
   const contextMenuIsOpen = getContext('contextMenu') as Writable<boolean>;
   const dispatch = createEventDispatcher();
 
-  const handleClick = (e: Event) => {
+  const handleClick = () => {
     if (isDisabled) return;
     dispatch('click', { value: text });
     contextMenuIsOpen.set(false);

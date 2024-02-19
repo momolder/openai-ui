@@ -36,7 +36,7 @@
       return getParentScroll(element.parentElement);
     }
   }
-  
+
   function update() {
     const scroll = getParentScroll(toggleButton);
     top = `${toggleButton?.offsetTop + toggleButton?.offsetHeight + window.scrollY - scroll.top}px`;
