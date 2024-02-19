@@ -172,7 +172,7 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
         name: openAIModel
         model: {
           format: 'OpenAI'
-          name: openAIDeployment
+          name: openAIModel
           version: openAIVersion
         }
         raiPolicyName: 'Microsoft.Default'
