@@ -7,7 +7,8 @@ export const StateStore = writable<State>({
   useHistory: false,
   autosave: false,
   version: '1',
-  sidebarSlot: ''
+  sidebarSlot: '',
+  deployment: ''
 });
 export const LanguageStore = writable<string>('en');
 export const HistoryStore = writable<Conversation[]>([]);

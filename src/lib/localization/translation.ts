@@ -148,6 +148,10 @@ export const lang = {
       ThemeDark: {
         en: 'Theme dark',
         de: 'Dunkles Layout'
+      },
+      Deployment: {
+        en: 'Use advanced model',
+        de: 'Komplexes Model nutzen'
       }
     },
     Help: {

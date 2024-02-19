@@ -40,4 +40,14 @@ test.describe('OpenAI-UI base functionality', () => {
     await page.getByRole('button', { name: 'clear chat' }).click();
     await expect(page.getByRole('button', { name: lang.Page.Welcome.StartButton.en })).toBeVisible();
   });
+
+  test('test', async ({ page }) => {
+    await page.getByRole('button', { name: 'How does the chat work?' }).click();
+    await expect(page.getByTestId('chat')).toContainText('Can you tell me more about what abilities and functions you have as an AI chatbot and how you handle my data and privacy? was your request and this is my answer.');
+    process.env.PUBLIC_OpenAi_Deployments = 'gpt3|gpt4';
+    await page.getByRole('button', { name: 'settingsicon' }).click();
+    await page.reload();
+    await page.getByRole('button', { name: 'How does the chat work?' }).click();
+    await expect(page.getByTestId('chat')).toContainText('Can you tell me more about what abilities and functions you have as an AI chatbot and how you handle my data and privacy? was your request and this is my answer.');
+  });
 });

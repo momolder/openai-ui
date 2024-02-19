@@ -21,7 +21,7 @@ class ConversationService {
       u.messages.push(response);
       return u;
     });
-    await fetch(fullUri('/conversation'), {
+    await fetch(fullUri(`/conversation/${get(StateStore).deployment}`), {
       method: 'POST',
       body: JSON.stringify(conversation),
       headers: {

@@ -45,6 +45,7 @@ export interface State {
   autosave: boolean;
   version: string;
   sidebarSlot: string;
+  deployment: string;
 }
 
 export interface ClientPrincipal {
