@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Conversation, State, UserInformation } from '$lib/models/Contracts';
+import { ChatMode, type Conversation, type State, type UserInformation } from '$lib/models/Contracts';
 
 export const ConversationStore = writable<Conversation>();
 export const StateStore = writable<State>({
@@ -8,7 +8,8 @@ export const StateStore = writable<State>({
   autosave: false,
   version: '1',
   sidebarSlot: '',
-  deployment: ''
+  deployment: '',
+  chatMode: ChatMode.Balanced
 });
 export const LanguageStore = writable<string>('en');
 export const HistoryStore = writable<Conversation[]>([]);

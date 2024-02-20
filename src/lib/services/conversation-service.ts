@@ -23,7 +23,7 @@ class ConversationService {
     });
     await fetch(fullUri(`/conversation/${get(StateStore).deployment}`), {
       method: 'POST',
-      body: JSON.stringify(conversation),
+      body: JSON.stringify({conversation, chatMode: get(StateStore).chatMode}),
       headers: {
         'Content-Type': 'application/json',
         Accept: 'plain/text'
@@ -39,7 +39,7 @@ class ConversationService {
           const { done, value } = await reader.read();
           quitReading = done;
           if (quitReading || !value) continue;
-          this.updateStore(value);
+          await this.updateStore(value);
         }
         this.workaroundMarkdownIssues();
         reader.releaseLock();
@@ -175,13 +175,14 @@ class ConversationService {
     });
   }
 
-  private updateStore(message: ChatMessage) {
+  private async updateStore(message: ChatMessage) {
     const conv = get(ConversationStore);
     if (message.context && message.context.messages.length > 0) {
       conv.messages[conv.messages.length - 1].context = message.context;
       ConversationStore.set(conv);
     }
     if (message.content) {
+      await new Promise((f) => setTimeout(f, 60));
       conv.messages[conv.messages.length - 1].content += message.content;
       ConversationStore.set(conv);
     }

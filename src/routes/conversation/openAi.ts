@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { env as publicEnv } from '$env/dynamic/public';
-import { ChatRole, type Conversation } from '$lib/models/Contracts';
+import { ChatRole, ChatMode, type Conversation } from '$lib/models/Contracts';
 import {
   OpenAIClient,
   type ChatRequestMessage,
@@ -32,16 +32,23 @@ const searchConfiguration: AzureCognitiveSearchChatExtensionConfiguration = {
   embeddingEndpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`
 };
 
-export async function streamResponse(conversation: Conversation, deployment: string) {
+const chatModeTemplates = [
+  { chatMode: ChatMode.Balanced, value: { temperature: 0.7, topP: 0.95 } },
+  { chatMode: ChatMode.Creative, value: { temperature: 1.31, topP: 0.29 } },
+  { chatMode: ChatMode.Precise, value: { temperature: 0.1, topP: 0.5 } },
+];
+
+export async function streamResponse(conversation: Conversation, chatMode: ChatMode, deployment: string) {
+  const template = chatModeTemplates.find((t) => t.chatMode === chatMode) ?? chatModeTemplates[0];
   const client = new OpenAIClient(env.OpenAi_Endpoint, new AzureKeyCredential(env.OpenAi_Key));
   const mappedMessages: ChatRequestMessage[] = mapMessages(conversation);
 
   const chatStream = await client.streamChatCompletions(deployment, mappedMessages, {
     maxTokens: Number.parseInt(env.OpenAi_MaxTokens),
-    temperature: Number.parseFloat(env.OpenAi_Temperature),
+    temperature: env.OpenAi_Temperature ? Number.parseFloat(env.OpenAi_Temperature) : template.value.temperature,
     frequencyPenalty: Number.parseFloat(env.OpenAi_FrequencyPenalty),
     presencePenalty: Number.parseFloat(env.OpenAi_PresencePenalty),
-    topP: Number.parseFloat(env.OpenAi_NucleusSamplingFactor),
+    topP: env.OpenAi_NucleusSamplingFactor ? Number.parseFloat(env.OpenAi_NucleusSamplingFactor) : template.value.topP,
     stop: [env.OpenAi_StopSequences],
     azureExtensionOptions: {
       extensions:

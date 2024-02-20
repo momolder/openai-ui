@@ -149,9 +149,39 @@ export const lang = {
         en: 'Theme dark',
         de: 'Dunkles Layout'
       },
+      ModelSettings: {
+        en: 'Model Settings',
+        de: 'Model Einstellungen'
+      },
       Deployment: {
-        en: 'Use advanced model',
-        de: 'Komplexes Model nutzen'
+        en: 'Select Model',
+        de: 'Model wählen'
+      },
+      DeploymentHint: {
+        en: 'The AI Model to use, generally speaking, a higher number means better but slower answers',
+        de: 'Das zu verwendende KI Model, generell bedeutet eine höhere Nummer bessere aber langsamere Antworten'
+      },
+      ChatMode: {
+        en: 'Conversation style',
+        de: 'Unterhaltungsstil'
+      },
+      ChatModeHint: {
+        en: 'The AI is setup to answer more akin to this setting',
+        de: 'Die KI wird angewiesen in höherem Maße entsprechend zu antworten'
+      },
+      ChatModeOptions: {
+        Balanced: {
+          en: 'balanced',
+          de: 'ausgewogen'
+        },
+        Creative: {
+          en: 'creative',
+          de: 'kreativ'
+        },
+        Precise: {
+          en: 'precise',
+          de: 'genau'
+        }
       }
     },
     Help: {

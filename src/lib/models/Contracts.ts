@@ -46,6 +46,7 @@ export interface State {
   version: string;
   sidebarSlot: string;
   deployment: string;
+  chatMode: ChatMode;
 }
 
 export interface ClientPrincipal {
@@ -53,4 +54,10 @@ export interface ClientPrincipal {
   claims: { typ: string; val: string }[];
   name_typ: string;
   role_typ: string;
+}
+
+export enum ChatMode {
+  Balanced = 'balanced',
+  Creative = 'creative',
+  Precise = 'precise'
 }
