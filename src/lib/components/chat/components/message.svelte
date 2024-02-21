@@ -23,19 +23,20 @@
   </div>
   {#if message.role === ChatRole.Assistant}
     <div class="px-[5%] print:hidden">
-      <Tooltip position="automatic" text={t(lang.Page.Chat.Message.Copy)}>
-        <button class="btn self-start" type="button" on:click={() => copyToClipboard(message.content)}>
-          <img src={clipboard} alt="redo" class="ico h-5 w-5" />
-        </button>
-      </Tooltip>
-      <Tooltip position="automatic" text={t(lang.Page.Chat.Message.Regenerate)}>
-        <button
-          class="btn self-start"
-          type="button"
-          on:click={() => conversationService.regenerateMessage(message)}>
-          <img src={redo} alt="redo" class="ico h-5 w-5" />
-        </button>
-      </Tooltip>
+      <button
+        class="btn self-start"
+        type="button"
+        title={t(lang.Page.Chat.Message.Copy)}
+        on:click={() => copyToClipboard(message.content)}>
+        <img src={clipboard} alt="redo" class="ico h-5 w-5" />
+      </button>
+      <button
+        class="btn self-start"
+        type="button"
+        title={t(lang.Page.Chat.Message.Regenerate)}
+        on:click={() => conversationService.regenerateMessage(message)}>
+        <img src={redo} alt="redo" class="ico h-5 w-5" />
+      </button>
     </div>
   {/if}
 </div>
