@@ -18,7 +18,9 @@
 				"dbaeumer.vscode-eslint",
 				"yzhang.markdown-all-in-one",
 				"ms-playwright.playwright",
-				"bradlc.vscode-tailwindcss"
+				"bradlc.vscode-tailwindcss",
+				"mhutchie.git-graph",
+				"onlyutkarsh.git-config-user-profiles"
 			]
         }
     }
