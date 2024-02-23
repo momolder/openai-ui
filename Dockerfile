@@ -31,4 +31,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=build /app/build .
 COPY --from=build /app/package.json .
-ENTRYPOINT ["node", "./"]
+ENTRYPOINT ["npm", "run node"]
