@@ -2,7 +2,7 @@ import { browser } from '$app/environment';
 import { env } from '$env/dynamic/public';
 import { isNullOrWhitespace, type SvelteFetch } from '$lib/helper';
 import type { ClientPrincipal, State, UserInformation } from '$lib/models/Contracts';
-import { ToastErrors } from './error-handler';
+import { ToastErrors, ToastErrorsJsonPipe } from './error-handler';
 import { StateStore, UserStore } from './state-management';
 
 class StateService {
@@ -29,9 +29,8 @@ class StateService {
   }
 
   public async loadUser(svelteFetch: SvelteFetch): Promise<void> {
-    const response = await svelteFetch(`/user`, { method: 'GET' });
-    await response
-      .json()
+    return await svelteFetch(`/user`, { method: 'GET' })
+      .then(ToastErrorsJsonPipe)
       .then((user) => {
         UserStore.set(user as UserInformation);
       })
@@ -40,7 +39,8 @@ class StateService {
 
   public async getUserinfo(): Promise<ClientPrincipal | undefined> {
     return await fetch(`/user/validate`, { method: 'GET' })
-      .then(async (r) => (await r.json()) as ClientPrincipal)
+      .then(ToastErrorsJsonPipe)
+      .then(c => c as ClientPrincipal)
       .catch(ToastErrors);
   }
 

@@ -12,3 +12,32 @@ export function ToastErrors(error: any): undefined {
     }
   );
 }
+
+export function ToastErrorsPipe(response: Response): Response {
+  if (!response.ok) {
+    console.error(response.statusText);
+    toast.push(
+      { msg: response.statusText },
+      {
+        dismissable: true,
+        duration: 5000
+      }
+    );
+  }
+  return response;
+}
+
+export async function ToastErrorsJsonPipe(response: Response): Promise<unknown> {
+  const json = (await response.json()) as string;
+  if (!response.ok) {
+    console.error(json);
+    toast.push(
+      { msg: response.statusText },
+      {
+        dismissable: true,
+        duration: 5000
+      }
+    );
+  }
+  return json;
+}

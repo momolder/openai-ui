@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import { ConversationStore, HistoryStore, IsStreaming, StateStore, UserStore } from './state-management';
-import { ToastErrors } from './error-handler';
+import { ToastErrors, ToastErrorsJsonPipe, ToastErrorsPipe } from './error-handler';
 import { ChatRole, type ChatMessage, type Conversation } from '$lib/models/Contracts';
 import { fullUri, type SvelteFetch } from '$lib/helper';
 
@@ -23,12 +23,13 @@ class ConversationService {
     });
     await fetch(fullUri(`/conversation/${get(StateStore).deployment}`), {
       method: 'POST',
-      body: JSON.stringify({conversation, chatMode: get(StateStore).chatMode}),
+      body: JSON.stringify({ conversation, chatMode: get(StateStore).chatMode }),
       headers: {
         'Content-Type': 'application/json',
         Accept: 'plain/text'
       }
     })
+      .then(ToastErrorsPipe)
       .then(async (c) => {
         const reader = this.processStream(c);
         if (!reader) {
@@ -58,7 +59,7 @@ class ConversationService {
       await fetch(fullUri('/history'), {
         method: 'PUT',
         body: JSON.stringify(get(ConversationStore))
-      });
+      }).then(ToastErrorsPipe);
       await this.loadHistory(fetch);
     }
   }
@@ -117,11 +118,16 @@ class ConversationService {
   }
 
   public async loadHistory(svelteFetch: SvelteFetch): Promise<void> {
-    await (await svelteFetch(fullUri('/history/user/me'))).json().then(HistoryStore.set).catch(ToastErrors);
+    await svelteFetch(fullUri('/history/user/me'))
+      .then(ToastErrorsJsonPipe)
+      .then((c) => {
+        HistoryStore.set(c as Conversation[]);
+      })
+      .catch(ToastErrors);
   }
 
   public async clearHistory(): Promise<void> {
-    await fetch(fullUri('/history/user/me'), { method: 'DELETE' }).catch(ToastErrors);
+    await fetch(fullUri('/history/user/me'), { method: 'DELETE' }).then(ToastErrorsPipe).catch(ToastErrors);
     ConversationStore.update((c) => {
       c.isFollowed = false;
       return c;
@@ -138,7 +144,8 @@ class ConversationService {
       method: 'POST',
       body: JSON.stringify(currentConversation)
     })
-      .then(async (x) => (await x.json()) as Conversation)
+      .then(ToastErrorsJsonPipe)
+      .then((x) => x as Conversation)
       .catch(ToastErrors);
 
     if (addedConversation) {
@@ -152,7 +159,9 @@ class ConversationService {
   }
 
   public async unfollow(entry: Conversation) {
-    await fetch(fullUri('/history'), { method: 'DELETE', body: JSON.stringify(entry) }).catch(ToastErrors);
+    await fetch(fullUri('/history'), { method: 'DELETE', body: JSON.stringify(entry) })
+      .then(ToastErrorsPipe)
+      .catch(ToastErrors);
     await this.loadHistory(fetch);
     ConversationStore.update((u) => {
       if (u.id === entry.id) u.isFollowed = false;
@@ -166,7 +175,8 @@ class ConversationService {
       method: 'PUT',
       body: JSON.stringify(entry)
     })
-      .then(async (x) => (await x.json()) as Conversation)
+      .then(ToastErrorsJsonPipe)
+      .then((x) => x as Conversation)
       .catch(ToastErrors);
     await this.loadHistory(fetch);
     ConversationStore.update((u) => {
