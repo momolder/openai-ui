@@ -4,6 +4,9 @@
   import SvelteMarkdown from 'svelte-markdown';
   import CodeBlock from './code-block.svelte';
   import List from './list.svelte';
+  import Table from './table.svelte';
+  import TableCell from './table-cell.svelte';
+  import TableRow from './table-row.svelte';
 
   export let message: ChatMessage;
   interface Part {
@@ -78,7 +81,15 @@
     </div>
   {/each}
 {:else}
-  <SvelteMarkdown source={message.content} renderers={{ code: CodeBlock, list: List }} />
+  <SvelteMarkdown
+    source={message.content}
+    renderers={{
+      code: CodeBlock,
+      list: List,
+      table: Table,
+      tablecell: TableCell,
+      tablerow: TableRow
+    }} />
 {/if}
 
 <Dialog bind:showDialog>
