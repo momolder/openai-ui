@@ -35,7 +35,7 @@ const searchConfiguration: AzureCognitiveSearchChatExtensionConfiguration = {
 const chatModeTemplates = [
   { chatMode: ChatMode.Balanced, value: { temperature: 0.7, topP: 0.95 } },
   { chatMode: ChatMode.Creative, value: { temperature: 1.31, topP: 0.29 } },
-  { chatMode: ChatMode.Precise, value: { temperature: 0.1, topP: 0.5 } },
+  { chatMode: ChatMode.Precise, value: { temperature: 0.1, topP: 0.5 } }
 ];
 
 export async function streamResponse(conversation: Conversation, chatMode: ChatMode, deployment: string) {
@@ -45,10 +45,14 @@ export async function streamResponse(conversation: Conversation, chatMode: ChatM
 
   const chatStream = await client.streamChatCompletions(deployment, mappedMessages, {
     maxTokens: Number.parseInt(env.OpenAi_MaxTokens),
-    temperature: env.OpenAi_Temperature ? Number.parseFloat(env.OpenAi_Temperature) : template.value.temperature,
+    temperature: env.OpenAi_Temperature
+      ? Number.parseFloat(env.OpenAi_Temperature)
+      : template.value.temperature,
     frequencyPenalty: Number.parseFloat(env.OpenAi_FrequencyPenalty),
     presencePenalty: Number.parseFloat(env.OpenAi_PresencePenalty),
-    topP: env.OpenAi_NucleusSamplingFactor ? Number.parseFloat(env.OpenAi_NucleusSamplingFactor) : template.value.topP,
+    topP: env.OpenAi_NucleusSamplingFactor
+      ? Number.parseFloat(env.OpenAi_NucleusSamplingFactor)
+      : template.value.topP,
     stop: [env.OpenAi_StopSequences],
     azureExtensionOptions: {
       extensions:

@@ -45,7 +45,5 @@ export async function load(event: LayoutLoadEvent) {
     await stateService.loadUser(event.fetch);
     conversationService.newConversation();
     if (get(StateStore).useHistory) await conversationService.loadHistory(event.fetch);
-
   }
 }
-

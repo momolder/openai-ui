@@ -55,7 +55,7 @@
       })}
       selectedItem={$StateStore.deployment}
       on:select={(e) => ($StateStore.deployment = e.detail.value)} />
-  <label for="Deployment" class="w-full text-xs">{t(lang.Page.Settings.DeploymentHint)}</label>
+    <label for="Deployment" class="w-full text-xs">{t(lang.Page.Settings.DeploymentHint)}</label>
   {/if}
   <Select
     label={t(lang.Page.Settings.ChatMode)}

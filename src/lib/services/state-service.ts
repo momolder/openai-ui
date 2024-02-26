@@ -21,7 +21,8 @@ class StateService {
         u.sidebarSlot = '';
         if (env.PUBLIC_OpenAi_Deployments.length <= 0) u.deployment = '';
         else if (!u.deployment) u.deployment = env.PUBLIC_OpenAi_Deployments.split('|')[0];
-        else if(!env.PUBLIC_OpenAi_Deployments.includes(u.deployment)) u.deployment = env.PUBLIC_OpenAi_Deployments.split('|')[0];
+        else if (!env.PUBLIC_OpenAi_Deployments.includes(u.deployment))
+          u.deployment = env.PUBLIC_OpenAi_Deployments.split('|')[0];
         return u;
       });
       StateStore.subscribe((s) => (localStorage.state = JSON.stringify(s)));
@@ -40,7 +41,7 @@ class StateService {
   public async getUserinfo(): Promise<ClientPrincipal | undefined> {
     return await fetch(`/user/validate`, { method: 'GET' })
       .then(ToastErrorsJsonPipe)
-      .then(c => c as ClientPrincipal)
+      .then((c) => c as ClientPrincipal)
       .catch(ToastErrors);
   }
 

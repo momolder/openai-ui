@@ -40,7 +40,6 @@ test.describe('OpenAI-UI base functionality', () => {
     await expect(page.getByTestId('chat').getByRole('paragraph').nth(1)).toContainText('test');
   });
 
-
   test('Deployment select should change model usage', async ({ page }) => {
     await page.getByRole('button', { name: 'settingsicon' }).click();
     await page.getByTestId(lang.Page.Settings.Deployment.en).selectOption('gpt-3');

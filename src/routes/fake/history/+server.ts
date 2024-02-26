@@ -18,7 +18,7 @@ export async function PUT({ request }: RequestEvent): Promise<Response> {
     h.splice(i, 1, conversation);
     return h;
   });
-  
+
   return json(conversation);
 }
 
