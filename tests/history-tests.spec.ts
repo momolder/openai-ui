@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('OpenAI-UI base functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await fetch('http://localhost:5173/fake/history/user/me', { method: 'DELETE' });
-    await page.goto('http://localhost:5173/');
+    await fetch('http://localhost:3000/fake/history/user/me', { method: 'DELETE' });
+    await page.goto('http://localhost:3000/');
   });
 
   test('rename should rename a conversation', async ({ page }) => {

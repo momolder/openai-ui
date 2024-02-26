@@ -1,7 +1,7 @@
 <script lang="ts">
   import History from './components/history.svelte';
   import history from '$lib/assets/history.svg';
-  import { lang, t } from '$lib/localization/translation';
+  import { lang } from '$lib/localization/translation';
   import Help from './components/help.svelte';
   import help from '$lib/assets/help.svg';
   import Settings from './components/settings.svelte';
@@ -12,6 +12,7 @@
   import user from '$lib/assets/user.svg';
   import User from './components/user.svelte';
   import NewChat from './components/new-chat.svelte';
+  import { t } from '$lib/localization/translator';
 
   let tab: string;
 

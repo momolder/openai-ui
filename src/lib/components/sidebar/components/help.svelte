@@ -1,9 +1,10 @@
 <script>
-  import { lang, t } from '$lib/localization/translation';
+  import { lang } from '$lib/localization/translation';
   import { StateStore } from '$lib/services/state-management';
   import hint from '$lib/assets/hint.svg';
   import Dialog from '$lib/components/dialog.svelte';
   import { releaseNotes } from '$lib/localization/release-notes';
+  import { t } from '$lib/localization/translator';
 
   let showDialog = false;
 </script>

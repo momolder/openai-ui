@@ -2,12 +2,13 @@
   import conversationService from '$lib/services/conversation-service';
   import send from '$lib/assets/send.svg';
   import wait from '$lib/assets/wait.svg';
-  import { lang, t } from '$lib/localization/translation';
+  import { lang } from '$lib/localization/translation';
   import { isNullOrWhitespace } from '$lib/helper';
   import { onDestroy } from 'svelte';
   import { IsStreaming, ConversationStore } from '$lib/services/state-management';
   import Switch from '$lib/components/controls/switch.svelte';
   import stateService from '$lib/services/state-service';
+  import { t } from '$lib/localization/translator';
 
   let userPrompt = '';
   let textAreaHtml: HTMLTextAreaElement;

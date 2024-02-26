@@ -2,11 +2,12 @@
   import { env } from '$env/dynamic/public';
   import Select from '$lib/components/controls/select.svelte';
   import Switch from '$lib/components/controls/switch.svelte';
-  import { lang, supportedLanguages, t } from '$lib/localization/translation';
+  import { lang } from '$lib/localization/translation';
   import { LanguageStore, StateStore } from '$lib/services/state-management';
   import themingService from '$lib/services/theming-service';
   import { toast } from '@zerodevx/svelte-toast';
   import { ChatMode } from '$lib/models/Contracts';
+  import { supportedLanguages, t } from '$lib/localization/translator';
 
   const deployments =
     env.PUBLIC_OpenAi_Deployments?.length > 0 ? env.PUBLIC_OpenAi_Deployments?.split('|') : undefined;

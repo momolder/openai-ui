@@ -2,13 +2,14 @@
   import { HistoryStore, IsStreaming } from '$lib/services/state-management';
   import unfollow from '$lib/assets/recyclebin.svg';
   import clear from '$lib/assets/clear.svg';
-  import { lang, t } from '$lib/localization/translation';
+  import { lang } from '$lib/localization/translation';
   import conversationService from '$lib/services/conversation-service';
   import type { Conversation } from '$lib/models/Contracts';
   import { get } from 'svelte/store';
   import ContextMenu from '$lib/components/controls/context-menu/context-menu.svelte';
   import MenuItem from '$lib/components/controls/context-menu/components/menu-item.svelte';
   import { MessageBoxStore, showMessageBox } from '$lib/components/controls/message-box/message-box';
+  import { t } from '$lib/localization/translator';
 
   let history: Conversation[] = [];
   HistoryStore.subscribe((h) => (history = h));

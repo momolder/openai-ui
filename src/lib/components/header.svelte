@@ -1,6 +1,7 @@
 <script>
   import logo from '$lib/assets/logo.svg';
-  import { lang, t } from '$lib/localization/translation';
+  import { lang } from '$lib/localization/translation';
+  import { t } from '$lib/localization/translator';
   import { StateStore } from '$lib/services/state-management';
 </script>
 

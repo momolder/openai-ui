@@ -1,4 +1,4 @@
-import { supportedLanguages } from './localization/translation';
+import { supportedLanguages } from './localization/translator';
 import { env } from '$env/dynamic/public';
 import { ToastErrors } from './services/error-handler';
 

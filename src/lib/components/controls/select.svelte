@@ -15,7 +15,7 @@
 
 <div class="flex justify-between py-2">
   <span>{label}</span>
-  <select class="rounded bg-light-base dark:bg-dark-base outline-none" on:change={select}>
+  <select data-testid={label} class="rounded bg-light-base dark:bg-dark-base outline-none" on:change={select}>
     {#each items as item}
       <option
         class="bg-light-base dark:bg-dark-base outline-none"

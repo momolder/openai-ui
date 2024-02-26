@@ -2,11 +2,11 @@
   import { ChatRole, type ChatMessage } from '$lib/models/Contracts';
   import redo from '$lib/assets/redo.svg';
   import clipboard from '$lib/assets/clipboard.svg';
-  import { lang, t } from '$lib/localization/translation';
-  import Tooltip from '$lib/components/controls/tooltip.svelte';
+  import { lang } from '$lib/localization/translation';
   import conversationService from '$lib/services/conversation-service';
   import MessageRenderer from './renderer/message-renderer.svelte';
   import { copyToClipboard } from '$lib/helper';
+  import { t } from '$lib/localization/translator';
 
   export let message: ChatMessage = {} as ChatMessage;
 </script>
