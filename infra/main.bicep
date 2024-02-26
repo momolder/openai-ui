@@ -13,6 +13,12 @@ param location string
 param secondaryLocation string = location
 param resourceGroupName string = ''
 
+// monitoring
+param useApplicationInsights bool = false
+param applicationInsightsName string = ''
+param logAnalyticsName string = ''
+param applicationInsightsDashboardName string = ''
+
 // app service plan
 param appServicePlanName string = ''
 param appServicePlanSku string = 'F1'
@@ -81,6 +87,28 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: tags
 }
 
+// Monitor application with Azure Monitor
+module monitoring 'core/monitor/monitoring.bicep' = if (useApplicationInsights) {
+  name: 'monitoring'
+  scope: resourceGroup
+  params: {
+    location: location
+    tags: tags
+    applicationInsightsName: !empty(applicationInsightsName) ? applicationInsightsName : '${abbrs.insightsComponents}${environmentName}'
+    logAnalyticsName: !empty(logAnalyticsName) ? logAnalyticsName : '${abbrs.operationalInsightsWorkspaces}${environmentName}'
+  }
+}
+
+module applicationInsightsDashboard './core/monitor/applicationinsights-dashboard.bicep' = if (useApplicationInsights) {
+  name: 'application-insights-dashboard'
+  scope: resourceGroup
+  params: {
+    name: !empty(applicationInsightsDashboardName) ? applicationInsightsDashboardName : '${abbrs.portalDashboards}${environmentName}'
+    location: location
+    applicationInsightsName: useApplicationInsights ? monitoring.outputs.applicationInsightsName : ''
+  }
+}
+
 module appServicePlan 'core/host/appserviceplan.bicep' = {
   name: 'appserviceplan'
   scope: resourceGroup
@@ -104,8 +132,9 @@ module app 'core/host/appservice.bicep' = {
     location: location
     tags: union(tags, { 'azd-service-name': 'app' })
     appServicePlanId: appServicePlan.outputs.id
-    runtimeName: 'node'
-    runtimeVersion: '20-lts'
+    applicationInsightsName: monitoring.outputs.applicationInsightsName
+    runtimeName: 'docker'
+    runtimeVersion: 'ghcr.io/momolder/openai-ui:main'
     managedIdentity: true
     // authClientSecret: authClientSecret
     // authClientId: authClientId
@@ -114,18 +143,11 @@ module app 'core/host/appservice.bicep' = {
     use32BitWorkerProcess: true
     alwaysOn: false
     appSettings: {
-      // Frontend
-      PUBLIC_App_UseHistory: 'true'
-      PUBLIC_App_Version: 'dev'
-      PUBLIC_App_Autosave: 'true'
-      PUBLIC_App_UseMock: 'false'
-      PUBLIC_App_UseDocumentSearch: 'false'
-
       // OpenAI
       OpenAi_Endpoint: openAi.outputs.endpoint
       OpenAi_Key: openAi.outputs.key
-      OpenAi_Deployment: openAIModel
-      OpenAi_Embedding: embeddingModel
+      OpenAi_Deployment: openAIDeployment
+      OpenAi_Embedding: embeddingDeployment
       OpenAi_ApiVersion: openAIApiVersion
       OpenAi_MaxTokens: openAIMaxTokens
       OpenAi_Temperature: openAITemperature
@@ -152,6 +174,15 @@ module app 'core/host/appservice.bicep' = {
       AiSearch_TitleField: titleField
       AiSearch_UrlField: urlField
       AiSearch_ContentFields: contentFields
+      
+      // Frontend
+      PUBLIC_App_UseHistory: 'true'
+      PUBLIC_App_Version: 'dev'
+      PUBLIC_App_Autosave: 'true'
+      PUBLIC_App_UseMock: 'false'
+      PUBLIC_App_UseDocumentSearch: 'false'
+      PUBLIC_OpenAi_Deployments: openAIDeployment
+      PUBLIC_AppInsights_Endpoint: monitoring.outputs.applicationInsightsConnectionString
     }
   }
 }

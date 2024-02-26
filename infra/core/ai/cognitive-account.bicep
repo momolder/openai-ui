@@ -22,11 +22,11 @@ resource account 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = {
   properties: {
     apiProperties: {}
     customSubDomainName: customSubDomainName
-    networkAcls: {
-      defaultAction: 'Allow'
-      virtualNetworkRules: []
-      ipRules: []
-    }
+    // networkAcls: {
+    //   defaultAction: 'Allow'
+    //   virtualNetworkRules: []
+    //   ipRules: []
+    // }
     publicNetworkAccess: publicNetworkAccess
   }
   sku: sku

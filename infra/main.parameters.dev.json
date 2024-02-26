@@ -10,6 +10,9 @@
     },
     "openAIModel": {
       "value": "gpt-35-turbo"
+    },
+    "useApplicationInsights": {
+      "value": true
     }
   }
 }
