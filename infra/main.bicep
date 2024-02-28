@@ -149,7 +149,11 @@ module app 'core/host/appservice.bicep' = {
       AiSearch_TitleField: titleField
       AiSearch_UrlField: urlField
       AiSearch_ContentFields: contentFields
-      
+            
+      // Authorization
+      App_ClaimName: ''
+      App_ClaimValue: ''
+
       // Database
       Database_DatabaseName: cosmosDatabaseName
       Database_AccountEndpoint: 'https://${cosmos.outputs.accountName}.documents.azure.com:443/'

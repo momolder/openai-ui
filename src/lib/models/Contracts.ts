@@ -45,8 +45,8 @@ export interface State {
   autosave: boolean;
   version: string;
   sidebarSlot: string;
-  deployment: string;
-  chatMode: ChatMode;
+  deployment?: string;
+  chatMode?: ChatMode;
 }
 
 export interface ClientPrincipal {
