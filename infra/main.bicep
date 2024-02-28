@@ -146,14 +146,11 @@ module app 'core/host/appservice.bicep' = {
       // OpenAI
       OpenAi_Endpoint: openAi.outputs.endpoint
       OpenAi_Key: openAi.outputs.key
-      OpenAi_Deployment: openAIDeployment
       OpenAi_Embedding: embeddingDeployment
       OpenAi_ApiVersion: openAIApiVersion
       OpenAi_MaxTokens: openAIMaxTokens
-      OpenAi_Temperature: openAITemperature
       OpenAi_FrequencyPenalty: '0.0'
       OpenAi_PresencePenalty: '0.0'
-      OpenAi_NucleusSamplingFactor: '0.95'
       OpenAi_StopSequences: openAIStopSequence
       OpenAi_SystemMessage: openAISystemMessage
       OpenAi_PastMessagesIncluded: openAIPastMessagesIncluded

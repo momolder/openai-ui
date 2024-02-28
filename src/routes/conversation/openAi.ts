@@ -45,14 +45,10 @@ export async function streamResponse(conversation: Conversation, chatMode: ChatM
 
   const chatStream = await client.streamChatCompletions(deployment, mappedMessages, {
     maxTokens: Number.parseInt(env.OpenAi_MaxTokens),
-    temperature: env.OpenAi_Temperature
-      ? Number.parseFloat(env.OpenAi_Temperature)
-      : template.value.temperature,
+    temperature: template.value.temperature,
     frequencyPenalty: Number.parseFloat(env.OpenAi_FrequencyPenalty),
     presencePenalty: Number.parseFloat(env.OpenAi_PresencePenalty),
-    topP: env.OpenAi_NucleusSamplingFactor
-      ? Number.parseFloat(env.OpenAi_NucleusSamplingFactor)
-      : template.value.topP,
+    topP: template.value.topP,
     stop: [env.OpenAi_StopSequences],
     azureExtensionOptions: {
       extensions:
