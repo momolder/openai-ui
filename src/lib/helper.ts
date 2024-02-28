@@ -40,3 +40,7 @@ export async function copyToClipboard(text: string) {
 export function toFilesystemSafeName(name: string): string {
   return name.replace(/[<>:"/\\|?*\s]/g, '');
 }
+
+export function availableDeployments(): string[] {
+  return env.PUBLIC_OpenAi_Deployments.split('|');
+}

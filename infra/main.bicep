@@ -57,17 +57,13 @@ param aiServicesAccountSku string = 'S0'
 // openai
 param openAiResourceName string = ''
 param openAiSku string = 'S0'
-param openAIModel string = 'gpt-4'
-param openAIDeployment string = openAIModel
-param openAIVersion string = '0613'
-param openAITemperature string = '0.7'
+param openAIDeployments array = [{name: 'gpt-35-turbo', model: 'gpt-35-turbo', version: '0613', capacity: 10}]
 param openAIMaxTokens int = 800
 param openAIStopSequence string = '<|im_end|>'
 param openAISystemMessage string = 'You are an AI assistant that helps people find information.'
 param openAIApiVersion string = '2023-10-01-preview'
 param openAIPastMessagesIncluded int = 10
-param embeddingModel string = 'text-embedding-ada-002'
-param embeddingDeployment string = embeddingModel
+param embeddingDeployments array = [{name: 'text-embedding-ada-002', model: 'text-embedding-ada-002', version: '2', capacity: 30}]
 
 // authentication
 param authClientId string = ''
@@ -80,7 +76,7 @@ var abbrs = loadJsonContent('abbreviations.json')
 var environmentNameSafe = replace(environmentName, '-', '')
 var tags = { }
 var authIssuerUri = '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
-
+var deployments = union(openAIDeployments, embeddingDeployments)
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
   location: location
@@ -134,7 +130,7 @@ module app 'core/host/appservice.bicep' = {
     appServicePlanId: appServicePlan.outputs.id
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     runtimeName: 'docker'
-    runtimeVersion: 'ghcr.io/momolder/openai-ui:main'
+    runtimeVersion: 'ghcr.io/momolder/openai-ui:latest'
     managedIdentity: true
     // authClientSecret: authClientSecret
     // authClientId: authClientId
@@ -143,24 +139,6 @@ module app 'core/host/appservice.bicep' = {
     use32BitWorkerProcess: true
     alwaysOn: false
     appSettings: {
-      // OpenAI
-      OpenAi_Endpoint: openAi.outputs.endpoint
-      OpenAi_Key: openAi.outputs.key
-      OpenAi_Embedding: embeddingDeployment
-      OpenAi_ApiVersion: openAIApiVersion
-      OpenAi_MaxTokens: openAIMaxTokens
-      OpenAi_FrequencyPenalty: '0.0'
-      OpenAi_PresencePenalty: '0.0'
-      OpenAi_StopSequences: openAIStopSequence
-      OpenAi_SystemMessage: openAISystemMessage
-      OpenAi_PastMessagesIncluded: openAIPastMessagesIncluded
-
-      // Database
-      Database_DatabaseName: cosmosDatabaseName
-      Database_AccountEndpoint: 'https://${cosmos.outputs.accountName}.documents.azure.com:443/'
-      Database_AccountKey: cosmos.outputs.accountKey
-      Database_CollectionName: cosmos.outputs.containerName
-
       // AI Search
       AiSearch_Endpoint: searchService.outputs.endpoint
       AiSearch_Key: searchService.outputs.adminKey
@@ -172,13 +150,30 @@ module app 'core/host/appservice.bicep' = {
       AiSearch_UrlField: urlField
       AiSearch_ContentFields: contentFields
       
+      // Database
+      Database_DatabaseName: cosmosDatabaseName
+      Database_AccountEndpoint: 'https://${cosmos.outputs.accountName}.documents.azure.com:443/'
+      Database_AccountKey: cosmos.outputs.accountKey
+      Database_CollectionName: cosmos.outputs.containerName
+
+      // OpenAI
+      OpenAi_Endpoint: openAi.outputs.endpoint
+      OpenAi_Key: openAi.outputs.key
+      OpenAi_Embedding: join(map(embeddingDeployments, d => d.name), '|')
+      OpenAi_ApiVersion: openAIApiVersion
+      OpenAi_MaxTokens: openAIMaxTokens
+      OpenAi_FrequencyPenalty: '0.0'
+      OpenAi_PresencePenalty: '0.0'
+      OpenAi_StopSequences: openAIStopSequence
+      OpenAi_SystemMessage: openAISystemMessage
+      OpenAi_PastMessagesIncluded: openAIPastMessagesIncluded
+
       // Frontend
       PUBLIC_App_UseHistory: 'true'
-      PUBLIC_App_Version: 'dev'
       PUBLIC_App_Autosave: 'true'
       PUBLIC_App_UseMock: 'false'
       PUBLIC_App_UseDocumentSearch: 'false'
-      PUBLIC_OpenAi_Deployments: openAIDeployment
+      PUBLIC_OpenAi_Deployments: join(map(openAIDeployments, d => d.name), '|')
       PUBLIC_AppInsights_Endpoint: monitoring.outputs.applicationInsightsConnectionString
     }
   }
@@ -195,27 +190,16 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
     sku: {
       name: openAiSku
     }
-    deployments: [
-      {
-        name: openAIModel
+    deployments: [for deployment in deployments: {
+        name: deployment.name
         model: {
           format: 'OpenAI'
-          name: openAIModel
-          version: openAIVersion
+          name: deployment.model
+          version: deployment.version
         }
         raiPolicyName: 'Microsoft.Default'
-        capacity: 10
-      }
-      {
-        name: embeddingDeployment
-        model: {
-          format: 'OpenAI'
-          name: embeddingModel
-          version: '2'
-        }
-        capacity: 30
-      }
-    ]
+        capacity: deployment.capacity
+      }]
   }
 }
 

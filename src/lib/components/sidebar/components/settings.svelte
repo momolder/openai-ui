@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { env } from '$env/dynamic/public';
   import Select from '$lib/components/controls/select.svelte';
   import Switch from '$lib/components/controls/switch.svelte';
   import { lang } from '$lib/localization/translation';
@@ -8,9 +7,12 @@
   import { toast } from '@zerodevx/svelte-toast';
   import { ChatMode } from '$lib/models/Contracts';
   import { supportedLanguages, t } from '$lib/localization/translator';
+  import { availableDeployments } from '$lib/helper';
 
-  const deployments =
-    env.PUBLIC_OpenAi_Deployments?.length > 0 ? env.PUBLIC_OpenAi_Deployments?.split('|') : undefined;
+  const deployments = availableDeployments().map((d) => {
+    return { label: d, value: d };
+  });
+
   const temperatures = [
     { label: t(lang.Page.Settings.ChatModeOptions.Balanced), value: ChatMode.Balanced },
     { label: t(lang.Page.Settings.ChatModeOptions.Creative), value: ChatMode.Creative },
@@ -47,12 +49,10 @@
     value={!themingService.isLight()} />
   <p class="py-2">{t(lang.Page.Settings.ModelSettings)}</p>
   <hr />
-  {#if deployments}
+  {#if deployments.length > 1}
     <Select
       label={t(lang.Page.Settings.Deployment)}
-      items={deployments.map((d) => {
-        return { label: d, value: d };
-      })}
+      items={deployments}
       selectedItem={$StateStore.deployment}
       on:select={(e) => ($StateStore.deployment = e.detail.value)} />
     <label for="Deployment" class="w-full text-xs">{t(lang.Page.Settings.DeploymentHint)}</label>

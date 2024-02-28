@@ -61,3 +61,8 @@ export enum ChatMode {
   Creative = 'creative',
   Precise = 'precise'
 }
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}

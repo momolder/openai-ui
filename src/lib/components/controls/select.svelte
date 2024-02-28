@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { SelectOption } from '$lib/models/Contracts';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
-  export let items: { label: string; value: string }[];
+  export let items: SelectOption[];
   export let selectedItem: string;
   export let label: string;
 
