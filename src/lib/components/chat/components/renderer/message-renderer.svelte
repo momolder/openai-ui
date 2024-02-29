@@ -4,6 +4,7 @@
   import SvelteMarkdown from 'svelte-markdown';
   import CodeBlock from './code-block.svelte';
   import List from './list.svelte';
+  import Link from './link.svelte';
   import Table from './table.svelte';
   import TableCell from './table-cell.svelte';
   import TableRow from './table-row.svelte';
@@ -73,7 +74,7 @@
 {#if parts.length > 0}
   <SvelteMarkdown
     source={parts.map((p) => (p.docId ? `${p.content} [${p.docId}]` : p.content)).join('')}
-    renderers={{ code: CodeBlock, list: List }} />
+    renderers={{ code: CodeBlock, list: List, link: Link }} />
   <hr />
   {#each distinct(parts) as part}
     <div>
