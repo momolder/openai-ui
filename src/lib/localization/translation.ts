@@ -182,11 +182,11 @@ export const lang = {
         de: 'Alle Eingaben werden innerhalb des OpenAI Azure Tennants gespeichert und zur Anzeige des Verlaufs verwendet.'
       },
       MicrosoftDisclaimer: {
-        en: 'Data is only used for communication with Microsoft\'s cognitive services to answer the questions asked.',
+        en: "Data is only used for communication with Microsoft's cognitive services to answer the questions asked.",
         de: 'Daten werden nur für die Kommunikation mit den kognitiven Diensten von Microsoft verwendet um die gestellten Fragen zu beantworten.'
       },
       MicrosoftDisclaimerLinkText: {
-        en: 'Microsoft\'s Data Privacy Statement',
+        en: "Microsoft's Data Privacy Statement",
         de: 'Microsofts Data Privacy Erklärung'
       },
       Version: {

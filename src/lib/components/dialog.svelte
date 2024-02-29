@@ -1,6 +1,6 @@
 <script lang="ts">
   export let showDialog: boolean;
-  export let noHeader: boolean = false;
+  export let noHeader = false;
 
   let dialog: HTMLDialogElement;
 
@@ -22,12 +22,12 @@
       <button class="btn w-6 h-8 justify-center" autofocus on:click={() => dialog.close()}>x</button>
     </div>
     {#if !noHeader}
-    <div class="flex flex-row justify-between px-2">
-      <div class="pt-4">
-        <slot name="header" />
+      <div class="flex flex-row justify-between px-2">
+        <div class="pt-4">
+          <slot name="header" />
+        </div>
       </div>
-    </div>
-    <hr />
+      <hr />
     {/if}
     <div class="cmp overflow-auto">
       <slot />

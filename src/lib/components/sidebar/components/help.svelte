@@ -16,7 +16,9 @@
     <p>{t(lang.Page.Help.HistoryDisclaimer)}</p>
   {/if}
   <p class="mb-3">{t(lang.Page.Help.MicrosoftDisclaimer)}</p>
-  <ExternalLink href="https://learn.microsoft.com/en-us/legal/cognitive-services/openai/data-privacy" title={t(lang.Page.Help.MicrosoftDisclaimerLinkText)} />
+  <ExternalLink
+    href="https://learn.microsoft.com/en-us/legal/cognitive-services/openai/data-privacy"
+    title={t(lang.Page.Help.MicrosoftDisclaimerLinkText)} />
   <hr class="my-2" />
   <h4 class="">{t(lang.Page.Help.Version)}: {$StateStore.version}</h4>
   <button type="button" class="ico-btn text-lg p-2 w-full rounded-none" on:click={() => (showDialog = true)}>
@@ -25,5 +27,5 @@
 </div>
 
 <Dialog noHeader={true} bind:showDialog>
-<ReleaseNotes />
+  <ReleaseNotes />
 </Dialog>
