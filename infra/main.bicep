@@ -195,7 +195,7 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
       name: openAiSku
     }
     deployments: [for deployment in deployments: {
-        name: deployment.name
+        name: !empty(deployment.name) ? deployment.name : '${deployment.model}-${deployment.version}'
         model: {
           format: 'OpenAI'
           name: deployment.model

@@ -9,6 +9,7 @@ import {
   type AzureCognitiveSearchQueryType,
   type AzureCognitiveSearchChatExtensionConfiguration
 } from '@azure/openai';
+import {Tiktoken, encoding_for_model, type TiktokenModel} from 'tiktoken';
 
 const searchConfiguration: AzureCognitiveSearchChatExtensionConfiguration = {
   type: 'AzureCognitiveSearch',
@@ -39,12 +40,16 @@ const chatModeTemplates = [
 ];
 
 export async function streamResponse(conversation: Conversation, chatMode: ChatMode, deployment: string) {
+  const maxTokens = Number.parseInt(env.OpenAi_MaxTokens);
+  const tokenLimit = Number.parseInt(env.OpenAi_TokenLimit);
+
   const template = chatModeTemplates.find((t) => t.chatMode === chatMode) ?? chatModeTemplates[0];
   const client = new OpenAIClient(env.OpenAi_Endpoint, new AzureKeyCredential(env.OpenAi_Key));
-  const mappedMessages: ChatRequestMessage[] = mapMessages(conversation);
+  let mappedMessages: ChatRequestMessage[] = mapMessages(conversation);
+  mappedMessages = trimToTokenLimit(deployment, mappedMessages, maxTokens, tokenLimit);
 
   const chatStream = await client.streamChatCompletions(deployment, mappedMessages, {
-    maxTokens: Number.parseInt(env.OpenAi_MaxTokens),
+    maxTokens: maxTokens,
     temperature: template.value.temperature,
     frequencyPenalty: Number.parseFloat(env.OpenAi_FrequencyPenalty),
     presencePenalty: Number.parseFloat(env.OpenAi_PresencePenalty),
@@ -92,7 +97,9 @@ function mapMessages(conversation: Conversation) {
     } as ChatRequestMessage;
   });
 
-  const pastMessagesIncluded = Number.parseInt(env.OpenAi_PastMessagesIncluded);
+  const pastMessagesIncluded = env.OpenAi_PastMessagesIncluded
+    ? Number.parseInt(env.OpenAi_PastMessagesIncluded)
+    : conversation.messages.length;
 
   mappedMessages =
     mappedMessages.length > pastMessagesIncluded
@@ -103,4 +110,68 @@ function mapMessages(conversation: Conversation) {
     ...mappedMessages
   ];
   return mappedMessages;
+}
+
+function trimToTokenLimit(
+  model: string,
+  messages: ChatRequestMessage[],
+  maxTokens: number,
+  tokenLimit: number
+): ChatRequestMessage[] {
+  let numTokens = getTokensForMessages(model, messages) + maxTokens;
+  while (numTokens >= tokenLimit) {
+    messages = messages.slice(0, -1)
+    numTokens = getTokensForMessages(model, messages) + maxTokens
+  }
+  
+  console.log(`sending ${messages.length} messages with ${numTokens} tokens to openai.`);
+  return messages;
+}
+
+function getTokensForMessages(model: string, messages: ChatRequestMessage[]): number {
+  const encoding: Tiktoken = encoding_for_model(model as TiktokenModel);
+  const tokenRates = getModelTokenRates(model);
+  let numTokens = 0;
+
+  for (const message of messages) {
+    numTokens += tokenRates.perMessage;
+    for (const [key, value] of Object.entries(message)) {
+      numTokens += encoding.encode(value as string).length;
+      if (key === 'name') {
+        numTokens += tokenRates.perName;
+      }
+    }
+  }
+  numTokens += 3; // every reply is primed with <|im_start|>assistant<|im_sep|>
+  encoding.free();
+  return numTokens;
+}
+
+function getModelTokenRates(model: string): { perMessage: number; perName: number } {
+  if (
+    new Set([
+      'gpt-35-turbo-0613',
+      'gpt-35-turbo-16k-0613',
+      'gpt-4-0314',
+      'gpt-4-32k-0314',
+      'gpt-4-0613',
+      'gpt-4-32k-0613'
+    ]).has(model)
+  ) {
+    return { perMessage: 3, perName: 1 };
+  } else if (model === 'gpt-35-turbo-0301') {
+    return { perMessage: 4, perName: -1 };
+  } else if (model.includes('gpt-35-turbo')) {
+    console.warn(
+      'Warning: gpt-35-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.'
+    );
+    return { perMessage: 3, perName: 1 };
+  } else if (model.includes('gpt-4')) {
+    console.warn('Warning: gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.');
+    return { perMessage: 3, perName: 1 };
+  } else {
+    throw new Error(
+      `getModelTokenRates() is not implemented for model ${model}. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.`
+    );
+  }
 }

@@ -50,7 +50,8 @@
     "@azure/storage-blob": "^12.17.0",
     "@microsoft/applicationinsights-web": "^3.1.0",
     "applicationinsights": "^2.9.4",
-    "jspdf": "^2.5.1"
+    "jspdf": "^2.5.1",
+    "tiktoken": "^1.0.13"
   },
   "type": "module"
 }
