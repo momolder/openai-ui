@@ -54,8 +54,10 @@
     <div
       class="cmp p-4 flex justify-end bg-light-input dark:bg-dark-input rounded-xl border border-light-highlight dark:border-dark-highlight">
       <!-- svelte-ignore a11y-autofocus -->
+      <div class="cmp">
       <textarea
         data-testid="chat-input"
+        maxlength={2000}
         bind:this={textAreaHtml}
         class="max-h-[200px] outline-none overflow-x-auto w-full resize-none bg-light-input dark:bg-dark-input"
         placeholder={t(lang.Page.Chat.Input.Placeholder)}
@@ -63,6 +65,8 @@
         on:keydown={(e) => handleInput(e)}
         required
         autofocus />
+        <label for={textAreaHtml?.name} class="flex justify-end text-xs">{userPrompt.length}/{textAreaHtml?.maxLength}</label>
+      </div>
       {#if streaming}
         <button class="btn min-w-max" type="reset" disabled={!streaming}>
           <img class="ico" src={wait} alt="wait" />
