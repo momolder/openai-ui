@@ -1,13 +1,7 @@
 <script lang="ts">
   import Dialog from '$lib/components/dialog.svelte';
   import { ChatRole, type ChatMessage, type ToolMessage } from '$lib/models/Contracts';
-  import SvelteMarkdown from 'svelte-markdown';
-  import CodeBlock from './code-block.svelte';
-  import List from './list.svelte';
-  import Link from './link.svelte';
-  import Table from './table.svelte';
-  import TableCell from './table-cell.svelte';
-  import TableRow from './table-row.svelte';
+  import Markdown from '$lib/components/controls/markdown/markdown.svelte';
 
   export let message: ChatMessage;
   interface Part {
@@ -72,9 +66,7 @@
 </script>
 
 {#if parts.length > 0}
-  <SvelteMarkdown
-    source={parts.map((p) => (p.docId ? `${p.content} [${p.docId}]` : p.content)).join('')}
-    renderers={{ code: CodeBlock, list: List, link: Link }} />
+  <Markdown source={parts.map((p) => (p.docId ? `${p.content} [${p.docId}]` : p.content)).join('')} />
   <hr />
   {#each distinct(parts) as part}
     <div>
@@ -82,15 +74,7 @@
     </div>
   {/each}
 {:else}
-  <SvelteMarkdown
-    source={message.content}
-    renderers={{
-      code: CodeBlock,
-      list: List,
-      table: Table,
-      tablecell: TableCell,
-      tablerow: TableRow
-    }} />
+  <Markdown source={message.content} />
 {/if}
 
 <Dialog bind:showDialog>

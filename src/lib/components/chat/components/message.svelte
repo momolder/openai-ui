@@ -4,7 +4,7 @@
   import clipboard from '$lib/assets/clipboard.svg';
   import { lang } from '$lib/localization/translation';
   import conversationService from '$lib/services/conversation-service';
-  import MessageRenderer from './renderer/message-renderer.svelte';
+  import MessageRenderer from './message-renderer.svelte';
   import { copyToClipboard } from '$lib/helper';
   import { t } from '$lib/localization/translator';
 
