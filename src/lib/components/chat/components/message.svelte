@@ -13,13 +13,21 @@
 
 <div class="flex flex-col justify-stretch">
   <div class="cmp overflow-hidden p-3 whitespace-pre-wrap break-words">
-    <span class="font-bold text-lg px-[5%]"
-      >{message.role === ChatRole.User
-        ? t(lang.Page.Chat.Message.Role.User)
-        : t(lang.Page.Chat.Message.Role.Agent)}</span>
-    <div class="cmp overflow-hidden px-[5%]">
-      <MessageRenderer {message} />
-    </div>
+    {#if message.role === ChatRole.User}
+      <span class="font-bold text-lg px-[5%]">
+        {t(lang.Page.Chat.Message.Role.User)}
+      </span>
+      <div class="cmp overflow-hidden px-[5%]">
+        {message.content}
+      </div>
+    {:else}
+      <span class="font-bold text-lg px-[5%]">
+        {t(lang.Page.Chat.Message.Role.Agent)}
+      </span>
+      <div class="cmp overflow-hidden px-[5%]">
+        <MessageRenderer {message} />
+      </div>
+    {/if}
   </div>
   {#if message.role === ChatRole.Assistant}
     <div class="px-[5%] print:hidden">
