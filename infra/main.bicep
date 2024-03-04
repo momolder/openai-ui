@@ -77,6 +77,7 @@ var environmentNameSafe = replace(environmentName, '-', '')
 var tags = { }
 var authIssuerUri = '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
 var deployments = union(openAIDeployments, embeddingDeployments)
+
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
   location: location
