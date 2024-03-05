@@ -3,7 +3,7 @@
   "version": "0.0.7",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vavite-loader vite dev",
     "build": "vite build --mode example",
     "prenode": "cp .env ./build/.env",
     "node": "node --require dotenv/config --import ./appinsights.js ./build",
@@ -22,6 +22,7 @@
     "@sveltejs/kit": "^1.27.6",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
+    "@vavite/node-loader": "^4.1.1",
     "@zerodevx/svelte-toast": "^0.9.5",
     "autoprefixer": "^10.4.16",
     "dotenv": "^16.4.5",
