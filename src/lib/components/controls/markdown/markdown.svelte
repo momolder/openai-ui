@@ -8,12 +8,13 @@
   import TableRow from './renderer/table-row.svelte';
   import Heading from './renderer/heading.svelte';
   import Paragraph from './renderer/paragraph.svelte';
+  import { sanitize } from '@jill64/universal-sanitizer';
 
   export let source: string;
 </script>
 
 <SvelteMarkdown
-  {source}
+  source={sanitize(source)}
   renderers={{
     code: CodeBlock,
     list: List,
