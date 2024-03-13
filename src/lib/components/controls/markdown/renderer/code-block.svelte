@@ -18,17 +18,32 @@
         themes: [lightTheme, darkTheme]
       });
 
-    if (!isNullOrWhitespace(lang) && !highlighter.getLoadedLanguages().includes(lang as Lang)) {
-      const bundles = BUNDLED_LANGUAGES.filter((bundle) => {
-        return bundle.id === lang || bundle.aliases?.includes(lang);
-      });
-      if (bundles.length > 0) {
-        await highlighter.loadLanguage(lang as Lang);
-      } else {
-        console.error(`Error loading highlighter for ${lang}`);
-      }
+    if (
+      !isNullOrWhitespace(lang) &&
+      !highlighter.getLoadedLanguages().includes(lang as Lang) &&
+      languageIsSupported(lang)
+    ) {
+      await highlighter.loadLanguage(lang as Lang);
+    } else {
+      console.warn(`Sorry, highlighting is not supported for ${lang}`);
     }
     return highlighter;
+  }
+
+  function shikiSupportedLang(): string {
+    if (!isNullOrWhitespace(lang) && languageIsSupported(lang)) {
+      return lang;
+    }
+    console.warn(`Highlighting with bash as fallback.`);
+    return 'bash';
+  }
+  
+  function languageIsSupported(language: string): boolean {
+    return (
+      BUNDLED_LANGUAGES.filter((bundle) => {
+        return bundle.id === language || bundle.aliases?.includes(language);
+      }).length > 0
+    );
   }
 </script>
 
@@ -42,7 +57,7 @@
       on:click={async () => await copyToClipboard(text)}
       ><img class="ico h-4 w-4" src={clipboard} alt="logo" />Copy code</button>
   </div>
-  {#await highlight().then( (c) => c?.codeToHtml( text, { lang: isNullOrWhitespace(lang) ? 'bash' : lang, theme: themingService.isDark() ? darkTheme : lightTheme } ) ) then code}
+  {#await highlight().then( (c) => c?.codeToHtml( text, { lang: shikiSupportedLang(), theme: themingService.isDark() ? darkTheme : lightTheme } ) ) then code}
     <div class="rounded-b-lg overflow-x-auto bg-light-codeblock dark:bg-dark-codeblock p-2">
       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
       <code>{@html code}</code>
