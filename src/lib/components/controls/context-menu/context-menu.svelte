@@ -55,7 +55,7 @@
 {#if $isOpen}
   <div
     bind:this={contextMenuDiv}
-    transition:fade={{ duration: 100 }}
+    transition:fade|global={{ duration: 100 }}
     class="absolute bg-light-overlay dark:bg-dark-overlay max-w-fit p-2 flex flex-col rounded-lg"
     style:top
     style:left>
