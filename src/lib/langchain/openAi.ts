@@ -2,51 +2,33 @@ import { env } from '$env/dynamic/private';
 import { ChatMode, ChatRole, type Conversation } from '$lib/models/Contracts';
 import { AzureChatOpenAI } from '@langchain/azure-openai';
 import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
-import { ChatPromptTemplate, PromptTemplate, type BasePromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
-import { env as publicEnv } from '$env/dynamic/public'; // Import the missing 'publicEnv' variable
+import {
+  ChatPromptTemplate,
+  PromptTemplate,
+  type BasePromptTemplate,
+  MessagesPlaceholder
+} from '@langchain/core/prompts';
 import type { AzureSearchChatExtensionConfiguration } from '@azure/openai';
-import { StringOutputParser, type BaseOutputParser } from '@langchain/core/output_parsers';
+import { BaseOutputParser, StringOutputParser } from '@langchain/core/output_parsers';
+import { JsonOutputKeyToolsParser } from 'langchain/output_parsers';
 import {
   AzureAISearchVectorStore,
   AzureAISearchQueryType
 } from '@langchain/community/vectorstores/azure_aisearch';
+import { createRetrieverTool } from 'langchain/tools/retriever';
 import type { DocumentInterface, Document } from '@langchain/core/documents';
 import { ConsoleCallbackHandler } from '@langchain/core/tracers/console';
-import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
+import { OpenAIEmbeddings } from '@langchain/openai';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import {
   Runnable,
+  RunnableMap,
   RunnableSequence,
   RunnablePick,
   RunnablePassthrough,
-  type RunnableConfig
 } from '@langchain/core/runnables';
 import type { LanguageModelLike } from '@langchain/core/language_models/base';
-
-const searchConfiguration: AzureSearchChatExtensionConfiguration = {
-  type: 'azure_search',
-  endpoint: env.AiSearch_Endpoint,
-  authentication: { key: env.AiSearch_Key, type: 'api_key' },
-  indexName: env.AiSearch_IndexName,
-  semanticConfiguration: env.AiSearch_SemanticConfiguration,
-  queryType: env.AiSearch_QueryType,
-  roleInformation: env.OpenAi_SystemMessage,
-  fieldsMapping: {
-    contentFieldsSeparator: '\n',
-    contentFields: env.AiSearch_ContentFields.split('|').map((field) => field.trim()),
-    filepathField: env.AiSearch_FilePathField,
-    titleField: env.AiSearch_TitleField,
-    urlField: env.AiSearch_UrlField
-  },
-  inScope: true,
-  strictness: 3,
-  topNDocuments: 2,
-  embeddingDependency: {
-    endpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`,
-    type: 'endpoint'
-  }
-};
 
 const chatModeTemplates = [
   { chatMode: ChatMode.Balanced, value: { temperature: 0.7, topP: 0.95 } },
@@ -55,25 +37,56 @@ const chatModeTemplates = [
 ];
 
 export async function response(conversation: Conversation, chatMode: ChatMode, deployment: string) {
+  console.log('!!!!!!!!!!!!!!!!!!');
+  console.log(chatMode);
+  console.log(deployment);
+  console.log('!!!!!!!!!!!!!!!!!!');
+
   const mappedMessages = mapMessages(conversation);
   mappedMessages.pop();
   const question = mappedMessages.pop();
 
+  const llm = getLargeLanguageModel(deployment, chatMode);
+  const retriever = vectorRetriever();
   const prompt = ChatPromptTemplate.fromMessages([
-    ['system', env.OpenAi_SystemMessage],
+    [
+      'system',
+      `You're a helpful AI assistant. Given a user question and some documents, answer the user question.
+       If none of the documents answer the question, just say you don't know.
+       Here are the documents:
+       {context}`
+    ],
     new MessagesPlaceholder('chat_history'),
     ['human', '{question}']
   ]);
+  const outputParser = new JsonOutputKeyToolsParser({
+    keyName: 'content',
+    returnSingle: true
+  });
 
-  const llm = getLargeLanguageModel(deployment, chatMode);
+  const answerChain = prompt.pipe(llm).pipe(new StringOutputParser());
+  const map = RunnableMap.from({
+    question: (input: {question: string, chat_history: BaseMessage[]}) => {console.log('question', input.chat_history); return input.question;},
+    chat_history: (input: {question: string, chat_history: BaseMessage[]}) => {console.log('chat_history', input.chat_history); return input.chat_history;},
+    docs: (input: {question: string, chat_history: BaseMessage[]}) => {console.log('docs', input.chat_history); return retriever.getRelevantDocuments(input.question);}
+  });
+  // complete chain that calls the retriever -> formats docs to string -> runs answer subchain -> returns just the answer and retrieved docs.
+  const chain = map
+    .assign({
+      context: (input: { question: string, chat_history: BaseMessage[], docs: Document[] }) => { console.log('context', input.chat_history); return formatDocsWithId(input.docs);}
+    })
+    .assign({chat_history: (input: { question: string, chat_history: BaseMessage[], docs: Document[] }) => { console.log('chat_history', input.chat_history); return input.chat_history; }})
+    .assign({ answer: (input: { question: string, chat_history: BaseMessage[], docs: Document[] }) => { console.log('answer', input.chat_history); return answerChain; }})
+    .pick('answer');
+  // .pick(["answer", "docs"]);
 
-  const runnable = prompt.pipe(llm).pipe(new StringOutputParser());
-
+  // streaming
   if (question) {
-    const stream = await runnable.stream({
+    const stream = await chain.stream({
       question: question.content.toString(),
       chat_history: mappedMessages
     });
+
     return new Response(stream, {
       headers: {
         'content-type': 'text/plain'
@@ -86,6 +99,11 @@ function getLargeLanguageModel(deployment: string, chatMode: ChatMode) {
   const template = chatModeTemplates.find((t) => t.chatMode === chatMode) ?? chatModeTemplates[0];
   return new AzureChatOpenAI({
     callbacks: [new ConsoleCallbackHandler()],
+    // streaming: true,
+    maxRetries: 0,
+    onFailedAttempt: (error) => {
+      console.log(error);
+    },
     azureOpenAIEndpoint: env.OpenAi_Endpoint,
     azureOpenAIApiKey: env.OpenAi_Key,
     azureOpenAIApiVersion: env.OpenAi_ApiVersion,
@@ -151,7 +169,7 @@ function vectorStore() {
   });
 }
 
-function retriever() {
+function vectorRetriever() {
   return vectorStore().asRetriever();
 }
 
@@ -218,26 +236,17 @@ function myChain<RunOutput = string>({
   ]).withConfig({ runName: 'retrieval_chain' });
   return retrievalChain;
 }
-export async function formatDocuments({
-  documentPrompt,
-  documentSeparator,
-  documents,
-  config
-}: {
-  documentPrompt: BasePromptTemplate;
-  documentSeparator: string;
-  documents: Document[];
-  config?: RunnableConfig;
-}) {
-  const formattedDocs = await Promise.all(
-    documents.map((document) =>
-      documentPrompt
-        .withConfig({ runName: 'document_formatter' })
-        .invoke({ ...document.metadata, page_content: document.pageContent }, config)
-    )
+
+function formatDocuments(input: Record<string, any>) {
+  const { docs } = input;
+  return (
+    '\n\n' +
+    docs
+      .map((doc: Document) => `Article title: ${doc.metadata.title}\nArticle Snippet: ${doc.pageContent}`)
+      .join('\n\n')
   );
-  return formattedDocs.join(documentSeparator);
 }
+
 function formatDocs(input: Record<string, any>): string {
   const { docs } = input;
   return (
@@ -249,4 +258,24 @@ function formatDocs(input: Record<string, any>): string {
       })
       .join('\n\n')
   );
+}
+
+function formatDocsWithId(docs: Document[]): string {
+  return (
+    '\n\n' +
+    docs
+      .map(
+        (doc: Document, idx: number) =>
+          `Source ID: ${idx}\nArticle title: ${doc.metadata.title}\nArticle Snippet: ${doc.pageContent}`
+      )
+      .join('\n\n')
+  );
+}
+
+function retrieverTool() {
+  return createRetrieverTool(retriever(), {
+    name: 'document search',
+    description:
+      'Searches and returns documents. The documents are then used to provide context to the language model.'
+  });
 }
