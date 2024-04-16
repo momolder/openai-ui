@@ -27,7 +27,7 @@
   onDestroy(unsubscriber);
 </script>
 
-<div class="cmp flex flex-col justify-between {$StateStore.sidebarSlot ? 'pr-9' : ''} md:p-2">
+<div class="cmp h-full flex flex-col justify-between {$StateStore.sidebarSlot ? 'pr-9' : ''} md:p-2">
   <div class="cmp flex flex-col overflow-hidden">
     <NewChat showLabel={tab != ''} label={t(lang.Page.Sidebar.Clear)} />
     {#if $StateStore.useHistory}
