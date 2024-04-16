@@ -31,11 +31,14 @@ class ConversationService {
     })
       .then(ToastErrorsPipe)
       .then(async (c) => {
-        const reader = this.processStream(c);
+        const reader = c.body?.pipeThrough(new TextDecoderStream()).getReader();
+
         if (!reader) {
           throw new Error('Failed to read response');
         }
+
         let quitReading = false;
+
         while (!quitReading && !this.doCancel) {
           const { done, value } = await reader.read();
           quitReading = done;
@@ -62,32 +65,6 @@ class ConversationService {
       }).then(ToastErrorsPipe);
       await this.loadHistory(fetch);
     }
-  }
-
-  private processStream(stream: Response): ReadableStreamDefaultReader<ChatMessage> | undefined {
-    let remaining = '';
-    return stream.body
-      ?.pipeThrough(new TextDecoderStream())
-      .pipeThrough(
-        new TransformStream<string, ChatMessage>({
-          transform: (chunk, controller) => {
-            remaining += chunk;
-            let index = 0;
-            while ((index = remaining.indexOf('}', index)) >= 0) {
-              const jsonStr = remaining.slice(0, index + 1);
-              try {
-                const parsed = JSON.parse(jsonStr) as ChatMessage;
-                controller.enqueue(parsed);
-                remaining = remaining.slice(index + 1);
-                index = 0;
-              } catch (error) {
-                index++;
-              }
-            }
-          }
-        })
-      )
-      .getReader();
   }
 
   public async regenerateMessage(message: ChatMessage) {
@@ -185,17 +162,11 @@ class ConversationService {
     });
   }
 
-  private async updateStore(message: ChatMessage) {
+  private async updateStore(message: string) {
     const conv = get(ConversationStore);
-    if (message.context && message.context.messages.length > 0) {
-      conv.messages[conv.messages.length - 1].context = message.context;
-      ConversationStore.set(conv);
-    }
-    if (message.content) {
       await new Promise((f) => setTimeout(f, 60));
-      conv.messages[conv.messages.length - 1].content += message.content;
+      conv.messages[conv.messages.length - 1].content += message;
       ConversationStore.set(conv);
-    }
   }
 
   private workaroundMarkdownIssues() {
