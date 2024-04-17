@@ -1,1 +1,1 @@
-<p class="pt-2"><slot></slot></p>
+<p class="pt-2"><slot /></p>

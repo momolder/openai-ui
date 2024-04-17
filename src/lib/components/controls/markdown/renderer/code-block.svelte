@@ -37,7 +37,7 @@
     console.warn(`Highlighting with bash as fallback.`);
     return 'bash';
   }
-  
+
   function languageIsSupported(language: string): boolean {
     return (
       BUNDLED_LANGUAGES.filter((bundle) => {
