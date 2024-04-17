@@ -31,7 +31,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-svelte": "^2.37.0",
-    "playwright": "^1.40.0",
+    "playwright": "^1.43.1",
     "postcss": "^8.4.38",
     "prettier": "^2.8.8",
     "prettier-plugin-svelte": "^2.10.1",
@@ -51,14 +51,10 @@
     "@azure/storage-blob": "^12.17.0",
     "@langchain/azure-openai": "^0.0.7",
     "@langchain/community": "^0.0.48",
-    "@langchain/mongodb": "^0.0.1",
     "@langchain/openai": "^0.0.28",
     "@microsoft/applicationinsights-web": "^3.1.2",
     "applicationinsights": "^2.9.5",
-    "jspdf": "^2.5.1",
-    "langchain": "^0.1.33",
-    "mongodb": "^6.5.0",
-    "tiktoken": "^1.0.14"
+    "langchain": "^0.1.33"
   },
   "overrides": {
     "@langchain/core": "0.1.57"
