@@ -164,9 +164,9 @@ class ConversationService {
 
   private async updateStore(message: string) {
     const conv = get(ConversationStore);
-      await new Promise((f) => setTimeout(f, 60));
-      conv.messages[conv.messages.length - 1].content += message;
-      ConversationStore.set(conv);
+    await new Promise((f) => setTimeout(f, 60));
+    conv.messages[conv.messages.length - 1].content += message;
+    ConversationStore.set(conv);
   }
 
   private workaroundMarkdownIssues() {
