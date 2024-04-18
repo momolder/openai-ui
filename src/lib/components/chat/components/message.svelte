@@ -18,7 +18,7 @@
         {t(lang.Page.Chat.Message.Role.User)}
       </span>
       <div class="cmp overflow-hidden px-[5%]">
-        {message.content}
+        <p>{message.content}</p>
       </div>
     {:else}
       <span class="font-bold text-lg px-[5%]">
