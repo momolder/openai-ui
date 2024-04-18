@@ -11,7 +11,8 @@ import type { Document } from '@langchain/core/documents';
 import { ConsoleCallbackHandler } from '@langchain/core/tracers/console';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { RunnableSequence } from '@langchain/core/runnables';
-import { type ChainInput, chatModeTemplates, rephraseTemplate, promptTemplate } from './templates';
+import { type ChainInput, chatModeTemplates, rephraseTemplate, promptTemplate, citationSchema } from './templates';
+import { StructuredOutputParser } from 'langchain/output_parsers';
 
 export async function response(conversation: Conversation, chatMode: ChatMode, deployment: string) {
   const mappedMessages = mapMessages(conversation); // map messages to AIMessage and HumanMessage
@@ -20,12 +21,17 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
 
   const llm = getLargeLanguageModel(deployment, chatMode);
 
+  const parser = StructuredOutputParser.fromZodSchema(citationSchema);
+
+  const runnable = {
+    context: provideContext(llm),
+    question: (input: ChainInput) => input.question.content.toString(),
+    chatHistory: (input: ChainInput) => input.chat_history,
+    format_instructions: (input: ChainInput) => input.format_instructions,
+  };
+
   const runnableChain = RunnableSequence.from([
-    {
-      context: provideContext(llm),
-      question: (input: ChainInput) => input.question.content.toString(),
-      chatHistory: (input: ChainInput) => input.chat_history
-    },
+    runnable,
     promptTemplate,
     llm,
     new StringOutputParser()
@@ -34,8 +40,9 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
   if (question) {
     const stream = await runnableChain.stream({
       question: question,
-      chat_history: mappedMessages
-    });
+      chat_history: mappedMessages,
+      format_instructions: parser.getFormatInstructions(),
+  });
 
     return new Response(stream, {
       headers: {
@@ -49,7 +56,7 @@ function provideContext(llm: AzureChatOpenAI) {
   return RunnableSequence.from([
     (input: ChainInput) => rephraseQuestion(input, llm),
     getVectorStore().asRetriever(),
-    (docs: Document[]) => docs.map((doc, i) => `<doc id='${i}'>${doc.pageContent}</doc>`).join('\n')
+    (docs: Document[]) => docs.map((doc, i) => {console.log(doc.metadata); return `{ id: '${i}', source: '${doc.metadata.source}', content: ${doc.pageContent}}`;}).join(',\n')
   ]);
 }
 
