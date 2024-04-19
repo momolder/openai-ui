@@ -36,14 +36,19 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
 
   const parser = StructuredOutputParser.fromZodSchema(citationSchema);
 
-  const runnable = {
-    context: provideContext(llm),
+  const ragRunnable = {
     question: (input: ChainInput) => input.question.content.toString(),
-    chatHistory: (input: ChainInput) => input.chat_history,
-    format_instructions: (input: ChainInput) => input.format_instructions
+    chatHistory: (input: ChainInput) => input.chat_history.map(h => `${h.name}: ${h.content.toString()}`).join('\n'),
+    format_instructions: (input: ChainInput) => input.format_instructions,
+    context: 
+      RunnableSequence.from([
+        (input: ChainInput) => rephraseQuestion(input, llm),
+        getRetriever(),
+        (docs: Document[]) => docs.map((doc, i) => `{ id: ${i+1}, source: '${doc.metadata.source}', content: ${doc.pageContent}}`).join(',\n')
+      ]),
   };
 
-  const runnableChain = RunnableSequence.from([runnable, promptTemplate, llm, new StringOutputParser()]);
+  const runnableChain = RunnableSequence.from([ragRunnable, promptTemplate, llm, new StringOutputParser()]);
 
   if (question) {
     const stream = await runnableChain.stream({
@@ -60,25 +65,12 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
   }
 }
 
-function provideContext(llm: AzureChatOpenAI) {
-  return RunnableSequence.from([
-    (input: ChainInput) => rephraseQuestion(input, llm),
-    getRetriever(),
-    (docs: Document[]) =>
-      docs
-        .map((doc, i) => {
-          return `{ id: '${i}', source: '${doc.metadata.source}', content: ${doc.pageContent}}`;
-        })
-        .join(',\n')
-  ]);
-}
-
 function rephraseQuestion(input: ChainInput, llm: AzureChatOpenAI): RunnableSequence<ChainInput> | string {
   return input.chat_history.length > 1
     ? RunnableSequence.from([
         {
           question: (input: ChainInput) => input.question.content.toString(),
-          chat_history: (input: ChainInput) => input.chat_history
+          chat_history: (input: ChainInput) => input.chat_history.map(h => `${h.name}: ${h.content.toString()}`).join('\n')
         },
         rephraseTemplate,
         llm,
