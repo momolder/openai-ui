@@ -13,6 +13,8 @@
   let userPrompt = '';
   let textAreaHtml: HTMLTextAreaElement;
   let streaming = false;
+  let hiddenDiv: HTMLDivElement;
+
   const unsubscriber = IsStreaming.subscribe((s) => (streaming = s));
 
   async function sendPrompt(): Promise<void> {
@@ -27,6 +29,13 @@
     conversationService.cancel();
   }
 
+  function updateTextareaHeight() {
+    const computedStyle = window.getComputedStyle(textAreaHtml);
+    hiddenDiv.style.width = computedStyle.width;
+    hiddenDiv.textContent = textAreaHtml.value || ' ';
+    textAreaHtml.style.height = hiddenDiv.scrollHeight + 'px';
+  }
+
   async function handleInput(event: KeyboardEvent) {
     if (event.code === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -35,6 +44,7 @@
       }
       await sendPrompt();
     }
+    updateTextareaHeight();
   }
 
   onDestroy(unsubscriber);
@@ -63,6 +73,7 @@
           placeholder={t(lang.Page.Chat.Input.Placeholder)}
           bind:value={userPrompt}
           on:keydown={(e) => handleInput(e)}
+          on:input={updateTextareaHeight}
           required
           autofocus />
         <label for={textAreaHtml?.name} class="flex justify-end text-xs"
@@ -83,4 +94,7 @@
     </div>
   </form>
   <span class="text-xs md:text-sm">{t(lang.Page.Chat.Input.ChatInfo)}</span>
+  <div
+    bind:this={hiddenDiv}
+    class="invisible whitespace-pre-wrap break-words absolute top-[-9999px] min-h-12" />
 </div>
