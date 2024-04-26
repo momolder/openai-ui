@@ -6,18 +6,18 @@ import {
   type ChatRequestMessage,
   AzureKeyCredential,
   type AzureChatExtensionConfiguration,
-  type AzureCognitiveSearchQueryType,
-  type AzureCognitiveSearchChatExtensionConfiguration
+  type AzureSearchChatExtensionConfiguration,
+  type ChatRequestSystemMessage
 } from '@azure/openai';
-import {Tiktoken, encoding_for_model, type TiktokenModel} from 'tiktoken';
+import { Tiktoken, encoding_for_model, type TiktokenModel } from 'tiktoken';
 
-const searchConfiguration: AzureCognitiveSearchChatExtensionConfiguration = {
-  type: 'AzureCognitiveSearch',
+const searchConfiguration: AzureSearchChatExtensionConfiguration = {
+  type: 'azure_search',
   endpoint: env.AiSearch_Endpoint,
-  key: env.AiSearch_Key,
+  authentication: { key: env.AiSearch_Key, type: 'api_key'},
   indexName: env.AiSearch_IndexName,
   semanticConfiguration: env.AiSearch_SemanticConfiguration,
-  queryType: env.AiSearch_QueryType as AzureCognitiveSearchQueryType,
+  queryType: env.AiSearch_QueryType,
   roleInformation: env.OpenAi_SystemMessage,
   fieldsMapping: {
     contentFieldsSeparator: '\n',
@@ -29,8 +29,7 @@ const searchConfiguration: AzureCognitiveSearchChatExtensionConfiguration = {
   inScope: true,
   strictness: 3,
   topNDocuments: 2,
-  embeddingKey: env.OpenAi_Key,
-  embeddingEndpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`
+  embeddingDependency: { endpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`, type: 'endpoint' },
 };
 
 const chatModeTemplates = [
@@ -106,7 +105,7 @@ function mapMessages(conversation: Conversation) {
       ? mappedMessages.slice(-pastMessagesIncluded)
       : mappedMessages;
   mappedMessages = [
-    { role: ChatRole.System, content: env.OpenAi_SystemMessage, name: 'system' },
+    { content: env.OpenAi_SystemMessage, name: 'system' } as ChatRequestSystemMessage,
     ...mappedMessages
   ];
   return mappedMessages;
@@ -120,10 +119,10 @@ function trimToTokenLimit(
 ): ChatRequestMessage[] {
   let numTokens = getTokensForMessages(model, messages) + maxTokens;
   while (numTokens >= tokenLimit) {
-    messages = messages.slice(0, -1)
-    numTokens = getTokensForMessages(model, messages) + maxTokens
+    messages = messages.slice(0, -1);
+    numTokens = getTokensForMessages(model, messages) + maxTokens;
   }
-  
+
   console.log(`sending ${messages.length} messages with ${numTokens} tokens to openai.`);
   return messages;
 }
