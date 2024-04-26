@@ -26,14 +26,15 @@
 
   function shikiSupportedLang(): string {
     if (lang === 'vba') return 'vb';
-    else if (lang as BuiltinLanguage) { return lang; } 
-    else { 
+    else if (lang as BuiltinLanguage) {
+      return lang;
+    } else {
       console.warn(`Highlighting with bash as fallback.`);
       return 'bash';
     }
   }
 
-  $:shikiLang=shikiSupportedLang()
+  $: shikiLang = shikiSupportedLang();
 </script>
 
 <div

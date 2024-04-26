@@ -23,7 +23,7 @@ if (env.PUBLIC_AppInsights_Endpoint) {
 }
 
 function adjustHeight() {
-  const viewHeight = window.innerHeight + 'px';
+  const viewHeight = `${window.innerHeight}px`;
   const container = document.body;
   container.style.height = viewHeight;
 }
