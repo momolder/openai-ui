@@ -7,6 +7,6 @@ import { t } from '$lib/localization/translator';
 import { lang } from '$lib/localization/translation';
 
 export async function load({ fetch }: PageLoadEvent) {
-  if (!(await stateService.validateUser(fetch))) throw error(401, t(lang.Errors.Unauthorized));
-  if (env.PUBLIC_OpenAi_Deployments.length === 0) throw error(412, t(lang.Errors.NoDeployment));
+  if (!(await stateService.validateUser(fetch))) error(401, t(lang.Errors.Unauthorized));
+  if (env.PUBLIC_OpenAi_Deployments.length === 0) error(412, t(lang.Errors.NoDeployment));
 }
