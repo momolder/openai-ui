@@ -10,21 +10,25 @@ import {
 import type { Document } from '@langchain/core/documents';
 import { ConsoleCallbackHandler } from '@langchain/core/tracers/console';
 import { OpenAIEmbeddings } from '@langchain/openai';
-import { RunnableSequence } from '@langchain/core/runnables';
+import { RunnableSequence, RunnableMap, RunnablePassthrough } from '@langchain/core/runnables';
 import {
   type ChainInput,
   chatModeTemplates,
   rephraseTemplate,
   promptTemplate,
-  citationSchema
+  citationSchema,
+  messageTemplate
 } from './templates';
-import { StructuredOutputParser } from 'langchain/output_parsers';
+import { JsonOutputFunctionsParser, StructuredOutputParser } from 'langchain/output_parsers';
 import { CheerioWebBaseLoader } from 'langchain/document_loaders/web/cheerio';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import { WebPDFLoader } from 'langchain/document_loaders/web/pdf';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+import { Input } from 'postcss';
+import { RunnablePick } from 'langchain/runnables';
 
 export async function response(conversation: Conversation, chatMode: ChatMode, deployment: string) {
   // await indexDocuments(); return;
@@ -36,22 +40,72 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
 
   const parser = StructuredOutputParser.fromZodSchema(citationSchema);
 
+  const rephraseRunnable = RunnableMap.from({
+    input: new RunnablePassthrough<ChainInput>(),
+    question: RunnableSequence.from([
+      (input: ChainInput) => {
+        return { question: input.question.content.toString(), chat_history: input.chat_history };
+      },
+      messageTemplate,
+      llm,
+      new StringOutputParser()
+    ])
+  });
+
+  const retrieveRunnable = RunnableMap.from({
+    input: new RunnablePassthrough<ChainInput>(),
+    question: new RunnablePassthrough<string>(),
+    docs: RunnableSequence.from([
+      await getInMemoryRetriever(),
+      (docs: Document[]) =>
+        docs
+          .map((doc, i) => `{ id: ${i + 1}, source: '${doc.metadata.source}', content: ${doc.pageContent}}`)
+          .join(',\n'),
+      (output: string) => {
+        console.info(output);
+        return output;
+      }
+    ])
+  });
+
   const ragRunnable = {
     question: (input: ChainInput) => input.question.content.toString(),
-    chatHistory: (input: ChainInput) => input.chat_history.map(h => `${h.name}: ${h.content.toString()}`).join('\n'),
+    chatHistory: (input: ChainInput) =>
+      input.chat_history.map((h) => `${h.name}: ${h.content.toString()}`).join('\n'),
     format_instructions: (input: ChainInput) => input.format_instructions,
-    context: 
-      RunnableSequence.from([
-        (input: ChainInput) => rephraseQuestion(input, llm),
-        getRetriever(),
-        (docs: Document[]) => docs.map((doc, i) => `{ id: ${i+1}, source: '${doc.metadata.source}', content: ${doc.pageContent}}`).join(',\n')
-      ]),
+    context: RunnableSequence.from([
+      (input: ChainInput) => rephraseQuestion(input, llm),
+      await getInMemoryRetriever(),
+      (docs: Document[]) =>
+        docs
+          .map((doc, i) => `{ id: ${i + 1}, source: '${doc.metadata.source}', content: ${doc.pageContent}}`)
+          .join(',\n')
+    ])
   };
+
+  const runnable = rephraseRunnable
+    .pipe(async (output) => {
+      return {
+        docs: await retrieveRunnable.invoke(output.question),
+        question: output.question,
+        input: output.input
+      };
+    })
+    .pipe((output) => {
+      return {
+        chatHistory: output.input.chat_history,
+        context: output.docs,
+        question: output.question,
+        format_instructions: output.input.format_instructions
+      };
+    });
+
+  const easyChain = RunnableSequence.from([runnable, promptTemplate, llm, new StringOutputParser()]);
 
   const runnableChain = RunnableSequence.from([ragRunnable, promptTemplate, llm, new StringOutputParser()]);
 
   if (question) {
-    const stream = await runnableChain.stream({
+    const stream = await rephraseRunnable.stream({
       question: question,
       chat_history: mappedMessages,
       format_instructions: parser.getFormatInstructions()
@@ -65,18 +119,21 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
   }
 }
 
-function rephraseQuestion(input: ChainInput, llm: AzureChatOpenAI): RunnableSequence<ChainInput> | string {
-  return input.chat_history.length > 1
+function rephraseQuestion(
+  input: ChainInput,
+  llm: AzureChatOpenAI
+): RunnableSequence<ChainInput> | RunnablePassthrough<ChainInput> {
+  return input.chat_history.length >= 1
     ? RunnableSequence.from([
         {
           question: (input: ChainInput) => input.question.content.toString(),
-          chat_history: (input: ChainInput) => input.chat_history.map(h => `${h.name}: ${h.content.toString()}`).join('\n')
+          chat_history: (input: ChainInput) => input.chat_history //.map(h => `${h.name}: ${h.content.toString()}`).join('\n')
         },
-        rephraseTemplate,
+        messageTemplate,
         llm,
         new StringOutputParser()
       ])
-    : input.question.content.toString();
+    : new RunnablePassthrough();
 }
 
 function mapMessages(conversation: Conversation): BaseMessage[] {
@@ -124,9 +181,12 @@ function getRetriever() {
 }
 
 async function getInMemoryRetriever() {
-  const glossarUrl = 'https://www.gdv.de/resource/blob/6320/b4588b93ac8c40299a4bde55cf81c46b/wichtige-begriffe-fuer-die-lebensversicherung-im-ueberblick-data.pdf';
-  const allgemeineBedingungenUrl = 'https://www.gdv.de/resource/blob/6326/43afd7c4e9d11e5275109fa05bc1c4d9/01-allgemeine-bedingungen-fur-die-berufsunfahigkeits-versicherung-0-pdf-data.pdf';
-  const blob = await fetch(allgemeineBedingungenUrl).then(r => r.blob());
+  const glossarUrl =
+    'https://www.gdv.de/resource/blob/6320/b4588b93ac8c40299a4bde55cf81c46b/wichtige-begriffe-fuer-die-lebensversicherung-im-ueberblick-data.pdf';
+  const allgemeineBedingungenUrl =
+    'https://kids.nationalgeographic.com/animals/prehistoric/article/amazing-dino-discoveries';
+  const usedUrl = glossarUrl;
+  const blob = await fetch(usedUrl).then((r) => r.blob());
   const loader = new WebPDFLoader(blob);
 
   // const loader = new CheerioWebBaseLoader(
@@ -140,7 +200,7 @@ async function getInMemoryRetriever() {
     chunkOverlap: 200
   });
   const splits = await textSplitter.splitDocuments(docs);
-  splits.forEach(s => s.metadata.source = allgemeineBedingungenUrl);
+  splits.forEach((s) => (s.metadata.source = usedUrl));
   const vectorStore = await MemoryVectorStore.fromDocuments(splits, getEmbbedding());
 
   return vectorStore.asRetriever();
@@ -158,7 +218,9 @@ function getVectorStore() {
 }
 
 async function indexDocuments() {
-  const loader = new PDFLoader('./static/01-allgemeine-bedingungen-fur-die-berufsunfahigkeits-versicherung.pdf');
+  const loader = new PDFLoader(
+    './static/01-allgemeine-bedingungen-fur-die-berufsunfahigkeits-versicherung.pdf'
+  );
   const rawDocuments = await loader.load();
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,

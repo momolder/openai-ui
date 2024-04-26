@@ -1,7 +1,7 @@
 import { env } from "$env/dynamic/private";
 import { ChatMode } from "$lib/models/Contracts";
 import { BaseMessage } from '@langchain/core/messages';
-import { PromptTemplate } from '@langchain/core/prompts';
+import { PromptTemplate, MessagesPlaceholder, ChatPromptTemplate } from '@langchain/core/prompts';
 import { z } from "zod";
 
 export interface ChainInput {
@@ -10,6 +10,12 @@ export interface ChainInput {
     format_instructions: string;
   }
   
+export const messageTemplate = ChatPromptTemplate.fromMessages([
+  ['system', 'Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question in the language of the follow up question.'],
+  new MessagesPlaceholder('chat_history'),
+  ['human', '{question}']
+]);
+
   export const promptTemplate = PromptTemplate.fromTemplate(
       `system: ${env.OpenAi_SystemMessage}.
        Given a user question and documents, answer the user question in the language of the human message.
