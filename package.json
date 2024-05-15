@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "vavite-loader vite dev",
     "build": "vite build --mode example",
-    "prenode": "cp .env ./build/.env",
     "node": "node --require dotenv/config --import ./appinsights.js ./build",
     "docker:build": "docker build --pull --rm -f \"Dockerfile\" -t openaiui:latest \".\" --progress=plain",
     "predocker:run": "npm run docker:build",
@@ -49,18 +48,17 @@
     "@azure/openai": "^1.0.0-beta.12",
     "@azure/search-documents": "^12.0.0",
     "@azure/storage-blob": "^12.17.0",
-    "@langchain/azure-openai": "^0.0.7",
-    "@langchain/community": "^0.0.51",
-    "@langchain/core": "0.1.61",
+    "@langchain/azure-openai": "^0.0.8",
+    "@langchain/community": "^0.0.54",
     "@langchain/openai": "^0.0.28",
     "@microsoft/applicationinsights-web": "^3.2.0",
-    "applicationinsights": "^2.9.5",
+    "applicationinsights": "^3.0.1",
     "cheerio": "^1.0.0-rc.12",
-    "langchain": "^0.1.36",
+    "langchain": "0.1.35",
     "pdf-parse": "^1.1.1"
   },
   "overrides": {
-    "@langchain/core": "0.1.61"
+    "@langchain/core": "0.1.58"
   },
   "type": "module"
 }

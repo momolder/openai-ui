@@ -55,7 +55,7 @@ PUBLIC_App_UseHistory="if false, database connection is not required and history
 PUBLIC_App_Version="version of the app"
 PUBLIC_App_UseMock="if true, no ai service connection will be established"
 PUBLIC_App_UseDocumentSearch="if true, enables search in the configured ai search index"
-PUBLIC_OpenAi_Deployments="list of available ai deployments, e.g. gpt-3|gpt-4"
+PUBLIC_OpenAi_Deployments="list of available ai deployments, e.g. gpt-35-turbo|gpt-4"
 ```
 
 ### Debug

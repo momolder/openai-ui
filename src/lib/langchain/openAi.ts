@@ -28,7 +28,6 @@ import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { Input } from 'postcss';
-import { RunnablePick } from 'langchain/runnables';
 
 export async function response(conversation: Conversation, chatMode: ChatMode, deployment: string) {
   // await indexDocuments(); return;
@@ -40,17 +39,17 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
 
   const parser = StructuredOutputParser.fromZodSchema(citationSchema);
 
-  const rephraseRunnable = RunnableMap.from({
-    input: new RunnablePassthrough<ChainInput>(),
-    question: RunnableSequence.from([
-      (input: ChainInput) => {
-        return { question: input.question.content.toString(), chat_history: input.chat_history };
-      },
-      messageTemplate,
-      llm,
-      new StringOutputParser()
-    ])
-  });
+const rephraseRunnable = RunnableMap.from({
+  input: new RunnablePassthrough<ChainInput>(),
+  question: RunnableSequence.from([
+    (input: ChainInput) => {
+      return { question: input.question.content.toString(), chat_history: input.chat_history };
+    },
+    messageTemplate,
+    llm,
+    new StringOutputParser()
+  ])
+});
 
   const retrieveRunnable = RunnableMap.from({
     input: new RunnablePassthrough<ChainInput>(),
@@ -68,48 +67,29 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
     ])
   });
 
-  const ragRunnable = {
-    question: (input: ChainInput) => input.question.content.toString(),
-    chatHistory: (input: ChainInput) =>
-      input.chat_history.map((h) => `${h.name}: ${h.content.toString()}`).join('\n'),
-    format_instructions: (input: ChainInput) => input.format_instructions,
-    context: RunnableSequence.from([
-      (input: ChainInput) => rephraseQuestion(input, llm),
-      await getInMemoryRetriever(),
-      (docs: Document[]) =>
-        docs
-          .map((doc, i) => `{ id: ${i + 1}, source: '${doc.metadata.source}', content: ${doc.pageContent}}`)
-          .join(',\n')
-    ])
-  };
-
   const runnable = rephraseRunnable
-    .pipe(async (output) => {
+    .pipe(retrieveRunnable)
+    .pipe((prevOut) => {
       return {
-        docs: await retrieveRunnable.invoke(output.question),
-        question: output.question,
-        input: output.input
-      };
-    })
-    .pipe((output) => {
-      return {
-        chatHistory: output.input.chat_history,
-        context: output.docs,
-        question: output.question,
-        format_instructions: output.input.format_instructions
+        chatHistory: prevOut.input.chat_history,
+        context: prevOut.docs,
+        question: prevOut.question,
+        format_instructions: prevOut.input.format_instructions
       };
     });
 
   const easyChain = RunnableSequence.from([runnable, promptTemplate, llm, new StringOutputParser()]);
-
-  const runnableChain = RunnableSequence.from([ragRunnable, promptTemplate, llm, new StringOutputParser()]);
+  const baseChain = RunnableSequence.from([messageTemplate, llm, new StringOutputParser()]);
+  // const runnableChain = RunnableSequence.from([ragRunnable, promptTemplate, llm, new StringOutputParser()]);
 
   if (question) {
-    const stream = await rephraseRunnable.stream({
+    const stream = await easyChain.stream(
+      {
       question: question,
       chat_history: mappedMessages,
       format_instructions: parser.getFormatInstructions()
-    });
+    }
+  );
 
     return new Response(stream, {
       headers: {
@@ -117,23 +97,6 @@ export async function response(conversation: Conversation, chatMode: ChatMode, d
       }
     });
   }
-}
-
-function rephraseQuestion(
-  input: ChainInput,
-  llm: AzureChatOpenAI
-): RunnableSequence<ChainInput> | RunnablePassthrough<ChainInput> {
-  return input.chat_history.length >= 1
-    ? RunnableSequence.from([
-        {
-          question: (input: ChainInput) => input.question.content.toString(),
-          chat_history: (input: ChainInput) => input.chat_history //.map(h => `${h.name}: ${h.content.toString()}`).join('\n')
-        },
-        messageTemplate,
-        llm,
-        new StringOutputParser()
-      ])
-    : new RunnablePassthrough();
 }
 
 function mapMessages(conversation: Conversation): BaseMessage[] {
