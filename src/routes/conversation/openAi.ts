@@ -28,7 +28,7 @@ const searchConfiguration: AzureSearchChatExtensionConfiguration = {
   },
   inScope: true,
   strictness: 3,
-  topNDocuments: 2,
+  topNDocuments: 10,
   embeddingDependency: { endpoint: `${env.OpenAi_Endpoint}openai/deployments/${env.OpenAi_Embedding}/embeddings?api-version=${env.OpenAi_ApiVersion}`, type: 'endpoint' },
 };
 

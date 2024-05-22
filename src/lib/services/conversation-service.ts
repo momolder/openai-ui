@@ -109,7 +109,7 @@ class ConversationService {
       isFollowed: false,
       userId: get(UserStore).id,
       date: new Date(),
-      useDocumentSearch: true
+      useDocumentSearch: false
     });
   }
 
