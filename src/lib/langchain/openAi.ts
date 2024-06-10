@@ -1,6 +1,5 @@
 import { env } from '$env/dynamic/private';
 import { ChatMode, ChatRole, type Conversation } from '$lib/models/Contracts';
-import { AzureChatOpenAI } from '@langchain/azure-openai';
 import { AIMessage, HumanMessage, BaseMessage } from '@langchain/core/messages';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import {
@@ -9,7 +8,7 @@ import {
 } from '@langchain/community/vectorstores/azure_aisearch';
 import type { Document } from '@langchain/core/documents';
 import { ConsoleCallbackHandler } from '@langchain/core/tracers/console';
-import { OpenAIEmbeddings } from '@langchain/openai';
+import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
 import { RunnableSequence, RunnableMap, RunnablePassthrough } from '@langchain/core/runnables';
 import {
   type ChainInput,
@@ -26,7 +25,7 @@ import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import { WebPDFLoader } from 'langchain/document_loaders/web/pdf';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { z } from 'zod';
 import { Input } from 'postcss';
 
 export async function response(conversation: Conversation, chatMode: ChatMode, deployment: string) {
@@ -83,11 +82,11 @@ const rephraseRunnable = RunnableMap.from({
   // const runnableChain = RunnableSequence.from([ragRunnable, promptTemplate, llm, new StringOutputParser()]);
 
   if (question) {
-    const stream = await easyChain.stream(
+    const stream = await baseChain.stream(
       {
       question: question,
       chat_history: mappedMessages,
-      format_instructions: parser.getFormatInstructions()
+      // format_instructions: parser.getFormatInstructions()
     }
   );
 
@@ -107,13 +106,14 @@ function mapMessages(conversation: Conversation): BaseMessage[] {
 
 function getLargeLanguageModel(deployment: string, chatMode: ChatMode) {
   const template = chatModeTemplates.find((t) => t.chatMode === chatMode) ?? chatModeTemplates[0];
-  return new AzureChatOpenAI({
+  return new ChatOpenAI({
     callbacks: [new ConsoleCallbackHandler()],
     maxRetries: 0,
     onFailedAttempt: (error) => {
       console.log(error);
     },
-    azureOpenAIEndpoint: env.OpenAi_Endpoint,
+    azureOpenAIApiInstanceName: env.OpenAi_InstanceName,
+    // azureOpenAIBasePath: env.OpenAi_Endpoint,
     azureOpenAIApiKey: env.OpenAi_Key,
     azureOpenAIApiVersion: env.OpenAi_ApiVersion,
     azureOpenAIApiDeploymentName: deployment,
